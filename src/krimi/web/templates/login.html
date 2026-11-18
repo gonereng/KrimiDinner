@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Anmelden – Krimidinner-Generator{% endblock %}
+{% block body %}
+<section class="card narrow">
+  <h1>Anmelden</h1>
+  {% if not configured %}
+    <p class="alert err">Es ist kein Passwort gesetzt. Trage <code>APP_PASSWORD=…</code> in die Datei <code>.env</code> ein und starte die App neu.</p>
+  {% else %}
+    {% if error %}<p class="alert err">{{ error }}</p>{% endif %}
+    <form method="post" action="/login" class="stack">
+      <label>Passwort <input type="password" name="password" autofocus required autocomplete="current-password"></label>
+      <button class="primary">Anmelden</button>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}

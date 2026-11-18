@@ -1,0 +1,109 @@
+{% extends "base.html" %}{% block title %}{{ kit.titel }} – Krimidinner{% endblock %}
+{% block body %}
+<p><a href="/">← Übersicht</a></p>
+<section class="card">
+  <h1>{{ kit.titel }}</h1>
+  {% if story %}<p class="muted">{{ story.untertitel }} · {{ story.spieler }} Spieler · {{ story.sprache|upper }} · Design: {{ story.design }}</p>{% endif %}
+
+  <div id="status" data-kit="{{ kit.name }}" data-running="{{ 'true' if running else 'false' }}">
+    <h2>Status: <span id="st-label" class="badge {{ status.status or kit.status }}">{{ status.aufgabe }} – {{ {'laeuft': 'läuft …', 'fertig': 'fertig', 'fehler': 'Fehler'}.get(status.status, kit.status) }}</span></h2>
+    <pre id="log" class="log">{{ (status.log or [])|join('\n') }}</pre>
+    {% if status.fehler %}<div class="alert err"><strong>Fehler:</strong><pre class="plain">{{ status.fehler }}</pre></div>{% endif %}
+    {% for w in status.warnungen or [] %}<p class="alert warn">{{ w }}</p>{% endfor %}
+  </div>
+</section>
+
+{% if files %}
+<section class="card">
+  <h2>Downloads</h2>
+  <ul class="files">
+    {% for f, label in files %}<li><a href="/kits/{{ kit.name }}/files/{{ f }}" target="_blank">{{ label }}</a> <span class="muted small">{{ f }}</span></li>{% endfor %}
+  </ul>
+  {% if hefte %}<details><summary>Charakterhefte einzeln</summary><ul class="files">
+    {% for h in hefte %}<li><a href="/kits/{{ kit.name }}/files/charakterhefte/{{ h }}" target="_blank">{{ h }}</a></li>{% endfor %}
+  </ul></details>{% endif %}
+</section>
+{% endif %}
+
+{% if report %}
+<section class="card">
+  <h2>Logikprüfung {% if report.ok %}<span class="badge ok">bestanden</span>{% else %}<span class="badge fehler">nicht bestanden</span>{% endif %}</h2>
+  {% if report.ermittlung %}
+    <p><strong>Gegencheck (Gemini kennt nur die Hinweise):</strong> Täter laut Prüfer: <code>{{ report.ermittlung.taeter_id }}</code>, Sicherheit {{ '%.0f'|format(report.ermittlung.sicherheit * 100) }} %</p>
+    <p class="muted small">{{ report.ermittlung.begruendung }}</p>
+  {% else %}<p class="muted small">Nur die feste Prüfung lief, ohne Gemini-Gegencheck.</p>{% endif %}
+  {% if report.fehler %}<ul class="errors">{% for f in report.fehler %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
+  {% for w in report.warnungen %}<p class="alert warn">{{ w }}</p>{% endfor %}
+</section>
+{% endif %}
+
+{% if usage %}
+<section class="card">
+  <h2>Gemini-Verbrauch (letzter Lauf)</h2>
+  <p>{{ usage.api_calls }} API-Aufrufe · {{ usage.cache_hits }} aus dem Cache · {{ usage.total_tokens }} Tokens ({{ usage.prompt_tokens }} Eingabe / {{ usage.output_tokens }} Ausgabe)</p>
+  <details><summary>Einzelne Aufrufe</summary><table class="tbl">
+    <tr><th>Schritt</th><th>Modell</th><th>Quelle</th><th>Tokens</th></tr>
+    {% for c in usage.calls %}<tr><td>{{ c.label }}</td><td>{{ c.model }}</td><td>{{ 'Cache' if c.cached else 'API' }}</td><td>{{ c.total or 0 }}</td></tr>{% endfor %}
+  </table></details>
+</section>
+{% endif %}
+
+{% if story %}
+<section class="card">
+  <h2>Aktionen</h2>
+  <div class="actions">
+    <a class="button" href="/kits/{{ kit.name }}/edit">story.json bearbeiten</a>
+    <form method="post" action="/kits/{{ kit.name }}/render" class="inline">
+      <select name="paper"><option value="a4">A4</option><option value="letter">US Letter</option></select>
+      <button>PDFs neu rendern</button>
+    </form>
+    <form method="post" action="/kits/{{ kit.name }}/validate" class="inline">
+      <label class="check"><input type="checkbox" name="gegencheck" value="true" {% if not has_key %}disabled{% endif %}> mit Gemini-Gegencheck</label>
+      <button>Logik prüfen</button>
+    </form>
+    <form method="post" action="/kits/{{ kit.name }}/delete" class="inline" onsubmit="return confirm('Kit „{{ kit.titel }}“ endgültig löschen?')">
+      <button class="danger">Löschen</button>
+    </form>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Überblick</h2>
+  <p>{{ story.einleitung }}</p>
+  <table class="tbl">
+    <tr><th>Figur</th><th>Rolle</th><th>Hinweise (R1/R2/R3)</th></tr>
+    {% for c in story.charaktere %}
+    <tr><td>{{ c.name }}</td><td>{{ c.rolle }}</td>
+      <td>{% for r in [1,2,3] %}{{ story.hinweise|selectattr('empfaenger', 'equalto', c.id)|selectattr('runde', 'equalto', r)|list|length }}{% if not loop.last %} / {% endif %}{% endfor %}</td></tr>
+    {% endfor %}
+  </table>
+  <details><summary>Lösung anzeigen (Spoiler!)</summary>
+    {% for c in story.charaktere if c.ist_taeter %}<p><strong>Täter:</strong> {{ c.name }}</p>{% endfor %}
+    <p>{{ story.aufloesung.zusammenfassung }}</p>
+  </details>
+</section>
+{% endif %}
+
+<script>
+(function () {
+  const box = document.getElementById('status');
+  if (!box || box.dataset.running !== 'true') return;
+  const log = document.getElementById('log');
+  const label = document.getElementById('st-label');
+  async function poll() {
+    try {
+      const r = await fetch('/api/kits/' + box.dataset.kit, {cache: 'no-store'});
+      if (r.ok) {
+        const s = await r.json();
+        log.textContent = (s.log || []).join('\n');
+        log.scrollTop = log.scrollHeight;
+        if (!s.running) { location.reload(); return; }
+        label.textContent = (s.aufgabe || '') + ' – läuft …';
+      }
+    } catch (e) {}
+    setTimeout(poll, 1500);
+  }
+  poll();
+})();
+</script>
+{% endblock %}

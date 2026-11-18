@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block title %}Bearbeiten – {{ kit.titel }}{% endblock %}
+{% block body %}
+<p><a href="/kits/{{ kit.name }}">← zurück zum Kit</a></p>
+<section class="card wide">
+  <h1>story.json bearbeiten</h1>
+  <p class="muted small">Hier lassen sich alle Texte, Hinweise, Rätsel und Runden direkt ändern. Beim Speichern wird das Format geprüft; die alte Version bleibt als <code>story.backup.json</code> erhalten.</p>
+  {% if errors %}<div class="alert err"><strong>Nicht gespeichert:</strong><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+  <form method="post" class="stack">
+    <textarea name="text" id="json" spellcheck="false">{{ text }}</textarea>
+    <div class="actions">
+      <button type="button" onclick="fmt()">JSON formatieren</button>
+      <button name="danach" value="speichern">Speichern</button>
+      <button name="danach" value="pruefen">Speichern & prüfen</button>
+      <button name="danach" value="rendern" class="primary">Speichern & PDFs rendern</button>
+    </div>
+  </form>
+</section>
+<script>
+function fmt() {
+  const t = document.getElementById('json');
+  try { t.value = JSON.stringify(JSON.parse(t.value), null, 2); }
+  catch (e) { alert('Ungültiges JSON: ' + e.message); }
+}
+</script>
+{% endblock %}
