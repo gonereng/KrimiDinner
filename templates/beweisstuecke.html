@@ -1,0 +1,27 @@
+{% extends "_layout.html" %}{% from "_macros.html" import art_name, puzzle_body with context %}
+{% block body %}
+{% for h in beweise %}
+{% set p = puzzles.get(h.id) %}
+<section class="evidence-page">
+  <div class="ev-label"><span>{{ L.beweisstueck }} {{ h.id }} · {{ L.runde }} {{ h.runde }}</span><span>{{ L.fuer }}: {{ name_of(h.empfaenger) }}</span></div>
+  {% if h.art == 'brief' %}
+  <div class="ev ev-brief"><div class="letterhead">{{ h.titel }}</div>{{ h.text }}{% if p %}{{ puzzle_body(h, p) }}{% endif %}</div>
+  {% elif h.art == 'zeitung' %}
+  <div class="ev ev-zeitung"><div class="masthead">{{ 'Bergbote' if s.design == 'chalet' else ('The Evening Star' if s.design == 'noir' else 'Der Landbote') }}</div>
+    <div class="dateline">{{ s.setting.zeit }}</div><h3>{{ h.titel }}</h3><div class="body">{{ h.text }}</div>{% if p %}{{ puzzle_body(h, p) }}{% endif %}</div>
+  {% elif h.art == 'telegramm' %}
+  <div class="ev ev-telegramm"><div class="tg-head">{{ 'TELEGRAMM' if s.sprache == 'de' else 'TELEGRAM' }}</div><strong>{{ h.titel }}</strong><br>{{ h.text }}{% if p %}{{ puzzle_body(h, p) }}{% endif %}</div>
+  {% elif h.art == 'notiz' %}
+  <div class="ev ev-notiz"><strong>{{ h.titel }}</strong><br><br>{{ h.text }}{% if p %}{{ puzzle_body(h, p) }}{% endif %}</div>
+  {% else %}
+  <div class="ev ev-karte"><h3>{{ h.titel }}</h3><p>{{ h.text }}</p>{% if p %}{{ puzzle_body(h, p) }}{% endif %}</div>
+  {% endif %}
+  {% if p and p.code %}
+  <div class="content-slip">
+    <div class="kicker">{{ 'Für die Spielleitung – abschneiden und erst herausgeben, wenn der Code' if s.sprache == 'de' else 'For the host – cut off and hand out only when the code' }} {{ p.code }} {{ 'genannt wurde' if s.sprache == 'de' else 'is given' }}</div>
+    <p style="margin-top: 3mm">{{ p.loesung }}</p>
+  </div>
+  {% endif %}
+</section>
+{% endfor %}
+{% endblock %}

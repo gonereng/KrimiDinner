@@ -1,0 +1,41 @@
+{% extends "_layout.html" %}{% from "_macros.html" import ornament with context %}
+{% block body %}
+{% for c in chars %}
+<section class="{% if not loop.first %}page-break{% endif %}">
+  <div class="char-cover">
+    <div class="kicker">{{ L.charakterheft }} · {{ s.titel }}</div>
+    <div style="height: 10mm"></div>
+    {% if images[c.id] %}<img class="portrait" src="{{ images[c.id] }}">{% else %}<div class="medal">{{ (c.name|short)[:1] }}</div>{% endif %}
+    <div class="name">{{ c.name }}</div>
+    <div class="rolle">{{ c.rolle }}</div>
+    {{ ornament() }}
+    <p class="small muted" style="margin-top: 10mm">{{ 'Nur für deine Augen bestimmt!' if s.sprache == 'de' else 'For your eyes only!' }}</p>
+  </div>
+
+  <h2 class="page-break">{{ s.titel }}</h2>
+  <div class="read" data-label="{{ L.vorlesen }}">{{ s.einleitung }}</div>
+  <h3>{{ L.profil }}</h3><p>{{ c.oeffentliches_profil }}</p>
+  <h3>{{ L.kostuem }}</h3><p>{{ c.kostuemtipp }}</p>
+  <div class="box dark"><h3>{{ L.geheimnis }}</h3><p>{{ c.geheimnis }}</p></div>
+  <div class="grid-2">
+    <div class="box"><h3>{{ L.motiv }}</h3><p>{{ c.motiv }}</p></div>
+    <div class="box"><h3>{{ L.alibi }}</h3><p>„{{ c.alibi }}“</p></div>
+  </div>
+  {% if c.beziehungen %}<h3>{{ L.beziehungen }}</h3>
+  <ul>{% for b in c.beziehungen %}<li><strong>{{ name_of(b.zu) }}:</strong> {{ b.beschreibung }}</li>{% endfor %}</ul>{% endif %}
+  <div class="grid-2">
+    <div><h3>{{ L.darf_sagen }}</h3><ul>{% for t in c.darf_sagen %}<li>{{ t }}</li>{% endfor %}</ul></div>
+    <div><h3>{{ L.darf_nicht }}</h3><ul>{% for t in c.darf_nicht_sagen %}<li>{{ t }}</li>{% endfor %}</ul></div>
+  </div>
+  {% if c.ist_taeter %}
+  <div class="box warn"><h3>{{ L.taeter_box }}</h3><p>{{ L.taeter_text }}</p>
+    <p class="small"><strong>{{ 'Was wirklich geschah' if s.sprache == 'de' else 'What really happened' }}:</strong> {{ s.aufloesung.tathergang }}</p></div>
+  {% else %}
+  <div class="box"><p class="small">{{ L.unschuldig_text }}</p></div>
+  {% endif %}
+
+  <h3>{{ 'Die anderen Gäste' if s.sprache == 'de' else 'The other guests' }}</h3>
+  <table>{% for o in s.charaktere if o.id != c.id %}<tr><td style="width:45mm"><strong>{{ o.name }}</strong><br><span class="small muted">{{ o.rolle }}</span></td><td class="small">{{ o.oeffentliches_profil }}</td></tr>{% endfor %}</table>
+</section>
+{% endfor %}
+{% endblock %}

@@ -1,6 +1,7 @@
 """Story-Generierung in zwei Schritten: erst Gerüst (Logik), dann Ausarbeitung (Texte)."""
 from __future__ import annotations
 
+import hashlib
 import json
 
 from .gemini_client import GeminiClient, load_prompt
@@ -14,9 +15,9 @@ def sprache_name(lang: str) -> str:
 
 
 def generate_geruest(client: GeminiClient, model: str, thema: str, spieler: int,
-                     lang: str = "de", dauer: str = "2 Stunden") -> Geruest:
+                     lang: str = "de", dauer: str = "2 Stunden", variante: int = 1) -> Geruest:
     prompt = load_prompt("geruest", thema=thema, spieler=spieler, dauer=dauer,
-                         sprache_name=sprache_name(lang))
+                         sprache_name=sprache_name(lang), variante=variante)
     return client.generate_json(prompt, Geruest, model, label="Gerüst")
 
 
@@ -43,7 +44,7 @@ def merge(geruest: Geruest, aus: Ausarbeitung, thema: str, spieler: int, lang: s
     return Story(
         titel=geruest.titel, untertitel=geruest.untertitel, thema=thema, sprache=lang,
         spieler=spieler, design=geruest.design,
-        seed=int.from_bytes(thema.encode()[:4].ljust(4, b"\0"), "big") % 100000,
+        seed=int(hashlib.sha256(thema.encode()).hexdigest()[:6], 16) % 100000,
         einleitung=aus.einleitung, setting=geruest.setting, opfer=geruest.opfer,
         charaktere=charaktere, fakten=geruest.fakten, zeitleiste=geruest.zeitleiste,
         hinweise=aus.hinweise, runden=aus.runden, aufloesung=aus.aufloesung,
@@ -52,9 +53,9 @@ def merge(geruest: Geruest, aus: Ausarbeitung, thema: str, spieler: int, lang: s
 
 
 def generate_story(client: GeminiClient, model: str, thema: str, spieler: int,
-                   lang: str = "de", progress=lambda msg: None) -> Story:
+                   lang: str = "de", progress=lambda msg: None, variante: int = 1) -> Story:
     progress("Schritt 1/2: Gerüst (Täter, Motiv, Zeitleiste, Alibis) …")
-    geruest = generate_geruest(client, model, thema, spieler, lang)
+    geruest = generate_geruest(client, model, thema, spieler, lang, variante=variante)
     progress(f"Gerüst fertig: „{geruest.titel}“ – Schritt 2/2: Charaktere, Hinweise, Runden …")
     aus = generate_ausarbeitung(client, model, geruest, spieler, lang)
     return merge(geruest, aus, thema, spieler, lang)
@@ -68,7 +69,7 @@ def repair_story(client: GeminiClient, model: str, story: Story, fehler: list[st
         "korrektur",
         fehler="\n".join(f"- {f}" for f in fehler),
         story_json=story.model_dump_json(indent=1),
-        taeter_id=taeter[0].id if taeter else "?",
+        taeter_id=taeter[0].id if taeter else "?", versuch=versuch,
         sprache_name=sprache_name(story.sprache))
     fixed = client.generate_json(prompt, Story, model, label=f"Korrektur {versuch}", temperature=0.4)
     # Metadaten, die Gemini nicht ändern soll, beibehalten

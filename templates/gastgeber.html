@@ -1,0 +1,60 @@
+{% extends "_layout.html" %}{% from "_macros.html" import cover, ornament, art_name with context %}
+{% block body %}
+{{ cover(L.gastgeber) }}
+
+<h2 style="margin-top:0">{{ L.vorlesen }}: {{ s.titel }}</h2>
+<div class="read" data-label="{{ L.vorlesen }}">{{ s.einleitung }}</div>
+
+<div class="grid-2">
+  <div class="box"><h3>{{ L.opfer }}</h3>
+    <p><strong>{{ s.opfer.name }}</strong></p><p>{{ s.opfer.hintergrund }}</p>
+    <p class="small">{{ s.opfer.todesart }} · {{ L.tatort }}: {{ s.opfer.fundort }} · ~{{ s.opfer.todeszeitpunkt }}</p></div>
+  <div class="box"><h3>{{ s.setting.ort }}</h3><p>{{ s.setting.zeit }}</p><p>{{ s.setting.atmosphaere }}</p>
+    <p class="small muted">{{ s.setting.raeume|join(' · ') }}</p></div>
+</div>
+
+<h2>{{ L.figuren }}</h2>
+<table>
+  <tr><th>{{ L.wer }}</th><th>{{ L.rolle }}</th><th>{{ L.kostuem }}</th></tr>
+  {% for c in s.charaktere %}<tr><td><strong>{{ c.name }}</strong></td><td>{{ c.rolle }}<br><span class="small muted">{{ c.oeffentliches_profil }}</span></td><td class="small">{{ c.kostuemtipp }}</td></tr>{% endfor %}
+</table>
+
+<h2>{{ L.vorbereitung }}</h2>
+<ul>{% for v in s.gastgeber.vorbereitung %}<li>☐ {{ v }}</li>{% endfor %}</ul>
+
+<h2 class="page-break">{{ L.ablauf }}</h2>
+{% for r in s.runden|sort(attribute='nummer') %}
+  <h3>{{ L.runde }} {{ r.nummer }}: {{ r.titel }}</h3>
+  <p>{{ r.ablauf }}</p>
+  {% if r.vorlesetext %}<div class="read" data-label="{{ L.vorlesen }}">{{ r.vorlesetext }}</div>{% endif %}
+  <table>
+    <tr><th style="width:14mm">ID</th><th>{{ L.verteilen }}</th><th style="width:42mm">{{ L.fuer }}</th><th style="width:34mm"></th></tr>
+    {% for h in s.hinweise if h.runde == r.nummer %}
+    <tr><td class="small">{{ h.id }}</td><td>{{ h.titel }}</td><td>{{ name_of(h.empfaenger) }}</td><td class="small muted">{{ art_name(h) }}{% if h.raetsel %} · {{ h.raetsel.typ|capitalize }}{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+{% endfor %}
+
+{% if puzzles %}
+<h2>{{ L.raetselloesungen }}</h2>
+<table>
+  {% for hid, p in puzzles.items() %}
+  <tr><td style="width:14mm" class="small">{{ hid }}</td><td style="width:30mm">{{ p.typ|capitalize }}</td>
+      <td>{% if p.code %}<strong>{{ L.code }}: {{ p.code }}</strong><br><span class="small">{{ L.inhalt }}: {{ p.loesung }}</span>{% else %}{{ L.botschaft }}: <strong>{{ p.loesung }}</strong>{% if p.detail %} <span class="small muted">({{ p.detail }})</span>{% endif %}{% endif %}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<h2>{{ L.tipps }}</h2>
+<ul>{% for t in s.gastgeber.tipps %}<li>{{ t }}</li>{% endfor %}</ul>
+
+<h2 class="page-break">{{ L.menue }}</h2>
+<div class="box center">
+  {% for g in s.gastgeber.menue %}<p><span class="kicker">{{ g.gang }}</span><br><span style="font-family: var(--f-head); font-size: 13pt">{{ g.gericht }}</span></p>{% endfor %}
+</div>
+<div class="grid-2">
+  <div><h3>{{ L.einkauf }}</h3><ul>{% for e in s.gastgeber.einkaufsliste %}<li>☐ {{ e }}</li>{% endfor %}</ul></div>
+  {% if s.gastgeber.deko %}<div><h3>{{ L.deko }}</h3><ul>{% for d in s.gastgeber.deko %}<li>{{ d }}</li>{% endfor %}</ul></div>{% endif %}
+</div>
+{{ ornament() }}
+{% endblock %}

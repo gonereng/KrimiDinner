@@ -1,0 +1,36 @@
+{% macro cover(doc_label, extra='') -%}
+<section class="cover">
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="kicker" style="color: var(--c-gold)">{{ s.setting.zeit }}</div>
+    <h1>{{ s.titel }}</h1>
+    <div class="sub">{{ s.untertitel }}</div>
+    {% if images.cover %}<img class="hero" src="{{ images.cover }}">{% else %}<div class="snow">{% if s.design == 'chalet' %}❄ ✦ ❄{% elif s.design == 'noir' %}✦ ✦ ✦{% else %}❦ ✦ ❦{% endif %}</div>{% endif %}
+    <div class="meta">{{ L.abend }} {{ s.spieler }} {{ L.spieler }} · {{ L.dauer }}</div>
+  </div>
+  <div class="doc">{{ doc_label }}{% if extra %}<br><span style="font-size: 11pt; font-style: italic">{{ extra }}</span>{% endif %}</div>
+</section>
+{%- endmacro %}
+
+{% macro ornament() -%}
+<div class="ornament">{% if s.design == 'chalet' %}❄ ❄ ❄{% else %}✦ ✦ ✦{% endif %}</div>
+{%- endmacro %}
+
+{% macro art_name(h) -%}
+{{ {'karte': 'Hinweiskarte', 'brief': 'Brief', 'zeitung': 'Zeitungsausschnitt', 'notiz': 'Notiz', 'telegramm': 'Telegramm'}[h.art] if s.sprache == 'de' else {'karte': 'Clue card', 'brief': 'Letter', 'zeitung': 'Newspaper clipping', 'notiz': 'Note', 'telegramm': 'Telegram'}[h.art] }}
+{%- endmacro %}
+
+{% macro puzzle_body(h, p) -%}
+{% if p.typ in ('caesar', 'substitution') %}
+  <div class="cipher">{{ p.geheimtext }}</div>
+  <div class="puzzle-help">{{ p.hilfe }}</div>
+{% elif p.typ == 'zahlenschloss' %}
+  <div class="lock">{% for _ in p.code %}<span></span>{% endfor %}</div>
+  <ul>{% for z in p.lock_hinweise %}<li>{{ z }}</li>{% endfor %}</ul>
+  <div class="puzzle-help">{{ p.hilfe }}</div>
+{% elif p.typ == 'wortsuche' %}
+  <table class="ws">{% for row in p.grid %}<tr>{% for ch in row %}<td>{{ ch }}</td>{% endfor %}</tr>{% endfor %}</table>
+  <div class="wordlist">{{ L.gesucht }}: {% for w in p.woerter %}<span>{{ w }}</span>{% endfor %}</div>
+  <div class="puzzle-help">{{ p.hilfe }}</div>
+{% endif %}
+{%- endmacro %}

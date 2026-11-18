@@ -1,0 +1,43 @@
+{% extends "_layout.html" %}{% from "_macros.html" import ornament with context %}
+{% block body %}
+<section class="sealed">
+  <div class="t"><div class="kicker" style="color: var(--c-gold)">{{ s.titel }}</div><h1>{{ L.aufloesung }}</h1>
+    <div style="font-style: italic; color: var(--c-gold)">{{ L.versiegelt }}</div></div>
+  <div class="seal">{{ s.titel[:1] }}</div>
+  <div class="warn">{{ L.erst_am_ende }}</div>
+</section>
+
+<h1 class="center">{{ L.aufloesung }}</h1>
+<div class="culprit">
+  <div class="kicker">{{ L.taeter_ist }}</div>
+  <div class="name">{{ taeter.name if taeter else '?' }}</div>
+  <div style="font-style: italic">{{ taeter.rolle if taeter else '' }}</div>
+</div>
+<div class="read" data-label="{{ L.vorlesen }}">{{ s.aufloesung.zusammenfassung }}</div>
+<div class="box"><h3>{{ L.motiv }}</h3><p>{{ taeter.motiv if taeter else '' }}</p></div>
+
+<h2>{{ L.schritte }}</h2>
+<ol class="steps">{% for st in s.aufloesung.schritte %}<li>{{ st }}</li>{% endfor %}</ol>
+
+<h2>{{ L.tathergang }}</h2>
+<div class="read" data-label="{{ L.vorlesen }}">{{ s.aufloesung.tathergang }}</div>
+
+<h2 class="page-break">{{ L.zeitleiste }}</h2>
+<table class="fixed">
+  <tr><th style="width:22mm">{{ L.zeit }}</th><th style="width:30mm">{{ L.ort }}</th><th style="width:38mm">{{ L.wer }}</th><th>{{ L.was }}</th></tr>
+  {% for e in s.zeitleiste %}
+  <tr><td>{{ e.von }}{% if e.bis %}–{{ e.bis }}{% endif %}</td><td>{{ e.ort }}</td><td class="small">{% for p in e.personen %}{{ name_of(p)|short }}{% if not loop.last %}, {% endif %}{% endfor %}</td><td class="small">{{ e.ereignis }}</td></tr>
+  {% endfor %}
+</table>
+
+{% if puzzles or seating %}
+<h2>{{ L.raetselloesungen }}</h2>
+<ul>
+  {% for hid, p in puzzles.items() %}
+  <li><strong>{{ hid }} ({{ p.typ|capitalize }}):</strong> {% if p.code %}{{ L.code }} {{ p.code }} – {{ p.loesung }}{% else %}{{ p.loesung }}{% if p.detail %} ({{ p.detail }}){% endif %}{% endif %}</li>
+  {% endfor %}
+  {% if seating %}<li><strong>{{ L.sitzordnung }}:</strong> {% for n in seating.loesung %}{{ loop.index }}. {{ n }}{% if not loop.last %} · {% endif %}{% endfor %}</li>{% endif %}
+</ul>
+{% endif %}
+{{ ornament() }}
+{% endblock %}

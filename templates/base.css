@@ -1,0 +1,166 @@
+/* ---------- Schriften (lokal, freie Lizenzen) ---------- */
+@font-face { font-family: "Playfair Display"; src: url("{{FONTS}}/playfair-display-latin-400-normal.woff"); font-weight: 400; }
+@font-face { font-family: "Playfair Display"; src: url("{{FONTS}}/playfair-display-latin-700-normal.woff"); font-weight: 700; }
+@font-face { font-family: "Playfair Display"; src: url("{{FONTS}}/playfair-display-latin-400-italic.woff"); font-style: italic; }
+@font-face { font-family: "Lora"; src: url("{{FONTS}}/lora-latin-400-normal.woff"); font-weight: 400; }
+@font-face { font-family: "Lora"; src: url("{{FONTS}}/lora-latin-700-normal.woff"); font-weight: 700; }
+@font-face { font-family: "Lora"; src: url("{{FONTS}}/lora-latin-400-italic.woff"); font-style: italic; }
+@font-face { font-family: "Special Elite"; src: url("{{FONTS}}/special-elite-latin-400-normal.woff"); }
+
+/* ---------- Grundlayout ---------- */
+@page {
+  margin: 18mm 17mm 20mm 17mm;
+  @bottom-center { content: counter(page); font-family: var(--f-body); font-size: 8pt; color: var(--c-muted); }
+}
+@page cover { margin: 0; @bottom-center { content: none; } }
+@page sheet { @bottom-center { content: none; } }
+
+html { font-size: 10.5pt; }
+body { font-family: var(--f-body); color: var(--c-ink); line-height: 1.42; margin: 0; }
+h1, h2, h3, h4 { font-family: var(--f-head); color: var(--c-primary); line-height: 1.15; margin: 0 0 .4em; break-after: avoid; }
+h1 { font-size: 26pt; }
+h2 { font-size: 17pt; margin-top: 1.1em; border-bottom: .6pt solid var(--c-accent); padding-bottom: 2pt; }
+h3 { font-size: 12.5pt; margin-top: .9em; }
+p { margin: 0 0 .55em; }
+ul, ol { margin: 0 0 .6em; padding-left: 1.2em; }
+li { margin-bottom: .2em; }
+.muted { color: var(--c-muted); }
+.small { font-size: 8.5pt; }
+.center { text-align: center; }
+.page-break { break-before: page; }
+.avoid { break-inside: avoid; }
+.orn { font-family: "DejaVu Sans", var(--f-body); color: var(--c-accent); letter-spacing: .4em; }
+.ornament { text-align: center; color: var(--c-accent); font-family: "DejaVu Sans", serif; letter-spacing: .6em; margin: .4em 0; }
+
+.kicker { font-family: var(--f-body); text-transform: uppercase; letter-spacing: .25em; font-size: 8.5pt; color: var(--c-accent); }
+.box { border: .8pt solid var(--c-accent); background: var(--c-panel); padding: 9pt 11pt; margin: .6em 0 .8em; break-inside: avoid; border-radius: 2pt; }
+.box h3 { margin-top: 0; }
+.box.dark { background: var(--c-primary); color: var(--c-paper); border-color: var(--c-primary); }
+.box.dark h3 { color: var(--c-gold); }
+.box.warn { border: 1.6pt solid var(--c-red); background: #fff; }
+.box.warn h3 { color: var(--c-red); }
+.read { font-style: italic; border-left: 3pt solid var(--c-accent); padding: 4pt 0 4pt 10pt; margin: .6em 0 .9em; }
+.read::before { content: attr(data-label); display: block; font-style: normal; font-size: 7.5pt; text-transform: uppercase; letter-spacing: .2em; color: var(--c-accent); margin-bottom: 2pt; }
+.cols-2 { columns: 2; column-gap: 9mm; }
+.grid-2 { display: flex; gap: 6mm; }
+.grid-2 > * { flex: 1; }
+
+table { border-collapse: collapse; width: 100%; font-size: 9pt; margin: .4em 0 .9em; }
+th { font-family: var(--f-head); text-align: left; color: var(--c-primary); border-bottom: 1pt solid var(--c-accent); padding: 3pt 4pt; }
+td { border-bottom: .4pt solid var(--c-line); padding: 3pt 4pt; vertical-align: top; }
+tr { break-inside: avoid; }
+table.fixed { table-layout: fixed; }
+
+/* ---------- Titelseiten ---------- */
+.cover { page: cover; height: var(--page-h); width: var(--page-w); position: relative; background: var(--c-cover-bg); color: var(--c-cover-ink); break-after: page; overflow: hidden; }
+.cover .frame { position: absolute; top: 12mm; left: 12mm; right: 12mm; bottom: 12mm; border: 1.2pt solid var(--c-gold); }
+.cover .frame::after { content: ""; position: absolute; top: 2.5mm; left: 2.5mm; right: 2.5mm; bottom: 2.5mm; border: .5pt solid var(--c-gold); }
+.cover .inner { position: absolute; top: 40mm; left: 25mm; right: 25mm; text-align: center; }
+.cover h1 { color: var(--c-cover-ink); font-size: 34pt; margin: 6mm 0 4mm; }
+.cover .sub { font-family: var(--f-head); font-style: italic; font-size: 14pt; color: var(--c-gold); }
+.cover .meta { margin-top: 10mm; letter-spacing: .2em; text-transform: uppercase; font-size: 9pt; }
+.cover .doc { position: absolute; bottom: 26mm; left: 0; right: 0; text-align: center; font-family: var(--f-head); font-size: 16pt; color: var(--c-gold); }
+.cover img.hero { width: 120mm; height: 120mm; object-fit: cover; margin-top: 10mm; border: 1pt solid var(--c-gold); }
+.cover .snow { font-family: "DejaVu Sans", serif; font-size: 40pt; color: var(--c-gold); margin-top: 18mm; letter-spacing: .4em; }
+
+/* ---------- Einladung ---------- */
+.invite { height: calc(var(--page-h) - 38mm); position: relative; break-after: page; border: 1.4pt double var(--c-accent); padding: 14mm 14mm; text-align: center; box-sizing: border-box; }
+.invite:last-child { break-after: auto; }
+.invite h1 { font-size: 28pt; }
+.invite .name { font-family: var(--f-head); font-size: 22pt; color: var(--c-primary); margin: 4mm 0 1mm; }
+.invite .rolle { font-style: italic; font-size: 12pt; margin-bottom: 6mm; }
+.invite .portrait { width: 45mm; height: 45mm; border-radius: 50%; object-fit: cover; border: 1pt solid var(--c-accent); }
+.invite .lines { margin: 8mm auto 0; width: 80%; text-align: left; }
+.invite .lines div { border-bottom: .5pt solid var(--c-line); height: 9mm; line-height: 12mm; color: var(--c-muted); font-size: 9pt; }
+.invite .text { text-align: left; font-size: 11.5pt; line-height: 1.5; }
+.invite .teaser { font-style: italic; color: var(--c-accent); margin: 4mm 6mm 6mm; font-size: 11pt; }
+.invite .band { background: var(--c-primary); color: var(--c-paper); margin: -14mm -14mm 8mm; padding: 9mm 10mm 7mm; }
+.invite .band h1 { color: var(--c-paper); margin: 1mm 0 2mm; }
+.invite .band .kicker { color: var(--c-gold); }
+
+/* ---------- Charakterheft ---------- */
+.char-cover { text-align: center; padding-top: 30mm; }
+.char-cover .portrait { width: 60mm; height: 60mm; border-radius: 50%; object-fit: cover; border: 1.2pt solid var(--c-accent); margin-bottom: 6mm; }
+.char-cover .name { font-family: var(--f-head); font-size: 30pt; color: var(--c-primary); }
+.char-cover .rolle { font-style: italic; font-size: 14pt; margin: 2mm 0 10mm; }
+.char-cover .medal { display: inline-block; width: 26mm; height: 26mm; border-radius: 50%; background: var(--c-primary); color: var(--c-gold); font-family: var(--f-head); font-size: 22pt; line-height: 26mm; margin-bottom: 6mm; }
+
+/* ---------- Hinweiskarten (Bögen mit Schnittmarken) ---------- */
+.sheet { page: sheet; width: var(--page-w); height: var(--page-h); position: relative; break-after: page; overflow: hidden; }
+.sheet:last-child { break-after: auto; }
+.sheet .label { position: absolute; bottom: 4mm; left: 0; right: 0; text-align: center; font-size: 7.5pt; color: var(--c-muted); letter-spacing: .15em; text-transform: uppercase; }
+.mark { position: absolute; border-color: #000; border-style: solid; border-width: 0; }
+.mark.h { border-top-width: .25pt; }
+.mark.v { border-left-width: .25pt; }
+.card { position: absolute; box-sizing: border-box; background: var(--c-card); border: .4pt dashed var(--c-line); padding: 5mm 5.5mm; display: flex; flex-direction: column; }
+.card .head { display: flex; justify-content: space-between; font-size: 7pt; text-transform: uppercase; letter-spacing: .12em; color: var(--c-accent); border-bottom: .5pt solid var(--c-accent); padding-bottom: 1.5mm; margin-bottom: 2.5mm; }
+.card h3 { margin: 0 0 2mm; font-size: 12pt; }
+.card .body { flex: 1; overflow: hidden; font-size: 10.6pt; line-height: 1.38; }
+.card .foot { font-size: 6.5pt; color: var(--c-muted); text-align: right; margin-top: 1mm; }
+
+.fit.shrink-1 { font-size: 92% !important; }
+.fit.shrink-2 { font-size: 85% !important; line-height: 1.3; }
+.fit.shrink-3 { font-size: 78% !important; line-height: 1.25; }
+.fit.shrink-4 { font-size: 70% !important; line-height: 1.2; }
+
+/* ---------- Beweisstücke ---------- */
+.evidence-page { break-after: page; }
+.evidence-page:last-child { break-after: auto; }
+.ev-label { font-size: 7.5pt; text-transform: uppercase; letter-spacing: .15em; color: var(--c-muted); border-bottom: .4pt dashed var(--c-line); padding-bottom: 2mm; margin-bottom: 8mm; display: flex; justify-content: space-between; }
+.ev { margin: 0 auto; break-inside: avoid; }
+.ev-brief { width: 150mm; background: #fbf7ee; border: .5pt solid #d9cfb8; padding: 16mm 18mm; font-family: "Lora", serif; font-style: italic; font-size: 11.5pt; line-height: 1.6; color: #2b2418; box-shadow: 0 0 0 3mm #f3ecdc; }
+.ev-brief .letterhead { font-style: normal; font-family: "Playfair Display", serif; font-size: 13pt; text-align: center; letter-spacing: .1em; border-bottom: .6pt solid #8a7a5a; padding-bottom: 3mm; margin-bottom: 8mm; color: #3c3220; }
+.ev-zeitung { width: 160mm; background: #f2efe6; border: .5pt solid #bdb6a3; padding: 8mm 10mm; font-family: "Lora", serif; color: #1b1b1b; }
+.ev-zeitung .masthead { font-family: "Playfair Display", serif; font-weight: 700; font-size: 26pt; text-align: center; border-bottom: 2pt solid #1b1b1b; border-top: .6pt solid #1b1b1b; padding: 2mm 0; letter-spacing: .05em; }
+.ev-zeitung .dateline { font-size: 7.5pt; text-align: center; border-bottom: .6pt solid #1b1b1b; padding: 1mm 0; margin-bottom: 5mm; text-transform: uppercase; letter-spacing: .2em; }
+.ev-zeitung h3 { font-family: "Playfair Display", serif; color: #1b1b1b; font-size: 18pt; text-align: center; }
+.ev-zeitung .body { columns: 2; column-gap: 6mm; text-align: justify; font-size: 10pt; hyphens: auto; }
+.ev-notiz { width: 120mm; background: #fff6b8; padding: 12mm 12mm 14mm; font-family: "Special Elite", monospace; font-size: 12pt; line-height: 1.5; color: #222; transform: rotate(-1.5deg); border-bottom: 1.2mm solid #f0e290; }
+.ev-telegramm { width: 160mm; background: #efe6cf; border: 1pt solid #a89464; padding: 8mm 10mm; font-family: "Special Elite", monospace; text-transform: uppercase; font-size: 11pt; line-height: 1.6; }
+.ev-telegramm .tg-head { font-family: "Playfair Display", serif; font-size: 20pt; text-align: center; letter-spacing: .4em; border-bottom: 1pt solid #a89464; margin-bottom: 5mm; }
+.ev-karte { width: 150mm; background: var(--c-card); border: 1pt solid var(--c-accent); padding: 12mm; }
+
+.cipher { font-family: "Special Elite", monospace; font-size: 15pt; letter-spacing: .12em; line-height: 1.6; margin: 6mm 0; text-align: center; word-spacing: .5em; font-style: normal; }
+.puzzle-help { font-family: var(--f-body); font-style: normal; font-size: 9pt; border-top: .5pt solid currentColor; padding-top: 3mm; margin-top: 6mm; opacity: .85; }
+.lock { display: flex; gap: 3mm; justify-content: center; margin: 6mm 0; }
+.lock span { display: inline-block; width: 12mm; height: 15mm; border: 1.2pt solid #333; border-radius: 2mm; background: #fff; }
+table.ws { width: auto; margin: 4mm auto; border-collapse: collapse; font-family: "Special Elite", monospace; font-size: 13pt; }
+table.ws td { width: 8.5mm; height: 8.5mm; text-align: center; vertical-align: middle; border: .4pt solid #999; padding: 0; }
+.wordlist { text-align: center; font-family: var(--f-head); letter-spacing: .1em; }
+.wordlist span { margin: 0 2.5mm; }
+.content-slip { margin-top: 12mm; border: 1.4pt dashed var(--c-red); padding: 8mm; }
+.content-slip .kicker { color: var(--c-red); }
+
+/* ---------- Auflösung ---------- */
+.sealed { page: cover; width: var(--page-w); height: var(--page-h); position: relative; background: var(--c-cover-bg); color: var(--c-cover-ink); break-after: page; }
+.sealed .t { position: absolute; top: 60mm; left: 0; right: 0; text-align: center; }
+.sealed .t h1 { color: var(--c-cover-ink); font-size: 30pt; }
+.seal { position: absolute; top: 140mm; left: calc(50% - 25mm); width: 50mm; height: 50mm; border-radius: 50%; background: #8e1b1b; border: 3mm solid #6d1212; box-sizing: border-box; color: #f3d7a2; text-align: center; font-family: "Playfair Display", serif; font-size: 30pt; line-height: 44mm; }
+.sealed .warn { position: absolute; bottom: 40mm; left: 0; right: 0; text-align: center; font-size: 11pt; letter-spacing: .3em; text-transform: uppercase; color: var(--c-gold); }
+.culprit { text-align: center; margin: 4mm 0 8mm; }
+.culprit .name { font-family: var(--f-head); font-size: 26pt; color: var(--c-red); }
+ol.steps li { margin-bottom: 2.5mm; }
+
+/* ---------- Namensschilder (Tischaufsteller) ---------- */
+.tent-sheet { page: sheet; width: var(--page-w); height: var(--page-h); position: relative; break-after: page; }
+.tent-sheet:last-child { break-after: auto; }
+.tent { position: absolute; left: 15mm; right: 15mm; height: 60mm; box-sizing: border-box; border: .4pt dashed var(--c-line); }
+.tent .half { position: absolute; left: 0; right: 0; height: 30mm; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+.tent .half.top { top: 0; transform: rotate(180deg); }
+.tent .half.bottom { bottom: 0; }
+.tent .fold { position: absolute; top: 30mm; left: 0; right: 0; border-top: .4pt dotted var(--c-muted); }
+.tent .name { font-family: var(--f-head); font-size: 22pt; color: var(--c-primary); line-height: 1.1; }
+.tent .rolle { font-style: italic; font-size: 9pt; color: var(--c-muted); }
+.tent .orn { font-size: 8pt; }
+
+/* ---------- Notizblatt ---------- */
+.notes { break-after: page; }
+.notes:last-child { break-after: auto; }
+table.suspects td { height: 15mm; }
+table.suspects td:first-child { width: 34mm; font-family: var(--f-head); color: var(--c-primary); }
+.lines-box div { border-bottom: .4pt solid var(--c-line); height: 7.5mm; }
+.tip-box { border: 1.2pt solid var(--c-accent); padding: 4mm 6mm; margin-top: 4mm; }
+.tip-box .ln { border-bottom: .4pt solid var(--c-line); height: 8mm; }
+table.seat td, table.seat th { text-align: center; }
+table.seat td { height: 8mm; }
+table.seat td:first-child { text-align: left; }

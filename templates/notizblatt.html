@@ -1,0 +1,28 @@
+{% extends "_layout.html" %}
+{% block body %}
+{% for me in s.charaktere %}
+<section class="notes">
+  <div class="kicker">{{ s.titel }}</div>
+  <h1 style="font-size: 20pt">{{ L.notizblatt }} <span class="muted" style="font-size: 12pt">– {{ me.name }}</span></h1>
+  <table class="suspects">
+    <tr><th>{{ L.verdaechtige }}</th><th>{{ L.spalte_motiv }}</th><th>{{ L.spalte_alibi }}</th><th>{{ L.spalte_gelegenheit }}</th><th style="width: 18mm">{{ L.spalte_verdacht }}</th></tr>
+    {% for c in s.charaktere %}<tr><td>{{ c.name|short }}<br><span class="small muted" style="font-family: var(--f-body)">{{ c.rolle[:34] }}</span></td><td></td><td></td><td></td><td class="center muted">☐ ☐ ☐</td></tr>{% endfor %}
+  </table>
+  <h3>{{ L.zeitnotizen }}</h3>
+  <div class="lines-box">{% for _ in range(6) %}<div></div>{% endfor %}</div>
+  <div class="tip-box avoid"><div class="kicker">{{ L.mein_tipp }}</div>
+    <div class="ln">{{ L.taeter_ist }}:</div><div class="ln">{{ L.weil }}:</div><div class="ln"></div></div>
+</section>
+{% if seating %}
+<section class="notes">
+  <h2 style="margin-top: 0">{{ L.bonus }}</h2>
+  <p class="small muted">{{ L.sitzhinweis }}</p>
+  <ol>{% for t in seating.texte %}<li>{{ t }}</li>{% endfor %}</ol>
+  <table class="seat">
+    <tr><th></th>{% for i in range(seating.personen|length) %}<th>{{ L.platz }} {{ i + 1 }}</th>{% endfor %}</tr>
+    {% for n in seating.personen %}<tr><td>{{ n }}</td>{% for i in range(seating.personen|length) %}<td></td>{% endfor %}</tr>{% endfor %}
+  </table>
+</section>
+{% endif %}
+{% endfor %}
+{% endblock %}

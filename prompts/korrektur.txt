@@ -1,5 +1,7 @@
 Du bist Lektor:in für Krimidinner-Spiele. Das folgende Kit hat die automatische Logikprüfung NICHT bestanden.
 
+KORREKTURDURCHLAUF: {{versuch}} von 3
+
 FEHLERLISTE:
 {{fehler}}
 

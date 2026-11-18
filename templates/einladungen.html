@@ -1,0 +1,27 @@
+{% extends "_layout.html" %}{% from "_macros.html" import ornament with context %}
+{% block body %}
+{% for c in s.charaktere %}
+<section class="invite">
+  <div class="band">
+    <div class="kicker">{{ L.einladung }}</div>
+    <h1>{{ s.titel }}</h1>
+    <div style="font-style: italic">{{ s.setting.ort }} · {{ s.setting.zeit }}</div>
+  </div>
+  <div class="teaser">{{ s.setting.atmosphaere }}</div>
+  {{ ornament() }}
+  {% if images[c.id] %}<img class="portrait" src="{{ images[c.id] }}">{% endif %}
+  <div class="small muted">{{ L.rolle }}</div>
+  <div class="name">{{ c.name }}</div>
+  <div class="rolle">{{ c.rolle }}</div>
+  <div class="text fit shrink-{{ shrink.get('inv-' ~ c.id, 0) }}" data-fit="inv-{{ c.id }}" style="height: 58mm">
+    <p>{{ c.oeffentliches_profil }}</p>
+    <p><strong>{{ L.kostuem }}:</strong> {{ c.kostuemtipp }}</p>
+  </div>
+  <div class="lines">
+    <div>{{ 'Wann' if s.sprache == 'de' else 'When' }}:</div>
+    <div>{{ 'Wo' if s.sprache == 'de' else 'Where' }}:</div>
+    <div>{{ 'Um Antwort wird gebeten bis' if s.sprache == 'de' else 'RSVP by' }}:</div>
+  </div>
+</section>
+{% endfor %}
+{% endblock %}
