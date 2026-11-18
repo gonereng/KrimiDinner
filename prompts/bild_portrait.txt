@@ -1,0 +1,3 @@
+Porträt einer Figur aus einem Krimidinner-Spiel, Brustbild, neutraler Hintergrund.
+Figur: {{name}}, {{rolle}}. Epoche/Schauplatz: {{zeit}}, {{ort}}. Kostüm: {{kostuem}}
+Stil: {{stil}}. Keine Schrift, keine Buchstaben. Quadratisch.

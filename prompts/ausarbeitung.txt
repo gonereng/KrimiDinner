@@ -1,0 +1,29 @@
+Du bist Autor:in hochwertiger Krimidinner-Spiele im Stil von Agatha Christie – mit trockenem Humor, ohne Splatter, für Erwachsene.
+
+AUFGABE (Schritt 2 von 2): Arbeite auf Basis des folgenden Gerüsts die spielbaren Texte aus. Ändere NICHTS an Täter, Fakten, Zeitleiste oder Alibis – verweise nur darauf.
+
+GERÜST (JSON):
+{{geruest_json}}
+
+Sprache aller Texte: {{sprache_name}}. Anzahl Spieler: {{spieler}}. 3 Runden, ca. {{dauer}}.
+
+Liefere:
+1. einleitung: atmosphärischer Vorlesetext für den Spielbeginn (150–250 Wörter).
+2. charaktere: für JEDEN Charakter (gleiche IDs!) Kostümtipp, öffentliches Profil (was alle wissen), Beziehungen zu mindestens zwei anderen Charakteren (Feld "zu" = Charakter-ID), 3–5 Dinge, die die Figur sagen darf, 2–4 Dinge, die sie verbergen muss.
+3. hinweise: insgesamt ca. {{hinweise_anzahl}} Hinweise, IDs "h<runde>_<nr>", z. B. "h1_01".
+   - JEDER Charakter erhält in JEDER Runde mindestens einen Hinweis (empfaenger = Charakter-ID). Ein Hinweis kann auch die eigene Figur betreffen.
+   - Jeder Hinweis verweist im Feld "fakten" auf 1–3 Fakt-IDs aus dem Gerüst und nennt in "belastet"/"entlastet" die betroffenen Charakter-IDs.
+   - Jeder UNSCHULDIGE Charakter wird durch mindestens einen Hinweis entlastet (spätestens in Runde 3).
+   - Der TÄTER wird durch mindestens drei Hinweise belastet, die auf jeweils VERSCHIEDENE Fakten verweisen.
+   - Falsche Fährten sind erwünscht: Runde 1 darf mehrere Unschuldige belasten; Runde 2 und 3 lösen diese auf.
+   - Das Gesamtbild aller Hinweise muss eindeutig auf genau den Täter zeigen – ohne die Lösung auszusprechen.
+   - Text pro Hinweis höchstens 450 Zeichen. "art" ist "karte" (normale Hinweiskarte) oder ein Beweisstück: "brief", "zeitung", "notiz", "telegramm" (insgesamt 4–6 Beweisstücke, Text im passenden Stil).
+   - Baue genau drei Rätsel-Hinweise ein (Feld "raetsel"; den Text der Karte schreibst du als Einleitung, z. B. "Im Kamin fand sich ein halb verbrannter Zettel …"):
+     a) typ "caesar" ODER "substitution": klartext = die geheime Botschaft (max. 120 Zeichen).
+     b) typ "zahlenschloss": klartext = was in der verschlossenen Schatulle/dem Safe liegt; ziffern = 3–4 Ziffern, jede mit "herkunft" aus einem Fakt, den die Spieler aus anderen Hinweisen kennen.
+     c) typ "wortsuche": woerter = 6–10 thematische Wörter (nur Buchstaben, max. 10 Zeichen), klartext = versteckte Botschaft aus den übrig bleibenden Buchstaben (max. 30 Buchstaben).
+4. runden: genau 3 Runden (nummer 1–3) mit Titel, Ablauf für den Gastgeber, Vorlesetext und hinweis_ids (= alle Hinweise dieser Runde).
+5. aufloesung: taeter_id, Zusammenfassung, 5–8 logische Schritte (jeder Schritt nennt die zugehörigen Hinweis-IDs in Klammern), ausführlicher Tathergang.
+6. gastgeber: Vorbereitung (Checkliste), Tipps für die Spielleitung, 3–4-Gänge-Menü passend zu Thema und Epoche, Einkaufsliste, Deko-Ideen.
+
+Gib ausschließlich JSON nach dem vorgegebenen Schema zurück.

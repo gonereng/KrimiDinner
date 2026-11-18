@@ -1,0 +1,2 @@
+Stimmungsvolle Illustration für das Titelbild eines Krimidinner-Spiels. Thema: {{thema}}. Schauplatz: {{ort}}, {{zeit}}. {{atmosphaere}}
+Stil: {{stil}}. Keine Schrift, keine Buchstaben, kein Blut. Hochformat.

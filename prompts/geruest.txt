@@ -1,0 +1,21 @@
+Du bist Autor:in hochwertiger Krimidinner-Spiele im Stil von Agatha Christie – mit trockenem Humor, ohne Splatter, für Erwachsene.
+
+AUFGABE (Schritt 1 von 2): Entwirf NUR das logische Gerüst eines Mordfalls. Noch keine Hinweiskarten.
+
+Vorgaben:
+- Thema: {{thema}}
+- Anzahl Spieler: {{spieler}} (= genau {{spieler}} spielbare Charaktere; das Opfer ist KEIN Spieler)
+- Spieldauer ca. {{dauer}}, 3 Runden
+- Sprache aller Texte: {{sprache_name}}
+
+Regeln für eine saubere Logik:
+1. GENAU EIN Charakter ist Täter:in (ist_taeter = true), alle anderen false.
+2. Jeder Charakter hat ein glaubwürdiges Motiv, ein Geheimnis (das nichts mit dem Mord zu tun haben muss) und ein Alibi für die Tatzeit.
+3. Die Alibis der Unschuldigen sind wahr und lassen sich durch mindestens einen Fakt bestätigen. Das Alibi des Täters ist falsch und wird durch mindestens drei voneinander unabhängige Fakten widerlegt (z. B. Zeugenbeobachtung, Spur am Tatort, Widerspruch in der Zeit, Gegenstand).
+4. Die Zeitleiste ist die WAHRHEIT des Abends: ca. 15–25 Einträge mit Uhrzeiten im Format HH:MM (der Abend darf über Mitternacht gehen, z. B. 23:40 bis 00:15). Jeder Eintrag nennt den Ort und die Charakter-IDs der anwesenden Personen. Niemand darf zur selben Zeit an zwei Orten sein. Die Tat selbst ist ein Eintrag.
+5. Fakten (ca. 20–30) sind kurze objektive Tatsachen, aus denen später Hinweise werden – darunter auch Zahlen, die sich für ein Zahlenschloss eignen (Zimmernummer, stehengebliebene Uhr, Jahreszahl …).
+6. IDs: Charaktere "c_<kurzname>" (Kleinbuchstaben, keine Umlaute), Fakten "f_<stichwort>".
+7. Wähle als design: "chalet" (Winter/Berge), "noir" (Großstadt/20er–50er) oder "klassisch" (Landhaus/allgemein) – passend zum Thema.
+8. Namen und Rollen sollen zur Epoche passen, abwechslungsreich und für alle Geschlechter spielbar sein.
+
+Gib ausschließlich JSON nach dem vorgegebenen Schema zurück.

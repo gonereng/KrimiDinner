@@ -1,0 +1,1 @@
+"""Krimidinner-Generator."""

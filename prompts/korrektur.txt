@@ -1,0 +1,18 @@
+Du bist Lektor:in für Krimidinner-Spiele. Das folgende Kit hat die automatische Logikprüfung NICHT bestanden.
+
+FEHLERLISTE:
+{{fehler}}
+
+KIT (JSON):
+{{story_json}}
+
+Korrigiere das Kit so, dass ALLE Fehler behoben sind. Regeln:
+- Genau ein Täter; Täter bleibt derselbe ({{taeter_id}}), sofern der Fehler nicht ausdrücklich das betrifft.
+- Jeder Hinweis verweist nur auf existierende Charakter- und Fakt-IDs. Fehlt ein benötigter Fakt, ergänze ihn in "fakten".
+- Jeder Unschuldige wird von mindestens einem Hinweis entlastet; der Täter von mindestens drei Hinweisen mit verschiedenen Fakten belastet.
+- Jeder Charakter erhält in jeder Runde mindestens einen Hinweis; runden[].hinweis_ids enthält genau die Hinweise der Runde.
+- Niemand ist in der Zeitleiste zur selben Zeit an zwei Orten.
+- Ist das Kit "mehrdeutig", schärfe die belastenden Hinweise gegen den Täter und die entlastenden Hinweise für die genannten Verdächtigen.
+- Behalte alles bei, was nicht fehlerhaft ist. Sprache: {{sprache_name}}.
+
+Gib das VOLLSTÄNDIGE korrigierte Kit als JSON nach dem Schema zurück.
