@@ -88,3 +88,17 @@ def test_wide_box_is_detected(tmp_path, story):
     doc = HTML(string='<style>@page{size:210mm 297mm;margin:20mm} body{margin:0}</style>'
                       '<div class="ev" style="width:190mm">zu breit</div>').render()
     assert find_wide_boxes(doc) and "20.0 mm zu breit" in find_wide_boxes(doc)[0]
+
+
+@pytest.mark.parametrize("name", list(themes.THEMES))
+def test_pages_have_white_background(tmp_path, story, name):
+    """Druckerfreundlich: keine Hintergrundfarbe auf normalen Seiten."""
+    from weasyprint import HTML
+    story.design = name
+    r = Renderer(story, tmp_path, "a4")
+    html = r.env.get_template("gastgeber.html").render(**r._ctx(shrink={}, karten=[], beweise=[]))
+    page = HTML(string=html, base_url=str(tmp_path)).render().pages[1]  # Seite 2 (nach dem Cover)
+    root = page._page_box.children[0]  # <html>
+    for box in (page._page_box, root, root.children[0]):
+        color = box.style["background_color"]
+        assert color.alpha == 0 or tuple(color)[:3] == (1.0, 1.0, 1.0), (name, color)

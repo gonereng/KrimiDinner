@@ -7,7 +7,7 @@
 @page sheet { @bottom-center { content: none; } }
 
 html { font-size: 10.5pt; }
-body { font-family: var(--f-body); color: var(--c-ink); line-height: 1.42; margin: 0; }
+body { font-family: var(--f-body); color: var(--c-ink); line-height: 1.42; margin: 0; background: #fff; }
 h1, h2, h3, h4 { font-family: var(--f-head); color: var(--c-primary); line-height: 1.15; margin: 0 0 .4em; break-after: avoid; }
 h1 { font-size: 26pt; }
 h2 { font-size: 17pt; margin-top: 1.1em; border-bottom: .6pt solid var(--c-accent); padding-bottom: 2pt; }
@@ -83,7 +83,7 @@ table.fixed { table-layout: fixed; }
 .mark { position: absolute; border-color: #000; border-style: solid; border-width: 0; }
 .mark.h { border-top-width: .25pt; }
 .mark.v { border-left-width: .25pt; }
-.card { position: absolute; box-sizing: border-box; background: var(--c-card); border: .4pt dashed var(--c-line); padding: 5mm 5.5mm; display: flex; flex-direction: column; }
+.card { position: absolute; box-sizing: border-box; background: #fff; border: .4pt dashed var(--c-line); padding: 5mm 5.5mm; display: flex; flex-direction: column; }
 .card .head { display: flex; justify-content: space-between; font-size: 7pt; text-transform: uppercase; letter-spacing: .12em; color: var(--c-accent); border-bottom: .5pt solid var(--c-accent); padding-bottom: 1.5mm; margin-bottom: 2.5mm; }
 .card h3 { margin: 0 0 2mm; font-size: 12pt; }
 .card .body { flex: 1; overflow: hidden; font-size: 10.6pt; line-height: 1.38; }

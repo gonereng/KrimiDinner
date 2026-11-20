@@ -38,7 +38,6 @@ class Theme:
   --f-head: {self.head}; --f-body: {self.body};
 }}
 h1, h2, h3, .cover h1, .name, .tent .name {{ text-transform: {self.head_transform}; letter-spacing: {self.head_spacing}; }}
-body {{ background: {c['paper']}; }}
 @page {{ @top-center {{ content: "{self.ornament}"; font-family: "DejaVu Sans", serif; font-size: 7pt;
   letter-spacing: .5em; color: {c['accent']}; vertical-align: bottom; padding-bottom: 3mm; }} }}
 @page cover {{ @top-center {{ content: none; }} }}
