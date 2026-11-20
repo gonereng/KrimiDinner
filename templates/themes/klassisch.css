@@ -1,8 +1,0 @@
-/* Landhaus: Bordeaux, Creme, Messing */
-:root {
-  --c-primary: #5a1e2a; --c-accent: #8c6a3f; --c-gold: #c8a45a; --c-red: #9c1c1c;
-  --c-ink: #2a2222; --c-muted: #7a6d66; --c-line: #d6c8b5; --c-paper: #fffdf8;
-  --c-panel: #f7f0e4; --c-card: #fffcf5;
-  --c-cover-bg: #5a1e2a; --c-cover-ink: #fbf3e6;
-  --f-head: "Playfair Display", serif; --f-body: "Lora", serif;
-}

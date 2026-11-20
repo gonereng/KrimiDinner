@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% from "_design_picker.html" import design_picker with context %}
 {% block body %}
 <div class="grid">
 <section class="card">
@@ -20,6 +20,10 @@
       </label>
       <label title="Andere Geschichte zum selben Thema">Variante <input type="number" name="variante" min="1" max="99" value="1"></label>
     </div>
+    <fieldset class="designs">
+      <legend>Design der PDFs</legend>
+      {{ design_picker('auto', true) }}
+    </fieldset>
     <div class="row checks">
       <label class="check"><input type="checkbox" name="bilder" value="true"> <span>Illustrationen erzeugen{% if not image_model %} <span class="muted">(braucht GEMINI_API_KEY + GEMINI_IMAGE_MODEL)</span>{% endif %}</span></label>
       <label class="check"><input type="checkbox" name="ohne_cache" value="true"> <span>Cache umgehen (neu bezahlen)</span></label>

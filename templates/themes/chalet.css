@@ -1,8 +1,0 @@
-/* Winter / Berghütte: Nachtblau, Eisblau, Silvestergold, Kaminrot */
-:root {
-  --c-primary: #1d2b44; --c-accent: #4a6c8c; --c-gold: #c9a227; --c-red: #a3302a;
-  --c-ink: #1f2430; --c-muted: #6b7686; --c-line: #b9c6d3; --c-paper: #ffffff;
-  --c-panel: #eef3f8; --c-card: #fbfdff;
-  --c-cover-bg: #1d2b44; --c-cover-ink: #f4f7fb;
-  --f-head: "Playfair Display", serif; --f-body: "Lora", serif;
-}

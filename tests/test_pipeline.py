@@ -182,3 +182,21 @@ def test_short_rate_limit_becomes_quota_error_after_retries(tmp_path, story):
     client = make_client(tmp_path, models)
     with pytest.raises(QuotaError):
         generate_kit("Z", 6, client=client, kit_dir=tmp_path / "kit", render=False)
+
+
+def test_design_choice_overrides_ai_and_survives_resume(tmp_path, story):
+    from krimi.pipeline import resume_kit
+    models = FakeModels(story, broken_first=False)  # KI liefert "chalet"
+    client = make_client(tmp_path, models)
+    generate_kit("D", 6, client=client, kit_dir=tmp_path / "kit", render=False, design="artdeco")
+    assert json.loads((tmp_path / "kit/story.json").read_text())["design"] == "artdeco"
+    assert json.loads((tmp_path / "kit/params.json").read_text())["design"] == "artdeco"
+    generate_kit("D", 6, client=client, kit_dir=tmp_path / "kit2", render=False, design="auto")
+    assert json.loads((tmp_path / "kit2/story.json").read_text())["design"] == "chalet"
+
+
+def test_unknown_ai_design_falls_back(tmp_path, story):
+    models = FakeModels(story, broken_first=False)
+    models.geruest.design = "barock-disco"
+    generate_kit("E", 6, client=make_client(tmp_path, models), kit_dir=tmp_path / "kit", render=False)
+    assert json.loads((tmp_path / "kit/story.json").read_text())["design"] == "klassisch"

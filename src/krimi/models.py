@@ -138,7 +138,7 @@ class Story(BaseModel):
     thema: str
     sprache: str = "de"
     spieler: int
-    design: Literal["chalet", "klassisch", "noir"] = "klassisch"
+    design: str = Field("klassisch", description="Name des PDF-Designs (siehe krimi.themes)")
     seed: int = 1985
     einleitung: str = Field(description="Atmosphärischer Einstieg, wird zu Beginn vorgelesen")
     setting: Setting
@@ -182,7 +182,7 @@ class Geruest(BaseModel):
     """Schritt 1: nur die logische Wahrheit des Falls."""
     titel: str
     untertitel: str
-    design: Literal["chalet", "klassisch", "noir"]
+    design: str = Field(description="Eines der vorgegebenen Designs")
     setting: Setting
     opfer: Opfer
     charaktere: list[GeruestCharakter]

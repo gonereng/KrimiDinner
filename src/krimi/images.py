@@ -7,15 +7,11 @@ import logging
 from pathlib import Path
 
 from .llm_client import LLMClient, QuotaError, load_prompt
+from . import themes
 from .models import Story
 
 log = logging.getLogger("krimi.images")
 
-STIL = {
-    "chalet": "Vintage-Gouache-Illustration im Stil alter Skiplakate der 1980er, gedeckte Blau- und Goldtöne, weiches Licht",
-    "noir": "Schwarz-Weiß-Tuschezeichnung im Film-noir-Stil, harte Schatten, Kreuzschraffur",
-    "klassisch": "Aquarell-Illustration im Stil klassischer Kriminalromane der 1930er, warme Bordeaux- und Cremetöne",
-}
 
 
 def generate_images(story: Story, client: LLMClient, model: str, kit_dir: Path,
@@ -26,7 +22,7 @@ def generate_images(story: Story, client: LLMClient, model: str, kit_dir: Path,
         return ["Kein GEMINI_IMAGE_MODEL gesetzt – Bilder übersprungen."]
     img_dir = Path(kit_dir) / "images"
     img_dir.mkdir(parents=True, exist_ok=True)
-    stil = STIL.get(story.design, STIL["klassisch"])
+    stil = themes.get_theme(story.design).bildstil
     jobs = [("cover", load_prompt("bild_cover", thema=story.thema, ort=story.setting.ort,
                                   zeit=story.setting.zeit, atmosphaere=story.setting.atmosphaere, stil=stil))]
     for c in story.charaktere:

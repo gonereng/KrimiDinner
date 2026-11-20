@@ -11,6 +11,7 @@ from pathlib import Path
 
 from .config import get_settings
 from .llm_client import LLMClient
+from . import themes
 from .images import generate_images
 from .models import Ausarbeitung, Geruest, Story
 from .render import render_kit, slug
@@ -127,8 +128,11 @@ def check_and_repair(story: Story, client: LLMClient, text_model: str, check_mod
 def generate_kit(thema: str, spieler: int = 6, lang: str = "de", paper: str = "a4",
                  images: bool = False, use_cache: bool = True, variante: int = 1,
                  progress=lambda m: None, client: LLMClient | None = None,
-                 kit_dir: Path | None = None, render: bool = True, resume: bool = False) -> dict:
-    """Erzeugt ein Kit. Mit resume=True wird ab dem letzten gesicherten Schritt weitergemacht."""
+                 kit_dir: Path | None = None, render: bool = True, resume: bool = False,
+                 design: str | None = None) -> dict:
+    """Erzeugt ein Kit. Mit resume=True wird ab dem letzten gesicherten Schritt weitergemacht.
+    design: Name eines Themas aus krimi.themes oder None/"auto" (die KI wählt passend zum Thema)."""
+    design = None if design in (None, "", "auto") else themes.normalize(design)
     s = get_settings()
     client = client or LLMClient(use_cache=use_cache)
     kit_dir = Path(kit_dir or s.output_dir / kit_name(thema, spieler, lang, variante))
@@ -137,7 +141,8 @@ def generate_kit(thema: str, spieler: int = 6, lang: str = "de", paper: str = "a
     if not resume:
         zs.reset()
     write_json(kit_dir / "params.json", {"thema": thema, "spieler": spieler, "lang": lang, "paper": paper,
-                                         "images": images, "variante": variante, "render": render})
+                                         "images": images, "variante": variante, "render": render,
+                                         "design": design})
     if resume and zs.summary():
         progress("Fortsetzen – bereits gesichert: " + ", ".join(zs.summary()))
     try:
@@ -158,6 +163,8 @@ def generate_kit(thema: str, spieler: int = 6, lang: str = "de", paper: str = "a
             story = load_story(kit_dir / "story.json")
         else:
             story = merge(geruest, aus, thema, spieler, lang)
+            if design:
+                story.design = design
             save_story(story, kit_dir / "story.json")
             zs.save(story=True, korrekturen=0, pruefung_ok=False)
         # 4. Prüfung + Korrekturen
@@ -227,7 +234,8 @@ def resume_kit(kit_dir: Path, progress=lambda m: None, client: LLMClient | None 
     return generate_kit(params["thema"], params["spieler"], params["lang"], params.get("paper", "a4"),
                         images=params.get("images", False), use_cache=use_cache,
                         variante=params.get("variante", 1), progress=progress, client=client,
-                        kit_dir=Path(kit_dir), render=params.get("render", True), resume=True)
+                        kit_dir=Path(kit_dir), render=params.get("render", True), resume=True,
+                        design=params.get("design"))
 
 
 def validate_kit(story_path: Path, gegencheck: bool = True, use_cache: bool = True) -> Report:
@@ -243,8 +251,12 @@ def validate_kit(story_path: Path, gegencheck: bool = True, use_cache: bool = Tr
     return report
 
 
-def render_existing(kit_dir: Path, paper: str = "a4") -> tuple[list[Path], list[str]]:
+def render_existing(kit_dir: Path, paper: str = "a4", design: str | None = None) -> tuple[list[Path], list[str]]:
+    """PDFs neu setzen. Mit `design` wird das Design gewechselt und in story.json gespeichert."""
     story = load_story(Path(kit_dir) / "story.json")
+    if design and design != "auto":
+        story.design = themes.normalize(design)
+        save_story(story, Path(kit_dir) / "story.json")
     return render_kit(story, Path(kit_dir), paper)
 
 

@@ -1,0 +1,21 @@
+{% macro design_picker(selected='auto', include_auto=true) -%}
+<div class="design-picker" role="radiogroup" aria-label="Design">
+  {% if include_auto %}
+  <label class="dp dp-auto">
+    <input type="radio" name="design" value="auto" {% if selected == 'auto' %}checked{% endif %}>
+    <span class="dp-cover"><span class="dp-frame"></span><span class="dp-sym">✨</span><span class="dp-title">Automatisch</span></span>
+    <span class="dp-name">Automatisch</span>
+    <span class="dp-desc">Die KI wählt passend zum Thema</span>
+  </label>
+  {% endif %}
+  {% for t in themes %}
+  <label class="dp dp-{{ t.name }}">
+    <input type="radio" name="design" value="{{ t.name }}" {% if selected == t.name %}checked{% endif %}>
+    <span class="dp-cover"><span class="dp-frame"></span><span class="dp-sym">{{ t.small_symbol }}</span><span class="dp-title">Mord im Salon</span></span>
+    <span class="dp-paper"><b>Hinweis</b> <span>Um 22:45 hörtest du Stimmen …</span></span>
+    <span class="dp-name">{{ t.label }}</span>
+    <span class="dp-desc">{{ t.beschreibung }}</span>
+  </label>
+  {% endfor %}
+</div>
+{%- endmacro %}

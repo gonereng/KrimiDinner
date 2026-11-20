@@ -27,13 +27,22 @@ def _usage(u: dict) -> None:
                f"{u['total_tokens']} Tokens ({u['prompt_tokens']} Eingabe / {u['output_tokens']} Ausgabe)")
 
 
-def _run(render: bool, theme, players, lang, paper, images, cache, variante, verbose):
+def _check_design(design: str) -> str:
+    from .themes import THEMES
+    if design != "auto" and design not in THEMES:
+        typer.secho(f"✘ Unbekanntes Design '{design}'. Verfügbar: auto, {', '.join(THEMES)}", fg="red")
+        raise typer.Exit(2)
+    return design
+
+
+def _run(render: bool, theme, players, lang, paper, images, cache, variante, verbose, design="auto"):
     from .llm_client import LLMError
     from .pipeline import KitFailed, generate_kit, kit_name
     _setup_logging(verbose)
     try:
         res = generate_kit(theme, players, lang, paper, images=images, use_cache=cache,
-                           variante=variante, progress=_progress, render=render)
+                           variante=variante, progress=_progress, render=render,
+                           design=_check_design(design))
     except (KitFailed, LLMError) as exc:
         from .config import get_settings
         typer.secho(f"✘ {exc}", fg="red")
@@ -46,15 +55,19 @@ def _run(render: bool, theme, players, lang, paper, images, cache, variante, ver
     _usage(res["usage"])
 
 
+DESIGN_HELP = "PDF-Design (siehe `krimi designs`), Standard: auto = KI wählt passend zum Thema"
+
+
 @app.command()
 def new(theme: str = typer.Option(..., "--theme", "-t", help="Thema des Krimidinners"),
         players: int = typer.Option(6, "--players", "-p", min=3, max=12),
+        design: str = typer.Option("auto", "--design", "-d", help=DESIGN_HELP),
         lang: str = typer.Option("de", "--lang", help="de oder en"),
         variante: int = typer.Option(1, "--variante", help="Andere Geschichte zum selben Thema"),
         cache: bool = typer.Option(True, "--cache/--no-cache", help="KI-Cache nutzen"),
         verbose: bool = typer.Option(False, "--verbose", "-v")):
     """Story erzeugen und prüfen -> output/<kit>/story.json"""
-    _run(False, theme, players, lang, "a4", False, cache, variante, verbose)
+    _run(False, theme, players, lang, "a4", False, cache, variante, verbose, design)
 
 
 @app.command()
@@ -62,12 +75,13 @@ def all(theme: str = typer.Option(..., "--theme", "-t"),
         players: int = typer.Option(6, "--players", "-p", min=3, max=12),
         lang: str = typer.Option("de", "--lang"),
         paper: str = typer.Option("a4", "--paper", help="a4 oder letter"),
+        design: str = typer.Option("auto", "--design", "-d", help=DESIGN_HELP),
         images: bool = typer.Option(True, "--images/--no-images", help="Illustrationen erzeugen"),
         variante: int = typer.Option(1, "--variante"),
         cache: bool = typer.Option(True, "--cache/--no-cache"),
         verbose: bool = typer.Option(False, "--verbose", "-v")):
     """Alles in einem Lauf: Story, Prüfung, Bilder, PDFs, ZIP."""
-    _run(True, theme, players, lang, paper, images, cache, variante, verbose)
+    _run(True, theme, players, lang, paper, images, cache, variante, verbose, design)
 
 
 @app.command()
@@ -117,11 +131,15 @@ def validate(story_json: Path = typer.Argument(..., exists=True, dir_okay=False)
 
 @app.command()
 def render(kit_dir: Path = typer.Argument(..., exists=True, file_okay=False),
-           paper: str = typer.Option("a4", "--paper", help="a4 oder letter")):
+           paper: str = typer.Option("a4", "--paper", help="a4 oder letter"),
+           design: str = typer.Option("", "--design", "-d",
+                                      help="Design wechseln (wird in story.json gespeichert); leer = beibehalten")):
     """PDFs aus output/<kit>/story.json neu setzen (ohne KI-Kosten)."""
     from .pipeline import render_existing
     _setup_logging(False)
-    files, warnings = render_existing(kit_dir, paper)
+    if design:
+        _check_design(design)
+    files, warnings = render_existing(kit_dir, paper, design or None)
     for w in warnings:
         typer.secho(f"⚠ {w}", fg="yellow")
     typer.secho(f"✔ {len(files)} Dateien in {kit_dir}", fg="green")
@@ -136,6 +154,14 @@ def demo(paper: str = typer.Option("a4", "--paper")):
     for w in warnings:
         typer.secho(f"⚠ {w}", fg="yellow")
     typer.secho(f"✔ Demo-Kit: {kit_dir} ({len(files)} Dateien)", fg="green")
+
+
+@app.command()
+def designs():
+    """Verfügbare PDF-Designs auflisten."""
+    from .themes import THEMES
+    for t in THEMES.values():
+        typer.echo(f"  {t.name:<14} {t.label:<15} {t.beschreibung}")
 
 
 @app.command()

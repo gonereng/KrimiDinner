@@ -16,7 +16,8 @@ Regeln für eine saubere Logik:
 4. Die Zeitleiste ist die WAHRHEIT des Abends: ca. 15–25 Einträge mit Uhrzeiten im Format HH:MM (der Abend darf über Mitternacht gehen, z. B. 23:40 bis 00:15). Jeder Eintrag nennt den Ort und die Charakter-IDs der anwesenden Personen. Niemand darf zur selben Zeit an zwei Orten sein. Die Tat selbst ist ein Eintrag.
 5. Fakten (ca. 20–30) sind kurze objektive Tatsachen, aus denen später Hinweise werden – darunter auch Zahlen, die sich für ein Zahlenschloss eignen (Zimmernummer, stehengebliebene Uhr, Jahreszahl …).
 6. IDs: Charaktere "c_<kurzname>" (Kleinbuchstaben, keine Umlaute), Fakten "f_<stichwort>".
-7. Wähle als design: "chalet" (Winter/Berge), "noir" (Großstadt/20er–50er) oder "klassisch" (Landhaus/allgemein) – passend zum Thema.
+7. Wähle als design genau einen dieser Namen – passend zum Thema:
+{{designs}}
 8. Namen und Rollen sollen zur Epoche passen, abwechslungsreich und für alle Geschlechter spielbar sein.
 
 Gib ausschließlich JSON nach dem vorgegebenen Schema zurück.

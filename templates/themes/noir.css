@@ -1,8 +1,0 @@
-/* Film noir: Schwarz, Grau, Rot */
-:root {
-  --c-primary: #151515; --c-accent: #6d6d6d; --c-gold: #d8c8a0; --c-red: #b3121b;
-  --c-ink: #161616; --c-muted: #777777; --c-line: #c8c8c8; --c-paper: #ffffff;
-  --c-panel: #f1f1f1; --c-card: #ffffff;
-  --c-cover-bg: #111111; --c-cover-ink: #eeeeee;
-  --f-head: "Playfair Display", serif; --f-body: "Special Elite", monospace;
-}

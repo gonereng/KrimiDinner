@@ -19,7 +19,29 @@ Bedienen lässt er sich über eine **passwortgeschützte Web-Oberfläche** oder 
 | `08_notizblaetter.pdf` | Detektiv-Notizblatt pro Spieler, dazu ein Bonus-Logikrätsel „Wer saß wo?“ |
 | `kit.zip` | alles zusammen, inkl. `story.json` |
 
-Die Formate A4 und US Letter stehen zur Wahl. Es gibt drei Designs: `chalet`, `klassisch` und `noir`. Die KI wählt das passende Design zum Thema, in `story.json` lässt es sich ändern.
+Die Formate A4 und US Letter stehen zur Wahl.
+
+### Designs
+
+Es gibt zehn Designs mit eigenen Farben, Schriften, Ornamenten, Zeitungskopf und Bildstil:
+
+| Design | Passt zu |
+|---|---|
+| `klassisch` | Landhaus, Agatha-Christie-Stil, zeitlos |
+| `chalet` | Winter, Berghütte, Skiurlaub |
+| `noir` | Großstadt, Detektivbüro, 1920er–1950er |
+| `weihnachten` | Heiligabend, Familienfest |
+| `artdeco` | Goldene Zwanziger, Gatsby-Party, Jazz |
+| `viktorianisch` | London um 1890, Sherlock Holmes |
+| `riviera` | Côte d'Azur, Yacht, 1960er-Sommer |
+| `western` | Saloon, Goldgräberstadt |
+| `gothic` | Spukschloss, Halloween |
+| `modern` | Gegenwart: Start-up, Podcast, Influencer-Villa |
+
+- **Beim Erzeugen** wählst du das Design über Vorschaukarten oder nimmst „Automatisch“, dann sucht die KI das passende aus. In der Kommandozeile geht das mit `--design`.
+- **Für ein bestehendes Kit** wählst du auf der Kit-Seite unter „Design & neu rendern“ ein anderes Design, ohne KI-Kosten. In der Kommandozeile: `krimi render output/<kit> --design western`. Das gewählte Design wird in `story.json` gespeichert.
+- `krimi designs` listet alle Designs auf.
+- **Eigenes Design hinzufügen:** einen Eintrag in `src/krimi/themes.py` ergänzen (Farben, Schriften, Ornamente, optional Zusatz-CSS). Web-Auswahl, KI-Prompt und PDFs übernehmen ihn automatisch.
 
 ## Schnellstart mit Docker (empfohlen)
 
@@ -84,7 +106,10 @@ krimi new --theme "Silvester im Schneechalet" --players 6 --lang de   # Story + 
 krimi validate output/<kit>/story.json                                # Logikprüfung (+ KI-Gegencheck)
 krimi validate output/<kit>/story.json --ohne-gegencheck              # nur die feste Prüfung, kostenlos
 krimi render output/<kit> --paper a4                                  # PDFs neu setzen (a4 | letter)
+krimi render output/<kit> --design gothic                             # ... in einem anderen Design
+krimi designs                                                         # verfügbare Designs
 krimi all --theme "..." --players 6                                   # alles in einem Lauf
+krimi all --theme "..." --design artdeco                              # mit festem Design (Standard: auto)
 krimi all --theme "..." --no-images --paper letter
 krimi resume output/<kit>                                             # abgebrochenen Lauf fortsetzen (z. B. nach Kontingent-Ende)
 krimi demo                                                            # Beispiel-Kit ohne API-Key
@@ -149,12 +174,13 @@ src/krimi/
   validate.py         Logikprüfung + Gegencheck
   puzzles.py          Rätsel (Caesar, Substitution, Zahlenschloss, Wortsuche, Sitzordnung), ohne KI, mit Seed
   images.py           optionale Illustrationen
+  themes.py           die PDF-Designs (Farben, Schriften, Ornamente, Bildstil)
   render.py           HTML -> PDF (WeasyPrint), Schnittmarken, Überlauf-Erkennung, ZIP
   pipeline.py         Gesamtablauf für CLI und Web
   cli.py              Kommandozeile
   web/                FastAPI-App, Vorlagen, CSS
   demo/               Beispiel-Kit (story.json)
-templates/            PDF-Vorlagen (Jinja2), base.css, themes/*.css, fonts/ (OFL/Apache-lizenziert)
+templates/            PDF-Vorlagen (Jinja2), base.css, fonts/ (OFL/Apache-lizenziert)
 tests/                pytest (Logikprüfung, Rätsel, KI-Client, Pipeline mit simulierter KI, Web)
 ```
 
@@ -178,4 +204,6 @@ Die Tests laufen ohne API-Key: Die KI wird in `tests/test_pipeline.py` simuliert
 
 ## Schriften
 
-Playfair Display und Lora stehen unter der SIL Open Font License, Special Elite unter der Apache License 2.0. Alle liegen lokal in `templates/fonts/`, die Lizenztexte daneben.
+Alle Schriften stammen von Google Fonts und liegen lokal in `templates/fonts/`, die Lizenztexte daneben:
+- **SIL Open Font License:** Playfair Display, Lora, Poiret One, Rye, Cinzel, IM Fell English, Montserrat, Work Sans und Josefin Sans.
+- **Apache License 2.0:** Special Elite und Mountains of Christmas.

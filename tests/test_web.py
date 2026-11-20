@@ -132,3 +132,22 @@ def test_retry_without_params_rejected(client):
     client.post("/demo")
     wait(client, "demo-silvester-im-schneechalet")
     assert client.post("/kits/demo-silvester-im-schneechalet/retry").status_code == 400
+
+
+def test_design_picker_and_rerender(client):
+    login(client)
+    page = client.get("/").text
+    assert 'name="design" value="auto"' in page and 'value="viktorianisch"' in page
+    css = client.get("/themes.css")
+    assert css.status_code == 200 and "Mountains of Christmas" in css.text
+    assert client.get("/fonts/rye-latin-400-normal.woff").status_code == 200
+    client.post("/demo")
+    name = "demo-silvester-im-schneechalet"
+    wait(client, name)
+    assert 'value="chalet" checked' in client.get(f"/kits/{name}").text
+    assert client.post(f"/kits/{name}/render", data={"paper": "a4", "design": "disco"}).status_code == 400
+    client.post(f"/kits/{name}/render", data={"paper": "letter", "design": "riviera"})
+    assert wait(client, name)["status"] == "fertig"
+    detail = client.get(f"/kits/{name}").text
+    assert "Design: Riviera" in detail and 'value="riviera" checked' in detail
+    assert client.post("/kits/new", data={"thema": "X", "design": "disco"}).status_code == 400

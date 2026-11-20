@@ -1,9 +1,9 @@
-{% extends "base.html" %}{% block title %}{{ kit.titel }} – Krimidinner{% endblock %}
+{% extends "base.html" %}{% from "_design_picker.html" import design_picker with context %}{% block title %}{{ kit.titel }} – Krimidinner{% endblock %}
 {% block body %}
 <p><a href="/">← Übersicht</a></p>
 <section class="card">
   <h1>{{ kit.titel }}</h1>
-  {% if story %}<p class="muted">{{ story.untertitel }} · {{ story.spieler }} Spieler · {{ story.sprache|upper }} · Design: {{ story.design }}</p>{% endif %}
+  {% if story %}<p class="muted">{{ story.untertitel }} · {{ story.spieler }} Spieler · {{ story.sprache|upper }} · Design: {{ (themes|selectattr('name', 'equalto', story.design)|first or {'label': story.design}).label }}</p>{% endif %}
 
   <div id="status" data-kit="{{ kit.name }}" data-running="{{ 'true' if running else 'false' }}">
     <h2>Status: <span id="st-label" class="badge {{ status.status or kit.status }}">{{ status.aufgabe }} – {{ {'laeuft': 'läuft …', 'fertig': 'fertig', 'fehler': 'Fehler'}.get(status.status, kit.status) }}</span></h2>
@@ -63,10 +63,6 @@
   <h2>Aktionen</h2>
   <div class="actions">
     <a class="button" href="/kits/{{ kit.name }}/edit">story.json bearbeiten</a>
-    <form method="post" action="/kits/{{ kit.name }}/render" class="inline">
-      <select name="paper"><option value="a4">A4</option><option value="letter">US Letter</option></select>
-      <button>PDFs neu rendern</button>
-    </form>
     <form method="post" action="/kits/{{ kit.name }}/validate" class="inline">
       <label class="check"><input type="checkbox" name="gegencheck" value="true" {% if not has_key %}disabled{% endif %}> mit KI-Gegencheck ({{ provider }})</label>
       <button>Logik prüfen</button>
@@ -75,6 +71,18 @@
       <button class="danger">Löschen</button>
     </form>
   </div>
+</section>
+
+<section class="card">
+  <h2>Design &amp; neu rendern</h2>
+  <p class="muted small">Wähle ein Design und das Papierformat. Die PDFs werden neu gesetzt, ohne KI-Kosten. Das gewählte Design wird im Kit gespeichert.</p>
+  <form method="post" action="/kits/{{ kit.name }}/render" class="stack">
+    {{ design_picker(story.design, false) }}
+    <div class="actions">
+      <select name="paper"><option value="a4">A4</option><option value="letter">US Letter</option></select>
+      <button class="primary" {% if running %}disabled{% endif %}>PDFs in diesem Design rendern</button>
+    </div>
+  </form>
 </section>
 
 <section class="card">

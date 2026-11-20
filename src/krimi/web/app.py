@@ -26,7 +26,8 @@ from fastapi.templating import Jinja2Templates
 from pydantic import ValidationError
 from starlette.middleware.sessions import SessionMiddleware
 
-from ..config import get_settings
+from ..config import TEMPLATES_DIR, get_settings
+from ..themes import THEMES, font_face_css
 from ..models import Story
 
 log = logging.getLogger("krimi.web")
@@ -37,7 +38,9 @@ app = FastAPI(title="Krimidinner-Generator", docs_url=None, redoc_url=None)
 app.add_middleware(SessionMiddleware, secret_key=settings.session_secret or secrets.token_hex(32),
                    same_site="lax", max_age=60 * 60 * 24 * 14, https_only=False)
 app.mount("/static", StaticFiles(directory=HERE / "static"), name="static")
+app.mount("/fonts", StaticFiles(directory=TEMPLATES_DIR / "fonts"), name="fonts")
 templates = Jinja2Templates(directory=HERE / "templates")
+templates.env.globals["themes"] = list(THEMES.values())
 
 executor = ThreadPoolExecutor(max_workers=2)
 _lock = threading.Lock()
@@ -191,6 +194,26 @@ def logout(request: Request):
     return RedirectResponse("/login", status_code=303)
 
 
+@app.get("/themes.css")
+def themes_css():
+    """Schriften + Vorschau-Farben der PDF-Designs für die Auswahlkarten in der Web-App."""
+    from fastapi.responses import Response
+    rules = [font_face_css("/fonts")]
+    for t in THEMES.values():
+        c = t.colors
+        rules.append(
+            f".dp-{t.name} .dp-cover {{ background: {c['cover_bg']}; color: {c['cover_ink']}; }}\n"
+            f".dp-{t.name} .dp-cover .dp-frame {{ border-color: {c['gold']}; }}\n"
+            f".dp-{t.name} .dp-title {{ font-family: {t.head}; text-transform: {t.head_transform}; "
+            f"letter-spacing: {t.head_spacing}; }}\n"
+            f".dp-{t.name} .dp-sym {{ color: {c['gold']}; }}\n"
+            f".dp-{t.name} .dp-paper {{ background: {c['paper']}; border-top: 3px solid {c['accent']}; }}\n"
+            f".dp-{t.name} .dp-paper b {{ font-family: {t.head}; color: {c['primary']}; }}\n"
+            f".dp-{t.name} .dp-paper span {{ font-family: {t.body}; color: {c['ink']}; }}")
+    return Response("\n".join(rules), media_type="text/css",
+                    headers={"Cache-Control": "public, max-age=3600"})
+
+
 @app.get("/healthz")
 def healthz():
     return {"ok": True}
@@ -215,9 +238,11 @@ def index(request: Request):
 @app.post("/kits/new")
 def new_kit(request: Request, thema: str = Form(...), spieler: int = Form(6), lang: str = Form("de"),
             paper: str = Form("a4"), bilder: bool = Form(False), ohne_cache: bool = Form(False),
-            variante: int = Form(1)):
+            variante: int = Form(1), design: str = Form("auto")):
     need_login(request)
     from ..pipeline import generate_kit, kit_name
+    if design != "auto" and design not in THEMES:
+        raise HTTPException(400, "Unbekanntes Design.")
     thema = thema.strip()[:200]
     if not thema:
         raise HTTPException(400, "Bitte ein Thema angeben.")
@@ -229,7 +254,7 @@ def new_kit(request: Request, thema: str = Form(...), spieler: int = Form(6), la
 
     def task(job: Job):
         res = generate_kit(thema, spieler, lang, paper, images=bilder, use_cache=not ohne_cache,
-                           variante=variante, progress=job.progress, kit_dir=kit_dir)
+                           variante=variante, progress=job.progress, kit_dir=kit_dir, design=design)
         u = res["usage"]
         job.progress(f"KI: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "
                      f"{u['total_tokens']} Tokens")
@@ -323,14 +348,17 @@ def kit_file(request: Request, name: str, file_path: str, download: bool = False
 
 
 @app.post("/kits/{name}/render")
-def kit_render(request: Request, name: str, paper: str = Form("a4")):
+def kit_render(request: Request, name: str, paper: str = Form("a4"), design: str = Form("")):
     need_login(request)
     d = kit_path(name)
     from ..pipeline import render_existing
+    if design and design not in THEMES:
+        raise HTTPException(400, "Unbekanntes Design.")
 
     def task(job: Job):
-        job.progress(f"PDFs werden neu gesetzt ({paper.upper()}) …")
-        files, warn = render_existing(d, paper if paper in ("a4", "letter") else "a4")
+        label = f", Design „{THEMES[design].label}“" if design else ""
+        job.progress(f"PDFs werden neu gesetzt ({paper.upper()}{label}) …")
+        files, warn = render_existing(d, paper if paper in ("a4", "letter") else "a4", design or None)
         job.progress(f"{len(files)} Dateien erzeugt")
         return warn
 
@@ -398,7 +426,7 @@ def kit_save(request: Request, name: str, text: str = Form(...), danach: str = F
         shutil.copy(d / "story.json", d / "story.backup.json")
     (d / "story.json").write_text(json.dumps(story.model_dump(), ensure_ascii=False, indent=2), encoding="utf-8")
     if danach == "rendern":
-        return kit_render(request, name, paper="a4")
+        return kit_render(request, name, paper="a4", design="")
     if danach == "pruefen":
         return kit_validate(request, name, gegencheck=False)
     return RedirectResponse(f"/kits/{name}", status_code=303)

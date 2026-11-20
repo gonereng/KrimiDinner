@@ -15,7 +15,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from . import puzzles
+from . import puzzles, themes
 from .config import TEMPLATES_DIR
 from .models import Hinweis, Story
 
@@ -245,6 +245,7 @@ class Renderer:
         if paper not in PAPER:
             raise ValueError(f"Unbekanntes Papierformat '{paper}' (a4 oder letter)")
         self.story, self.kit_dir, self.paper = story, Path(kit_dir), paper
+        self.theme = themes.get_theme(story.design)
         self.L = LABELS.get(story.sprache, LABELS["de"])
         self.env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)),
                                autoescape=select_autoescape(["html"]))
@@ -269,14 +270,11 @@ class Renderer:
         return found
 
     def _css(self) -> str:
-        theme = TEMPLATES_DIR / "themes" / f"{self.story.design}.css"
-        if not theme.exists():
-            theme = TEMPLATES_DIR / "themes" / "klassisch.css"
         pw, ph = PAPER[self.paper]
         fonts = (TEMPLATES_DIR / "fonts").resolve().as_uri()
         base = (TEMPLATES_DIR / "base.css").read_text(encoding="utf-8")
-        return (base.replace("{{FONTS}}", fonts)
-                + "\n" + theme.read_text(encoding="utf-8")
+        return (themes.font_face_css(fonts) + "\n" + base
+                + "\n" + self.theme.css()
                 + f"\n:root {{ --page-w: {pw}mm; --page-h: {ph}mm; }}"
                 + f"\n@page {{ size: {pw}mm {ph}mm; }}"
                 + f"\n@page sheet {{ size: {pw}mm {ph}mm; margin: 0; }}")
@@ -285,7 +283,7 @@ class Renderer:
         s = self.story
         return {"s": s, "L": self.L, "paper": self.paper, "pw": PAPER[self.paper][0],
                 "ph": PAPER[self.paper][1], "puzzles": self.puzzles, "seating": self.seating,
-                "images": self.images, "css": self._css(), "card_w": CARD_W, "card_h": CARD_H,
+                "images": self.images, "css": self._css(), "theme": self.theme, "card_w": CARD_W, "card_h": CARD_H,
                 "taeter": s.taeter()[0] if s.taeter() else None, **extra}
 
     def _pdf(self, template: str, out: Path, fit_retries: int = 4, **extra) -> Path:

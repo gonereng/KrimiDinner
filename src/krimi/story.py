@@ -5,6 +5,7 @@ import hashlib
 import json
 
 from .llm_client import LLMClient, load_prompt
+from . import themes
 from .models import Ausarbeitung, Geruest, Story
 
 SPRACHEN = {"de": "Deutsch", "en": "Englisch (English)"}
@@ -17,7 +18,7 @@ def sprache_name(lang: str) -> str:
 def generate_geruest(client: LLMClient, model: str, thema: str, spieler: int,
                      lang: str = "de", dauer: str = "2 Stunden", variante: int = 1) -> Geruest:
     prompt = load_prompt("geruest", thema=thema, spieler=spieler, dauer=dauer,
-                         sprache_name=sprache_name(lang), variante=variante)
+                         sprache_name=sprache_name(lang), variante=variante, designs=themes.prompt_list())
     return client.generate_json(prompt, Geruest, model, label="Gerüst")
 
 
@@ -43,7 +44,7 @@ def merge(geruest: Geruest, aus: Ausarbeitung, thema: str, spieler: int, lang: s
         })
     return Story(
         titel=geruest.titel, untertitel=geruest.untertitel, thema=thema, sprache=lang,
-        spieler=spieler, design=geruest.design,
+        spieler=spieler, design=themes.normalize(geruest.design),
         seed=int(hashlib.sha256(thema.encode()).hexdigest()[:6], 16) % 100000,
         einleitung=aus.einleitung, setting=geruest.setting, opfer=geruest.opfer,
         charaktere=charaktere, fakten=geruest.fakten, zeitleiste=geruest.zeitleiste,
