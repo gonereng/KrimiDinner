@@ -85,6 +85,6 @@ def test_evidence_stays_within_margins(tmp_path, story, name, paper):
 def test_wide_box_is_detected(tmp_path, story):
     from weasyprint import HTML
     from krimi.render import find_wide_boxes
-    doc = HTML(string='<style>@page{size:210mm 297mm;margin:20mm}</style>'
+    doc = HTML(string='<style>@page{size:210mm 297mm;margin:20mm} body{margin:0}</style>'
                       '<div class="ev" style="width:190mm">zu breit</div>').render()
     assert find_wide_boxes(doc) and "20.0 mm zu breit" in find_wide_boxes(doc)[0]
