@@ -38,7 +38,7 @@ Die Formate A4 und US Letter stehen zur Wahl. Es gibt drei Designs: `chalet`, `k
    ```bash
    docker compose up -d --build
    ```
-4. Im Browser **http://localhost:8000** öffnen und mit dem Passwort aus `.env` anmelden.
+4. Im Browser **http://localhost:8048** öffnen und mit dem Passwort aus `.env` anmelden.
 
 Kits und Cache landen im Ordner `./data` (`data/output/<kit>/`, `data/cache/`). Sie bleiben also auch nach einem Neustart oder Update erhalten.
 
