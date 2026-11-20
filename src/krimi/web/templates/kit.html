@@ -39,9 +39,9 @@
 <section class="card">
   <h2>Logikprüfung {% if report.ok %}<span class="badge ok">bestanden</span>{% else %}<span class="badge fehler">nicht bestanden</span>{% endif %}</h2>
   {% if report.ermittlung %}
-    <p><strong>Gegencheck (Gemini kennt nur die Hinweise):</strong> Täter laut Prüfer: <code>{{ report.ermittlung.taeter_id }}</code>, Sicherheit {{ '%.0f'|format(report.ermittlung.sicherheit * 100) }} %</p>
+    <p><strong>Gegencheck (die KI kennt nur die Hinweise):</strong> Täter laut Prüfer: <code>{{ report.ermittlung.taeter_id }}</code>, Sicherheit {{ '%.0f'|format(report.ermittlung.sicherheit * 100) }} %</p>
     <p class="muted small">{{ report.ermittlung.begruendung }}</p>
-  {% else %}<p class="muted small">Nur die feste Prüfung lief, ohne Gemini-Gegencheck.</p>{% endif %}
+  {% else %}<p class="muted small">Nur die feste Prüfung lief, ohne KI-Gegencheck.</p>{% endif %}
   {% if report.fehler %}<ul class="errors">{% for f in report.fehler %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
   {% for w in report.warnungen %}<p class="alert warn">{{ w }}</p>{% endfor %}
 </section>
@@ -49,7 +49,7 @@
 
 {% if usage %}
 <section class="card">
-  <h2>Gemini-Verbrauch (letzter Lauf)</h2>
+  <h2>KI-Verbrauch (letzter Lauf)</h2>
   <p>{{ usage.api_calls }} API-Aufrufe · {{ usage.cache_hits }} aus dem Cache · {{ usage.total_tokens }} Tokens ({{ usage.prompt_tokens }} Eingabe / {{ usage.output_tokens }} Ausgabe)</p>
   <details><summary>Einzelne Aufrufe</summary><table class="tbl">
     <tr><th>Schritt</th><th>Modell</th><th>Quelle</th><th>Tokens</th></tr>
@@ -68,7 +68,7 @@
       <button>PDFs neu rendern</button>
     </form>
     <form method="post" action="/kits/{{ kit.name }}/validate" class="inline">
-      <label class="check"><input type="checkbox" name="gegencheck" value="true" {% if not has_key %}disabled{% endif %}> mit Gemini-Gegencheck</label>
+      <label class="check"><input type="checkbox" name="gegencheck" value="true" {% if not has_key %}disabled{% endif %}> mit KI-Gegencheck ({{ provider }})</label>
       <button>Logik prüfen</button>
     </form>
     <form method="post" action="/kits/{{ kit.name }}/delete" class="inline" onsubmit="return confirm('Kit „{{ kit.titel }}“ endgültig löschen?')">

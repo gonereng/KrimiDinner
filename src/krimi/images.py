@@ -1,10 +1,12 @@
-"""Optionale Illustrationen über GEMINI_IMAGE_MODEL (Cover + Charakterporträts)."""
+"""Optionale Illustrationen über Gemini (GEMINI_IMAGE_MODEL): Cover + Charakterporträts.
+
+DeepSeek hat kein Bildmodell – Bilder brauchen daher immer einen GEMINI_API_KEY."""
 from __future__ import annotations
 
 import logging
 from pathlib import Path
 
-from .gemini_client import GeminiClient, GeminiQuotaError, load_prompt
+from .llm_client import LLMClient, QuotaError, load_prompt
 from .models import Story
 
 log = logging.getLogger("krimi.images")
@@ -16,7 +18,7 @@ STIL = {
 }
 
 
-def generate_images(story: Story, client: GeminiClient, model: str, kit_dir: Path,
+def generate_images(story: Story, client: LLMClient, model: str, kit_dir: Path,
                     progress=lambda msg: None) -> list[str]:
     """Erzeugt images/cover.png und images/<charakter-id>.png. Gibt Warnungen zurück."""
     warnings: list[str] = []
@@ -36,7 +38,7 @@ def generate_images(story: Story, client: GeminiClient, model: str, kit_dir: Pat
         progress(f"Bild {i}/{len(jobs)}: {name}")
         try:
             data = client.generate_image(prompt, model, label=f"Bild {name}")
-        except GeminiQuotaError:
+        except QuotaError:
             raise  # Kontingent weg: abbrechen, damit „Wiederholen“ die fehlenden Bilder nachholt
         except Exception as exc:  # Bilder sind optional – Kit bleibt nutzbar
             warnings.append(f"Bild '{name}' fehlgeschlagen: {exc}")

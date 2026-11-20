@@ -4,7 +4,7 @@
 <section class="card">
   <h1>Neues Krimidinner</h1>
   {% if not has_key %}
-  <p class="alert warn">Kein <code>GEMINI_API_KEY</code> in der <code>.env</code> gesetzt. Neue Geschichten lassen sich erst mit Key erzeugen. Das Demo-Kit, die Bearbeitung und das Rendern funktionieren aber auch ohne.</p>
+  <p class="alert warn">Kein <code>{{ key_var }}</code> in der <code>.env</code> gesetzt. Neue Geschichten lassen sich erst mit Key erzeugen. Das Demo-Kit, die Bearbeitung und das Rendern funktionieren aber auch ohne.</p>
   {% endif %}
   <form method="post" action="/kits/new" class="stack" id="newform">
     <label>Thema
@@ -21,12 +21,12 @@
       <label title="Andere Geschichte zum selben Thema">Variante <input type="number" name="variante" min="1" max="99" value="1"></label>
     </div>
     <div class="row checks">
-      <label class="check"><input type="checkbox" name="bilder" value="true"> <span>Illustrationen erzeugen{% if not image_model %} <span class="muted">(kein Bildmodell gesetzt)</span>{% endif %}</span></label>
+      <label class="check"><input type="checkbox" name="bilder" value="true"> <span>Illustrationen erzeugen{% if not image_model %} <span class="muted">(braucht GEMINI_API_KEY + GEMINI_IMAGE_MODEL)</span>{% endif %}</span></label>
       <label class="check"><input type="checkbox" name="ohne_cache" value="true"> <span>Cache umgehen (neu bezahlen)</span></label>
     </div>
     <button class="primary" {% if not has_key %}disabled{% endif %}>Kit erzeugen</button>
     <p class="muted small">Dauert je nach Modell 1–5 Minuten: Gerüst → Texte → Logikprüfung (+ bis zu 3 Korrekturen) → PDFs.
-      Modelle: {{ text_model }} / Prüfung: {{ check_model }}{% if image_model %} / Bilder: {{ image_model }}{% endif %}</p>
+      KI: {{ provider }} · Modelle: {{ text_model }} / Prüfung: {{ check_model }}{% if image_model %} / Bilder: {{ image_model }}{% endif %}</p>
   </form>
   <hr>
   <form method="post" action="/demo" class="inline">

@@ -1,7 +1,7 @@
 # Krimidinner-Generator
 
 Erzeugt aus einem Thema ein komplettes, druckfertiges **Krimidinner-Kit** als PDFs: Story, Charaktere, Hinweise, Rätsel, Gastgeber-Anleitung, Einladungen, versiegelte Auflösung und mehr.
-Die kreativen Teile schreibt **Google Gemini**. Die Logikprüfung, die Rätsel und das Layout übernimmt deterministischer Code.
+Die kreativen Teile schreibt eine KI, wahlweise **DeepSeek** (Standard) oder **Google Gemini**. Die Logikprüfung, die Rätsel und das Layout übernimmt deterministischer Code.
 
 Bedienen lässt er sich über eine **passwortgeschützte Web-Oberfläche** oder über die Kommandozeile (`krimi …`).
 
@@ -19,18 +19,20 @@ Bedienen lässt er sich über eine **passwortgeschützte Web-Oberfläche** oder 
 | `08_notizblaetter.pdf` | Detektiv-Notizblatt pro Spieler, dazu ein Bonus-Logikrätsel „Wer saß wo?“ |
 | `kit.zip` | alles zusammen, inkl. `story.json` |
 
-Die Formate A4 und US Letter stehen zur Wahl. Es gibt drei Designs: `chalet`, `klassisch` und `noir`. Gemini wählt das passende Design zum Thema, in `story.json` lässt es sich ändern.
+Die Formate A4 und US Letter stehen zur Wahl. Es gibt drei Designs: `chalet`, `klassisch` und `noir`. Die KI wählt das passende Design zum Thema, in `story.json` lässt es sich ändern.
 
 ## Schnellstart mit Docker (empfohlen)
 
-1. **Gemini-API-Key besorgen**: unter <https://aistudio.google.com/apikey> mit einem Google-Konto anmelden und auf „API-Schlüssel erstellen“ klicken.
+1. **DeepSeek-API-Key besorgen**: unter <https://platform.deepseek.com/api_keys> anmelden, einen Key erstellen und unter „Top up“ etwas Guthaben aufladen. Die API ist Prepaid, ein Kit kostet nur wenige Cent.
+   *Optional:* Für Illustrationen zusätzlich einen Gemini-Key unter <https://aistudio.google.com/apikey> anlegen, denn DeepSeek kann keine Bilder erzeugen.
 2. **Konfiguration anlegen**:
    ```bash
    cp .env.example .env
    ```
    In `.env` eintragen:
    ```ini
-   GEMINI_API_KEY=dein-key
+   LLM_PROVIDER=deepseek
+   DEEPSEEK_API_KEY=dein-key
    APP_PASSWORD=ein-gutes-passwort       # Passwort für die Web-Oberfläche
    SESSION_SECRET=langer-zufallsstring   # z. B. python -c "import secrets; print(secrets.token_hex(32))"
    ```
@@ -55,8 +57,8 @@ docker run -d -p 8000:8000 --env-file .env -v "$PWD/data:/data" --name krimidinn
 
 - **Neues Kit**: Thema, Spielerzahl (3–12), Sprache (DE/EN), Papierformat und optional Illustrationen wählen. Der Fortschritt erscheint live: Gerüst → Texte → Logikprüfung → Korrekturen → PDFs.
 - **Demo-Kit**: Ein fertiges Beispiel („Mord im Chalet Edelweiß“, Silvester 1985, 6 Spieler) funktioniert auch ohne API-Key.
-- **Wiederholen**: Bricht eine Generierung ab, etwa weil das Gemini-Kontingent aufgebraucht ist oder der Server neu gestartet wurde, erscheint auf der Kit-Seite der Button **↻ Wiederholen**. Er macht beim letzten gesicherten Schritt weiter (Gerüst, Texte, jede Korrektur, Prüfung, jedes Bild). Bereits erledigte Schritte werden nicht noch einmal bezahlt, auch nicht mit „Cache umgehen“.
-- **Kit-Seite**: alle PDFs zum Ansehen oder Herunterladen, Prüfbericht mit Gegencheck-Ergebnis und Gemini-Verbrauch (Aufrufe, Cache-Treffer, Tokens).
+- **Wiederholen**: Bricht eine Generierung ab, etwa weil das DeepSeek-Guthaben oder Gemini-Kontingent aufgebraucht ist oder der Server neu gestartet wurde, erscheint auf der Kit-Seite der Button **↻ Wiederholen**. Er macht beim letzten gesicherten Schritt weiter (Gerüst, Texte, jede Korrektur, Prüfung, jedes Bild). Bereits erledigte Schritte werden nicht noch einmal bezahlt, auch nicht mit „Cache umgehen“.
+- **Kit-Seite**: alle PDFs zum Ansehen oder Herunterladen, Prüfbericht mit Gegencheck-Ergebnis und KI-Verbrauch (Aufrufe, Cache-Treffer, Tokens).
 - **story.json bearbeiten**: Texte, Hinweise und Rätsel direkt im Browser ändern. Danach „Speichern & prüfen“ oder „Speichern & PDFs rendern“, beides ohne KI-Kosten. Die vorige Fassung bleibt als `story.backup.json` erhalten.
 
 ## Installation ohne Docker (Entwicklung / CLI)
@@ -79,7 +81,7 @@ cp .env.example .env   # Key + Passwort eintragen
 
 ```bash
 krimi new --theme "Silvester im Schneechalet" --players 6 --lang de   # Story + Prüfung -> output/<kit>/story.json
-krimi validate output/<kit>/story.json                                # Logikprüfung (+ Gemini-Gegencheck)
+krimi validate output/<kit>/story.json                                # Logikprüfung (+ KI-Gegencheck)
 krimi validate output/<kit>/story.json --ohne-gegencheck              # nur die feste Prüfung, kostenlos
 krimi render output/<kit> --paper a4                                  # PDFs neu setzen (a4 | letter)
 krimi all --theme "..." --players 6                                   # alles in einem Lauf
@@ -108,24 +110,41 @@ Nützliche Optionen:
    - jeder Spieler bekommt pro Runde mindestens einen Hinweis
    - Runden und Hinweise passen zusammen
    - niemand ist in der Zeitleiste gleichzeitig an zwei Orten (auch über Mitternacht)
-3. **Gegencheck**: Ein separater Gemini-Aufruf (`GEMINI_CHECK_MODEL`) sieht *nur* die Verdächtigen und Hinweise, nicht die Lösung, und soll den Täter ermitteln. Nennt er jemand anderen oder liegt seine Sicherheit unter 70 %, gilt das Kit als mehrdeutig.
-4. **Korrekturschleife**: Die Fehlerliste geht zurück an Gemini, höchstens 3 Durchläufe. Danach bricht der Lauf mit einem klaren Bericht ab (`report.json` bzw. auf der Kit-Seite).
+3. **Gegencheck**: Ein separater KI-Aufruf (`DEEPSEEK_CHECK_MODEL` bzw. `GEMINI_CHECK_MODEL`) sieht *nur* die Verdächtigen und Hinweise, nicht die Lösung, und soll den Täter ermitteln. Nennt er jemand anderen oder liegt seine Sicherheit unter 70 %, gilt das Kit als mehrdeutig.
+4. **Korrekturschleife**: Die Fehlerliste geht zurück an die KI, höchstens 3 Durchläufe. Danach bricht der Lauf mit einem klaren Bericht ab (`report.json` bzw. auf der Kit-Seite).
 
-## Gemini: Modelle, Cache, Kosten
+## KI-Anbieter: DeepSeek oder Gemini
 
-- Die Modelle stehen in `.env`: `GEMINI_TEXT_MODEL`, `GEMINI_CHECK_MODEL` und optional `GEMINI_IMAGE_MODEL`. Die Defaults in `.env.example` entsprechen dem Stand vom November 2026. Aktuelle Namen findest du unter <https://ai.google.dev/gemini-api/docs/models>.
-- **Cache**: Jede Antwort wird unter `sha256(Modell + Prompt + Schema)` in `.cache/` abgelegt. Ein zweiter Lauf mit denselben Eingaben kostet keine API-Aufrufe.
-- Bei Rate-Limits (429), Serverfehlern und Timeouts wiederholt der Client den Aufruf mit exponentiellem Backoff. Ist das **Tageskontingent** erschöpft, bricht er sofort mit einem klaren Hinweis ab. Der Fortschritt liegt dann in `output/<kit>/zwischenstand/` und lässt sich mit „Wiederholen“ bzw. `krimi resume` fortsetzen.
+Welcher Anbieter Story, Texte und Prüfung schreibt, legt `LLM_PROVIDER` in `.env` fest:
+
+| | DeepSeek (`LLM_PROVIDER=deepseek`, Standard) | Gemini (`LLM_PROVIDER=gemini`) |
+|---|---|---|
+| Key | `DEEPSEEK_API_KEY` | `GEMINI_API_KEY` |
+| Modelle | `DEEPSEEK_TEXT_MODEL`, `DEEPSEEK_CHECK_MODEL` (Default `deepseek-v4-flash`) | `GEMINI_TEXT_MODEL`, `GEMINI_CHECK_MODEL` |
+| Strukturierte Ausgabe | JSON-Modus. Das Schema steht im Prompt, ungültige Antworten bessert das Modell bis zu 2× nach | natives `response_schema` |
+| Bilder | nicht möglich, dafür zusätzlich `GEMINI_API_KEY` + `GEMINI_IMAGE_MODEL` setzen | `GEMINI_IMAGE_MODEL` |
+
+DeepSeek-spezifische Einstellungen:
+- `DEEPSEEK_MAX_TOKENS` legt die maximale Antwortlänge fest (Default 32000). Wird eine Antwort abgeschnitten, kommt eine klare Fehlermeldung.
+- `DEEPSEEK_THINKING` kann `enabled` oder `disabled` sein, leer heißt Modell-Standard.
+- `DEEPSEEK_BASE_URL` erlaubt einen anderen OpenAI-kompatiblen Endpunkt.
+
+Modellnamen ändern sich. Die alten DeepSeek-Namen `deepseek-chat`/`deepseek-reasoner` wurden im Juli 2026 abgeschaltet. Aktuelle Namen findest du unter <https://api-docs.deepseek.com/quick_start/pricing> bzw. <https://ai.google.dev/gemini-api/docs/models>.
+
+## Cache und Kosten
+
+- **Cache**: Jede Antwort wird unter `sha256(Anbieter + Modell + Prompt + Schema)` in `.cache/` abgelegt. Ein zweiter Lauf mit denselben Eingaben kostet keine API-Aufrufe.
+- Bei Rate-Limits (429), Serverfehlern und Timeouts wiederholt der Client den Aufruf mit exponentiellem Backoff. Ist das **Tageskontingent** (Gemini) bzw. das **Guthaben** (DeepSeek, HTTP 402) erschöpft, bricht er sofort mit einem klaren Hinweis ab. Der Fortschritt liegt dann in `output/<kit>/zwischenstand/` und lässt sich mit „Wiederholen“ bzw. `krimi resume` fortsetzen.
 - Der Token-Verbrauch jedes Laufs steht in `output/<kit>/usage.json`, in der Konsole und auf der Kit-Seite.
 - Alle Prompts liegen als Textdateien in `prompts/` und lassen sich dort anpassen.
 
 ## Projektstruktur
 
 ```
-prompts/              Prompt-Vorlagen für Gemini
+prompts/              Prompt-Vorlagen für die KI
 src/krimi/
-  models.py           Pydantic-Modelle (zugleich Schema für Geminis JSON-Ausgabe)
-  gemini_client.py    API-Zugriff, Retry, Cache, Token-Zählung
+  models.py           Pydantic-Modelle (zugleich Schema für die JSON-Ausgabe der KI)
+  llm_client.py       KI-Zugriff (DeepSeek / Gemini), Retry, Cache, JSON-Prüfung, Token-Zählung
   story.py            Generierung (Gerüst -> Ausarbeitung) und Korrektur
   validate.py         Logikprüfung + Gegencheck
   puzzles.py          Rätsel (Caesar, Substitution, Zahlenschloss, Wortsuche, Sitzordnung), ohne KI, mit Seed
@@ -136,7 +155,7 @@ src/krimi/
   web/                FastAPI-App, Vorlagen, CSS
   demo/               Beispiel-Kit (story.json)
 templates/            PDF-Vorlagen (Jinja2), base.css, themes/*.css, fonts/ (OFL/Apache-lizenziert)
-tests/                pytest (Logikprüfung, Rätsel, Pipeline mit simuliertem Gemini, Web)
+tests/                pytest (Logikprüfung, Rätsel, KI-Client, Pipeline mit simulierter KI, Web)
 ```
 
 `puzzles.py` hängt nicht von der Story ab und lässt sich auch für eigene Rätselhefte nutzen:
@@ -153,7 +172,7 @@ puzzles.seating_puzzle(["Anna", "Ben", "Cleo", "Dan"], seed=3).texte
 pytest
 ```
 
-Die Tests laufen ohne API-Key: Gemini wird in `tests/test_pipeline.py` simuliert. Geprüft werden Korrekturschleife, Cache (zweiter Lauf = 0 API-Aufrufe), `--no-cache` und Retry bei 429.
+Die Tests laufen ohne API-Key: Die KI wird in `tests/test_pipeline.py` simuliert, die DeepSeek-API in `tests/test_llm_client.py` mit einem Schein-HTTP-Endpunkt. Geprüft werden Korrekturschleife, Cache (zweiter Lauf = 0 API-Aufrufe), `--no-cache` und Retry bei 429.
 
 **Texte laufen nicht aus Boxen:** Nach dem Rendern misst `render.py` jede Karte und jedes Namensschild. Ragt Text über den Rand, wird die Schrift in Stufen verkleinert und neu gesetzt. Passt es trotzdem nicht, erscheint eine Warnung.
 

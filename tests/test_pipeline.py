@@ -1,11 +1,11 @@
-"""End-to-End-Test der Pipeline mit simuliertem Gemini (kein API-Key nötig)."""
+"""End-to-End-Test der Pipeline mit simulierter KI (kein API-Key nötig)."""
 import json
 import zipfile
 from types import SimpleNamespace
 
 import pytest
 
-from krimi.gemini_client import GeminiClient, GeminiError
+from krimi.llm_client import LLMClient, LLMError
 from krimi.models import Ausarbeitung, CharakterDetails, Geruest, GeruestCharakter
 from krimi.pipeline import generate_kit
 
@@ -26,7 +26,8 @@ def parts_from_demo(story):
 
 
 class FakeModels:
-    """Imitiert client.models.generate_content des google-genai-SDK."""
+    """Simuliertes KI-Backend (gleiche Schnittstelle wie DeepSeekBackend/GeminiBackend)."""
+    name = "fake"
 
     def __init__(self, story, broken_first=True, fail_times=0, quota_on=None):
         self.story = story
@@ -41,13 +42,13 @@ class FakeModels:
         self.fail_times = fail_times
         self.quota_on = quota_on  # Schema-Name, bei dem das Tageskontingent "erschöpft" ist
 
-    def generate_content(self, model, contents, config):
+    def complete_json(self, prompt, schema, model, temperature):
         if self.fail_times:
             self.fail_times -= 1
             err = RuntimeError("rate limit")
             err.code = 429
             raise err
-        name = config.response_schema.__name__
+        name = schema.__name__
         if name == self.quota_on:
             err = RuntimeError("429 RESOURCE_EXHAUSTED: Quota exceeded for GenerateRequestsPerDay")
             err.code = 429
@@ -61,14 +62,11 @@ class FakeModels:
                                               "begruendung": "Ohrclip, Tipp-Ex, leere Küche",
                                               "alternative_verdaechtige": []}),
         }[name]()
-        usage = SimpleNamespace(prompt_token_count=1000, candidates_token_count=500, total_token_count=1500)
-        return SimpleNamespace(text=payload, usage_metadata=usage)
+        return payload, {"prompt": 1000, "output": 500, "total": 1500}
 
 
 def make_client(tmp_path, models, cache=True):
-    c = GeminiClient(api_key="test", use_cache=cache, cache_dir=tmp_path / "cache", sleep=lambda s: None)
-    c._client = SimpleNamespace(models=models)
-    return c
+    return LLMClient(backend=models, use_cache=cache, cache_dir=tmp_path / "cache", sleep=lambda s: None)
 
 
 def test_full_pipeline_with_repair_and_cache(tmp_path, story):
@@ -126,21 +124,21 @@ def test_retry_on_rate_limit(tmp_path, story):
     assert models.calls[0] == "Geruest"
 
 
-def test_missing_key_is_clear_error(tmp_path):
-    c = GeminiClient(api_key="", cache_dir=tmp_path)
-    with pytest.raises(GeminiError, match="GEMINI_API_KEY"):
+@pytest.mark.parametrize("provider", ["deepseek", "gemini"])
+def test_missing_key_is_clear_error(tmp_path, provider):
+    c = LLMClient(provider=provider, api_key="", cache_dir=tmp_path)
+    with pytest.raises(LLMError, match=f"{provider.upper()}_API_KEY"):
         c.generate_json("hallo", Geruest, "m")
 
 
 def test_resume_after_quota_exhausted(tmp_path, story):
-    from krimi.gemini_client import GeminiQuotaError
+    from krimi.llm_client import QuotaError
     from krimi.pipeline import Zwischenstand, resume_kit
     models = FakeModels(story, quota_on="Ausarbeitung")
     sleeps = []
-    client = GeminiClient(api_key="t", use_cache=False, cache_dir=tmp_path / "c", sleep=sleeps.append)
-    client._client = SimpleNamespace(models=models)
+    client = LLMClient(backend=models, use_cache=False, cache_dir=tmp_path / "c", sleep=sleeps.append)
     kit = tmp_path / "kit"
-    with pytest.raises(GeminiQuotaError, match="Fortschritt ist gespeichert"):
+    with pytest.raises(QuotaError, match="Fortschritt ist gespeichert"):
         generate_kit("Silvester", 6, client=client, kit_dir=kit, use_cache=False)
     assert sleeps == []  # Tageslimit: kein sinnloses Warten
     assert models.calls == ["Geruest"]
@@ -148,7 +146,7 @@ def test_resume_after_quota_exhausted(tmp_path, story):
 
     # Später: Kontingent wieder da, aber Gerüst steht nur noch der Kontingent beim Prüfen im Weg
     models.quota_on = "Ermittlung"
-    with pytest.raises(GeminiQuotaError):
+    with pytest.raises(QuotaError):
         resume_kit(kit, client=client, use_cache=False)
     assert models.calls == ["Geruest", "Ausarbeitung", "Story"]  # Gerüst NICHT erneut
     zs = Zwischenstand(kit)
@@ -179,8 +177,8 @@ def test_new_run_discards_old_checkpoints(tmp_path, story):
 
 
 def test_short_rate_limit_becomes_quota_error_after_retries(tmp_path, story):
-    from krimi.gemini_client import GeminiQuotaError
+    from krimi.llm_client import QuotaError
     models = FakeModels(story, fail_times=99)
     client = make_client(tmp_path, models)
-    with pytest.raises(GeminiQuotaError):
+    with pytest.raises(QuotaError):
         generate_kit("Z", 6, client=client, kit_dir=tmp_path / "kit", render=False)

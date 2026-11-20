@@ -10,7 +10,7 @@ import shutil
 from pathlib import Path
 
 from .config import get_settings
-from .gemini_client import GeminiClient
+from .llm_client import LLMClient
 from .images import generate_images
 from .models import Ausarbeitung, Geruest, Story
 from .render import render_kit, slug
@@ -95,7 +95,7 @@ def read_json(path: Path):
         return None
 
 
-def check_and_repair(story: Story, client: GeminiClient, text_model: str, check_model: str,
+def check_and_repair(story: Story, client: LLMClient, text_model: str, check_model: str,
                      progress=lambda m: None, max_korrekturen: int = MAX_KORREKTUREN,
                      zs: Zwischenstand | None = None, kit_dir: Path | None = None) -> tuple[Story, Report]:
     """Prüft und korrigiert bis zu `max_korrekturen` Mal. Mit Zwischenstand wird nach jeder
@@ -116,7 +116,7 @@ def check_and_repair(story: Story, client: GeminiClient, text_model: str, check_
         if i == max_korrekturen:
             break
         nr = erledigt + i + 1
-        progress(f"Korrektur {i + 1}/{max_korrekturen} durch Gemini …")
+        progress(f"Korrektur {i + 1}/{max_korrekturen} durch die KI …")
         story = repair_story(client, text_model, story, report.fehler, nr)
         if zs and kit_dir:
             save_story(story, Path(kit_dir) / "story.json")
@@ -126,11 +126,11 @@ def check_and_repair(story: Story, client: GeminiClient, text_model: str, check_
 
 def generate_kit(thema: str, spieler: int = 6, lang: str = "de", paper: str = "a4",
                  images: bool = False, use_cache: bool = True, variante: int = 1,
-                 progress=lambda m: None, client: GeminiClient | None = None,
+                 progress=lambda m: None, client: LLMClient | None = None,
                  kit_dir: Path | None = None, render: bool = True, resume: bool = False) -> dict:
     """Erzeugt ein Kit. Mit resume=True wird ab dem letzten gesicherten Schritt weitergemacht."""
     s = get_settings()
-    client = client or GeminiClient(use_cache=use_cache)
+    client = client or LLMClient(use_cache=use_cache)
     kit_dir = Path(kit_dir or s.output_dir / kit_name(thema, spieler, lang, variante))
     kit_dir.mkdir(parents=True, exist_ok=True)
     zs = Zwischenstand(kit_dir)
@@ -180,8 +180,7 @@ def generate_kit(thema: str, spieler: int = 6, lang: str = "de", paper: str = "a
             return {"kit_dir": str(kit_dir), "files": [str(kit_dir / "story.json")],
                     "warnings": warnings, "usage": client.usage.to_dict()}
         if images:
-            progress("Bilder werden erzeugt …")
-            warnings += generate_images(story, client, s.image_model, kit_dir, progress)
+            warnings += _make_images(story, client, use_cache, kit_dir, progress)
         progress("PDFs werden gesetzt …")
         files, render_warn = render_kit(story, kit_dir, paper)
         warnings += render_warn
@@ -194,7 +193,32 @@ def generate_kit(thema: str, spieler: int = 6, lang: str = "de", paper: str = "a
                  client.usage.api_calls, client.usage.cache_hits, client.usage.total_tokens)
 
 
-def resume_kit(kit_dir: Path, progress=lambda m: None, client: GeminiClient | None = None,
+def _make_images(story: Story, client: LLMClient, use_cache: bool, kit_dir: Path, progress) -> list[str]:
+    """Bilder kommen immer von Gemini – bei DeepSeek als Textanbieter über einen zweiten Client."""
+    s = get_settings()
+    if not s.image_model:
+        return ["Kein GEMINI_IMAGE_MODEL gesetzt – Bilder übersprungen."]
+    if client.provider == "gemini":
+        img_client = client
+    elif s.image_api_key:
+        img_client = LLMClient(provider="gemini", api_key=s.image_api_key, use_cache=use_cache)
+    else:
+        return ["Bilder brauchen einen GEMINI_API_KEY (DeepSeek kann keine Bilder erzeugen) – übersprungen."]
+    progress("Bilder werden erzeugt …")
+    try:
+        return generate_images(story, img_client, s.image_model, kit_dir, progress)
+    finally:
+        if img_client is not client:  # Bild-Verbrauch in die Gesamtstatistik übernehmen
+            u, iu = client.usage, img_client.usage
+            u.api_calls += iu.api_calls
+            u.cache_hits += iu.cache_hits
+            u.prompt_tokens += iu.prompt_tokens
+            u.output_tokens += iu.output_tokens
+            u.total_tokens += iu.total_tokens
+            u.calls.extend(iu.calls)
+
+
+def resume_kit(kit_dir: Path, progress=lambda m: None, client: LLMClient | None = None,
                use_cache: bool = True) -> dict:
     """Setzt einen abgebrochenen Lauf mit den ursprünglichen Parametern fort."""
     params = read_json(Path(kit_dir) / "params.json")
@@ -210,7 +234,7 @@ def validate_kit(story_path: Path, gegencheck: bool = True, use_cache: bool = Tr
     story = load_story(story_path)
     if gegencheck:
         s = get_settings()
-        client = GeminiClient(use_cache=use_cache)
+        client = LLMClient(use_cache=use_cache)
         report = full_check(story, client, s.check_model)
         write_json(story_path.parent / "usage-validate.json", client.usage.to_dict())
     else:

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import typer
 
-app = typer.Typer(help="Krimidinner-Generator: druckfertige Murder-Mystery-Kits mit Gemini.",
+app = typer.Typer(help="Krimidinner-Generator: druckfertige Murder-Mystery-Kits mit KI (DeepSeek oder Gemini).",
                   no_args_is_help=True, add_completion=False)
 
 
@@ -23,18 +23,18 @@ def _progress(msg: str) -> None:
 
 
 def _usage(u: dict) -> None:
-    typer.echo(f"Gemini: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "
+    typer.echo(f"KI: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "
                f"{u['total_tokens']} Tokens ({u['prompt_tokens']} Eingabe / {u['output_tokens']} Ausgabe)")
 
 
 def _run(render: bool, theme, players, lang, paper, images, cache, variante, verbose):
-    from .gemini_client import GeminiError
+    from .llm_client import LLMError
     from .pipeline import KitFailed, generate_kit, kit_name
     _setup_logging(verbose)
     try:
         res = generate_kit(theme, players, lang, paper, images=images, use_cache=cache,
                            variante=variante, progress=_progress, render=render)
-    except (KitFailed, GeminiError) as exc:
+    except (KitFailed, LLMError) as exc:
         from .config import get_settings
         typer.secho(f"✘ {exc}", fg="red")
         kit = get_settings().output_dir / kit_name(theme, players, lang, variante)
@@ -51,7 +51,7 @@ def new(theme: str = typer.Option(..., "--theme", "-t", help="Thema des Krimidin
         players: int = typer.Option(6, "--players", "-p", min=3, max=12),
         lang: str = typer.Option("de", "--lang", help="de oder en"),
         variante: int = typer.Option(1, "--variante", help="Andere Geschichte zum selben Thema"),
-        cache: bool = typer.Option(True, "--cache/--no-cache", help="Gemini-Cache nutzen"),
+        cache: bool = typer.Option(True, "--cache/--no-cache", help="KI-Cache nutzen"),
         verbose: bool = typer.Option(False, "--verbose", "-v")):
     """Story erzeugen und prüfen -> output/<kit>/story.json"""
     _run(False, theme, players, lang, "a4", False, cache, variante, verbose)
@@ -75,12 +75,12 @@ def resume(kit_dir: Path = typer.Argument(..., exists=True, file_okay=False),
            cache: bool = typer.Option(True, "--cache/--no-cache"),
            verbose: bool = typer.Option(False, "--verbose", "-v")):
     """Abgebrochenen Lauf (z. B. Kontingent erschöpft) ab dem letzten gesicherten Schritt fortsetzen."""
-    from .gemini_client import GeminiError
+    from .llm_client import LLMError
     from .pipeline import KitFailed, resume_kit
     _setup_logging(verbose)
     try:
         res = resume_kit(kit_dir, progress=_progress, use_cache=cache)
-    except (KitFailed, GeminiError) as exc:
+    except (KitFailed, LLMError) as exc:
         typer.secho(f"✘ {exc}", fg="red")
         raise typer.Exit(1)
     for w in res["warnings"]:
@@ -92,15 +92,15 @@ def resume(kit_dir: Path = typer.Argument(..., exists=True, file_okay=False),
 @app.command()
 def validate(story_json: Path = typer.Argument(..., exists=True, dir_okay=False),
              gegencheck: bool = typer.Option(True, "--gegencheck/--ohne-gegencheck",
-                                             help="Täter zusätzlich per Gemini ermitteln lassen"),
+                                             help="Täter zusätzlich per KI ermitteln lassen"),
              cache: bool = typer.Option(True, "--cache/--no-cache")):
     """Logikprüfung einer (ggf. von Hand bearbeiteten) story.json."""
-    from .gemini_client import GeminiError
+    from .llm_client import LLMError
     from .pipeline import validate_kit
     _setup_logging(False)
     try:
         r = validate_kit(story_json, gegencheck=gegencheck, use_cache=cache)
-    except GeminiError as exc:
+    except LLMError as exc:
         typer.secho(f"✘ {exc}\n  (Tipp: --ohne-gegencheck prüft nur die feste Logik)", fg="red")
         raise typer.Exit(1)
     for w in r.warnungen:

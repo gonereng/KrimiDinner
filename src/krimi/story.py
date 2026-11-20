@@ -4,7 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-from .gemini_client import GeminiClient, load_prompt
+from .llm_client import LLMClient, load_prompt
 from .models import Ausarbeitung, Geruest, Story
 
 SPRACHEN = {"de": "Deutsch", "en": "Englisch (English)"}
@@ -14,14 +14,14 @@ def sprache_name(lang: str) -> str:
     return SPRACHEN.get(lang, lang)
 
 
-def generate_geruest(client: GeminiClient, model: str, thema: str, spieler: int,
+def generate_geruest(client: LLMClient, model: str, thema: str, spieler: int,
                      lang: str = "de", dauer: str = "2 Stunden", variante: int = 1) -> Geruest:
     prompt = load_prompt("geruest", thema=thema, spieler=spieler, dauer=dauer,
                          sprache_name=sprache_name(lang), variante=variante)
     return client.generate_json(prompt, Geruest, model, label="Gerüst")
 
 
-def generate_ausarbeitung(client: GeminiClient, model: str, geruest: Geruest, spieler: int,
+def generate_ausarbeitung(client: LLMClient, model: str, geruest: Geruest, spieler: int,
                           lang: str = "de", dauer: str = "2 Stunden") -> Ausarbeitung:
     prompt = load_prompt(
         "ausarbeitung",
@@ -52,7 +52,7 @@ def merge(geruest: Geruest, aus: Ausarbeitung, thema: str, spieler: int, lang: s
     )
 
 
-def generate_story(client: GeminiClient, model: str, thema: str, spieler: int,
+def generate_story(client: LLMClient, model: str, thema: str, spieler: int,
                    lang: str = "de", progress=lambda msg: None, variante: int = 1) -> Story:
     progress("Schritt 1/2: Gerüst (Täter, Motiv, Zeitleiste, Alibis) …")
     geruest = generate_geruest(client, model, thema, spieler, lang, variante=variante)
@@ -61,9 +61,9 @@ def generate_story(client: GeminiClient, model: str, thema: str, spieler: int,
     return merge(geruest, aus, thema, spieler, lang)
 
 
-def repair_story(client: GeminiClient, model: str, story: Story, fehler: list[str],
+def repair_story(client: LLMClient, model: str, story: Story, fehler: list[str],
                  versuch: int) -> Story:
-    """Schickt die Fehlerliste an Gemini und bekommt ein korrigiertes Kit zurück."""
+    """Schickt die Fehlerliste an die KI und bekommt ein korrigiertes Kit zurück."""
     taeter = story.taeter()
     prompt = load_prompt(
         "korrektur",
@@ -72,7 +72,7 @@ def repair_story(client: GeminiClient, model: str, story: Story, fehler: list[st
         taeter_id=taeter[0].id if taeter else "?", versuch=versuch,
         sprache_name=sprache_name(story.sprache))
     fixed = client.generate_json(prompt, Story, model, label=f"Korrektur {versuch}", temperature=0.4)
-    # Metadaten, die Gemini nicht ändern soll, beibehalten
+    # Metadaten, die die KI nicht ändern soll, beibehalten
     fixed.thema, fixed.spieler, fixed.sprache, fixed.seed = story.thema, story.spieler, story.sprache, story.seed
     return fixed
 

@@ -9,6 +9,8 @@ from fastapi.testclient import TestClient
 def client(tmp_path, monkeypatch):
     monkeypatch.setenv("APP_PASSWORD", "geheim")
     monkeypatch.setenv("KRIMI_OUTPUT_DIR", str(tmp_path / "out"))
+    monkeypatch.setenv("LLM_PROVIDER", "deepseek")
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "")
     monkeypatch.setenv("GEMINI_API_KEY", "")
     from krimi.web.app import app
     return TestClient(app)
@@ -49,7 +51,7 @@ def test_no_password_configured(client, monkeypatch):
 def test_demo_flow(client):
     assert login(client).status_code == 303
     page = client.get("/")
-    assert "Kein <code>GEMINI_API_KEY</code>" in page.text
+    assert "Kein <code>DEEPSEEK_API_KEY</code>" in page.text
     r = client.post("/demo", data={"paper": "a4"}, follow_redirects=False)
     name = r.headers["location"].split("/")[-1]
     st = wait(client, name)
@@ -91,7 +93,7 @@ def test_new_kit_without_key_fails_cleanly(client):
                     follow_redirects=False)
     name = r.headers["location"].split("/")[-1]
     st = wait(client, name)
-    assert st["status"] == "fehler" and "GEMINI_API_KEY" in st["fehler"]
+    assert st["status"] == "fehler" and "DEEPSEEK_API_KEY" in st["fehler"]
 
 
 def test_new_kit_rejects_bad_input(client):
@@ -108,7 +110,7 @@ def test_retry_button_after_failure(client, monkeypatch, tmp_path):
     page = client.get(f"/kits/{name}").text
     assert "Wiederholen" in page and "/retry" in page
 
-    # Retry mit simuliertem Gemini: Gerüst lag schon vor
+    # Retry mit simulierter KI: Gerüst lag schon vor
     from krimi import pipeline
     calls = []
 

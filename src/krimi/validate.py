@@ -1,7 +1,7 @@
 """Logikprüfung eines Kits.
 
 1. Deterministisch (check_story): Struktur, Verweise, Ent-/Belastung, Zeitleiste.
-2. Per Gemini (cross_check): Ein Prüfmodell bekommt nur Verdächtige + Hinweise
+2. Per KI (cross_check): Ein Prüfmodell bekommt nur Verdächtige + Hinweise
    und soll den Täter ermitteln.
 """
 from __future__ import annotations
@@ -206,7 +206,7 @@ def check_timeline(story: Story) -> list[str]:
 
 
 # --------------------------------------------------------------------------
-# Gegencheck per Gemini
+# Gegencheck per KI
 # --------------------------------------------------------------------------
 
 def hinweise_als_text(story: Story) -> str:
@@ -223,7 +223,7 @@ def hinweise_als_text(story: Story) -> str:
 
 
 def cross_check(story: Story, client, model: str) -> Ermittlung:
-    from .gemini_client import load_prompt
+    from .llm_client import load_prompt
     verdaechtige = "\n".join(
         f"- {c.id}: {c.name}, {c.rolle}. {c.oeffentliches_profil} Behauptetes Alibi: {c.alibi}"
         for c in story.charaktere)

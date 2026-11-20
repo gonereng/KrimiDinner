@@ -1,6 +1,6 @@
 """Pydantic-Datenmodelle für ein Krimidinner-Kit.
 
-Die Modelle dienen gleichzeitig als JSON-Schema für Geminis strukturierte
+Die Modelle dienen gleichzeitig als JSON-Schema für die strukturierte KI-
 Ausgabe. Deshalb: nur einfache Typen (str, int, bool, Listen, verschachtelte
 Modelle), keine dicts mit freien Schlüsseln.
 
@@ -76,7 +76,7 @@ class ZiffernQuelle(BaseModel):
 
 
 class RaetselSpec(BaseModel):
-    """Vorgabe für ein Rätsel. Gemini liefert den Klartext, der Code verschlüsselt."""
+    """Vorgabe für ein Rätsel. Die KI liefert den Klartext, der Code verschlüsselt."""
     typ: RaetselTyp
     klartext: str = Field(description="Botschaft/Inhalt, der nach dem Lösen sichtbar wird")
     ziffern: list[ZiffernQuelle] = Field([], description="Nur für zahlenschloss: 3-4 Ziffern")
@@ -164,7 +164,7 @@ class Story(BaseModel):
 
 
 # --------------------------------------------------------------------------
-# Zwischenschritte der Generierung (Gemini-Ausgabeschemata)
+# Zwischenschritte der Generierung (KI-Ausgabeschemata)
 # --------------------------------------------------------------------------
 
 

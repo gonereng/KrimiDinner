@@ -208,7 +208,8 @@ def index(request: Request):
     s = get_settings()
     return templates.TemplateResponse(request, "index.html", {
         "kits": kits, "has_key": bool(s.api_key), "text_model": s.text_model,
-        "check_model": s.check_model, "image_model": s.image_model})
+        "check_model": s.check_model, "provider": s.provider_name, "key_var": s.key_var,
+        "image_model": s.image_model if (s.image_api_key or s.provider == "gemini") else ""})
 
 
 @app.post("/kits/new")
@@ -230,7 +231,7 @@ def new_kit(request: Request, thema: str = Form(...), spieler: int = Form(6), la
         res = generate_kit(thema, spieler, lang, paper, images=bilder, use_cache=not ohne_cache,
                            variante=variante, progress=job.progress, kit_dir=kit_dir)
         u = res["usage"]
-        job.progress(f"Gemini: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "
+        job.progress(f"KI: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "
                      f"{u['total_tokens']} Tokens")
         return res["warnings"]
 
@@ -250,7 +251,7 @@ def kit_retry(request: Request, name: str):
     def task(job: Job):
         res = resume_kit(d, progress=job.progress)
         u = res["usage"]
-        job.progress(f"Gemini: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "
+        job.progress(f"KI: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "
                      f"{u['total_tokens']} Tokens")
         return res["warnings"]
 
@@ -295,7 +296,8 @@ def kit_detail(request: Request, name: str):
         "kit": summary, "status": read_json(d / "status.json", {}) or {},
         "report": read_json(d / "report.json"), "usage": read_json(d / "usage.json"),
         "files": files, "hefte": [h.name for h in hefte], "story": story,
-        "running": name in _running, "has_key": bool(get_settings().api_key)})
+        "running": name in _running, "has_key": bool(get_settings().api_key),
+        "provider": get_settings().provider_name})
 
 
 @app.get("/api/kits/{name}")
@@ -343,7 +345,7 @@ def kit_validate(request: Request, name: str, gegencheck: bool = Form(False)):
     from ..pipeline import validate_kit
 
     def task(job: Job):
-        job.progress("Logikprüfung" + (" mit Gemini-Gegencheck" if gegencheck else "") + " …")
+        job.progress("Logikprüfung" + (" mit KI-Gegencheck" if gegencheck else "") + " …")
         r = validate_kit(d / "story.json", gegencheck=gegencheck)
         if r.ermittlung:
             job.progress(f"Gegencheck: {r.ermittlung.taeter_id} (Sicherheit {r.ermittlung.sicherheit:.2f})")
