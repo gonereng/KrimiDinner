@@ -48,7 +48,8 @@ _running: set[str] = set()
 NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,80}$")
 FILE_LABELS = {
     "01_gastgeber.pdf": "Gastgeber-Anleitung", "02_einladungen.pdf": "Einladungen",
-    "03_charakterhefte.pdf": "Charakterhefte (alle)", "04_hinweiskarten.pdf": "Hinweiskarten",
+    "03_charakterhefte.pdf": "Charakterhefte (alle)", "04_hinweiskarten.pdf": "Hinweiskarten (mit Rückseiten, beidseitig drucken)",
+    "04_hinweiskarten_einseitig.pdf": "Hinweiskarten (nur Vorderseiten)",
     "05_beweisstuecke.pdf": "Beweisstücke", "06_aufloesung.pdf": "Auflösung (versiegelt)",
     "07_namensschilder.pdf": "Namensschilder", "08_notizblaetter.pdf": "Detektiv-Notizblätter",
     "kit.zip": "Alles als ZIP", "story.json": "story.json",

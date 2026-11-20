@@ -47,3 +47,25 @@ def test_render_existing_switches_and_saves_design(tmp_path, story):
     assert json.loads((tmp_path / "story.json").read_text())["design"] == "gothic"
     render_existing(tmp_path, "letter")  # ohne Design: bleibt
     assert json.loads((tmp_path / "story.json").read_text())["design"] == "gothic"
+
+
+@pytest.mark.parametrize("paper", ["a4", "letter"])
+def test_card_backs_are_mirrored_for_duplex(story, paper):
+    from krimi.render import CARD_W, PAPER, card_sheets
+    r = Renderer(story, Path("."), paper)
+    pages = card_sheets(r.card_hints(), paper, backs=True)
+    assert [p["side"] for p in pages[:2]] == ["front", "back"]
+    assert len(pages) == 2 * len(card_sheets(r.card_hints(), paper, backs=False))
+    pw = PAPER[paper][0]
+    for front, back in zip(pages[::2], pages[1::2]):
+        assert [h.id for _, h in front["cards"]] == [h.id for _, h in back["cards"]]
+        for (fs, _), (bs, _) in zip(front["cards"], back["cards"]):
+            # Wenden an der langen Kante: x spiegelt sich, y bleibt
+            assert abs(fs["x"] + bs["x"] + CARD_W - pw) < 0.01 and fs["y"] == bs["y"]
+
+
+def test_kit_contains_both_card_files(tmp_path, story):
+    from krimi.render import render_kit
+    files, warnings = render_kit(story, tmp_path, "a4")
+    names = {f.name for f in files}
+    assert {"04_hinweiskarten.pdf", "04_hinweiskarten_einseitig.pdf"} <= names and warnings == []

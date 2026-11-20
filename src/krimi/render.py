@@ -23,6 +23,7 @@ log = logging.getLogger("krimi.render")
 
 PAPER = {"a4": (210.0, 297.0), "letter": (215.9, 279.4)}
 CARD_W, CARD_H, CARD_GAP = 90.0, 80.0, 6.0
+BLEED = 2.0  # Rückseiten-Farbe ragt so weit über die Schnittkante (Toleranz beim Duplexdruck)
 
 LABELS = {
     "de": {
@@ -59,6 +60,8 @@ LABELS = {
         "beweis_hinweis": "Beweisstück – an die genannte Person aushändigen", "schneiden": "Entlang der Marken ausschneiden",
         "inhalt_titel": "Für die Spielleitung", "erst_bei_code": "Erst herausgeben bei Code",
         "inhalt_von": "Inhalt", "inhalt_seite": "Inhalt liegt als Beweisstück",
+        "hinweis_label": "Hinweis",
+        "rueckseiten": "Rückseiten · beidseitig drucken, an der langen Kante wenden",
     },
     "en": {
         "gastgeber": "Host Guide", "einladung": "Invitation", "rolle": "Your role",
@@ -94,6 +97,8 @@ LABELS = {
         "beweis_hinweis": "Evidence – hand to the named player", "schneiden": "Cut along the marks",
         "inhalt_titel": "For the host", "erst_bei_code": "Hand out only for code",
         "inhalt_von": "Contents", "inhalt_seite": "Contents are evidence",
+        "hinweis_label": "Clue",
+        "rueckseiten": "Card backs · print double-sided, flip on long edge",
     },
 }
 
@@ -202,6 +207,26 @@ def crop_marks(slots: list[dict], length: float = 4.0, offset: float = 1.0) -> l
     return marks
 
 
+def mirror_slot(slot: dict, paper: str) -> dict:
+    """Position der Rückseite beim Duplexdruck (Wenden an der langen Kante): horizontal gespiegelt."""
+    pw, _ = PAPER[paper]
+    return {"x": round(pw - slot["x"] - CARD_W, 2), "y": slot["y"]}
+
+
+def card_sheets(hints: list, paper: str, backs: bool = True) -> list[dict]:
+    """Bögen für die Hinweiskarten; mit backs=True folgt auf jeden Vorderseiten-Bogen sein Rückseiten-Bogen."""
+    slots = card_layout(paper)
+    pages = []
+    for runde in (1, 2, 3):
+        hs = sorted([h for h in hints if h.runde == runde], key=lambda h: h.id)
+        for group in chunk(hs, len(slots)):
+            pages.append({"runde": runde, "side": "front", "cards": list(zip(slots, group))})
+            if backs:
+                pages.append({"runde": runde, "side": "back",
+                              "cards": [(mirror_slot(sl, paper), h) for sl, h in zip(slots, group)]})
+    return pages
+
+
 def chunk(items: list, n: int) -> list[list]:
     return [items[i:i + n] for i in range(0, len(items), n)]
 
@@ -283,7 +308,7 @@ class Renderer:
         s = self.story
         return {"s": s, "L": self.L, "paper": self.paper, "pw": PAPER[self.paper][0],
                 "ph": PAPER[self.paper][1], "puzzles": self.puzzles, "seating": self.seating,
-                "images": self.images, "css": self._css(), "theme": self.theme, "card_w": CARD_W, "card_h": CARD_H,
+                "images": self.images, "css": self._css(), "theme": self.theme, "card_w": CARD_W, "card_h": CARD_H, "bleed": BLEED,
                 "taeter": s.taeter()[0] if s.taeter() else None, **extra}
 
     def _pdf(self, template: str, out: Path, fit_retries: int = 4, **extra) -> Path:
@@ -324,14 +349,11 @@ class Renderer:
         for c in self.story.charaktere:
             files.append(self._pdf("charakterheft.html", d / "charakterhefte" / f"{slug(c.name)}.pdf",
                                    chars=[c]))
-        slots = card_layout(self.paper)
-        pages = []
-        for runde in (1, 2, 3):
-            hs = sorted([h for h in self.card_hints() if h.runde == runde], key=lambda h: h.id)
-            for group in chunk(hs, len(slots)):
-                pages.append({"runde": runde, "cards": list(zip(slots, group))})
-        files.append(self._pdf("hinweiskarten.html", d / "04_hinweiskarten.pdf", pages=pages,
-                               marks=crop_marks(slots)))
+        marks = crop_marks(card_layout(self.paper))
+        files.append(self._pdf("hinweiskarten.html", d / "04_hinweiskarten.pdf", marks=marks,
+                               pages=card_sheets(self.card_hints(), self.paper, backs=True)))
+        files.append(self._pdf("hinweiskarten.html", d / "04_hinweiskarten_einseitig.pdf", marks=marks,
+                               pages=card_sheets(self.card_hints(), self.paper, backs=False)))
         files.append(self._pdf("beweisstuecke.html", d / "05_beweisstuecke.pdf",
                                beweise=sorted(self.evidence_hints(), key=lambda h: (h.runde, h.id))))
         files.append(self._pdf("aufloesung.html", d / "06_aufloesung.pdf"))

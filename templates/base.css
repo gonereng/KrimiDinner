@@ -157,3 +157,15 @@ table.suspects td:first-child { width: 34mm; font-family: var(--f-head); color: 
 table.seat td, table.seat th { text-align: center; }
 table.seat td { height: 8mm; }
 table.seat td:first-child { text-align: left; }
+
+/* ---------- Kartenrückseiten (Duplexdruck) ---------- */
+.card-back { position: absolute; box-sizing: border-box; background: var(--c-cover-bg); color: var(--c-cover-ink); overflow: hidden; }
+.card-back .cb-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: .28; }
+.card-back .cb-frame { position: absolute; border: 1pt solid var(--c-gold); }
+.card-back .cb-frame::after { content: ""; position: absolute; top: 1.5mm; left: 1.5mm; right: 1.5mm; bottom: 1.5mm; border: .4pt solid var(--c-gold); }
+.card-back .cb-inner { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4mm 6mm; box-sizing: border-box; }
+.card-back .cb-kicker { font-size: 7pt; letter-spacing: .35em; text-transform: uppercase; color: var(--c-gold); }
+.card-back .cb-sym { font-family: "DejaVu Sans", serif; color: var(--c-gold); font-size: 13pt; letter-spacing: .35em; margin: 3mm 0 2.5mm; }
+.card-back .cb-title { font-family: var(--f-head); font-size: 17pt; line-height: 1.15; max-height: 22mm; overflow: hidden; color: var(--c-cover-ink); }
+.card-back .cb-round { margin-top: 4mm; font-family: var(--f-head); font-size: 11pt; color: var(--c-gold); }
+.card-back .cb-for { margin-top: 1mm; font-size: 7.5pt; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }

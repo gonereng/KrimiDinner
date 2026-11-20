@@ -1,6 +1,24 @@
 {% extends "_layout.html" %}
 {% block body %}
 {% for pg in pages %}
+{% if pg.side == 'back' %}
+<section class="sheet backs">
+  <div class="label">{{ L.rueckseiten }}</div>
+  {% for slot, h in pg.cards %}
+  <div class="card-back" style="left: {{ slot.x - bleed }}mm; top: {{ slot.y - bleed }}mm; width: {{ card_w + 2 * bleed }}mm; height: {{ card_h + 2 * bleed }}mm">
+    {% if images.cover %}<img class="cb-img" src="{{ images.cover }}">{% endif %}
+    <div class="cb-frame" style="top: {{ bleed + 3 }}mm; left: {{ bleed + 3 }}mm; right: {{ bleed + 3 }}mm; bottom: {{ bleed + 3 }}mm"></div>
+    <div class="cb-inner" style="top: {{ bleed + 3 }}mm; left: {{ bleed + 3 }}mm; right: {{ bleed + 3 }}mm; bottom: {{ bleed + 3 }}mm">
+      <div class="cb-kicker">{{ L.hinweis_label }}</div>
+      <div class="cb-sym">{{ theme.cover_symbol }}</div>
+      <div class="cb-title fit shrink-{{ shrink.get('back-' ~ h.id, 0) }}" data-fit="back-{{ h.id }}">{{ s.titel }}</div>
+      <div class="cb-round">{{ L.runde }} {{ h.runde }}</div>
+      <div class="cb-for">{{ L.fuer }}: {{ name_of(h.empfaenger)|short }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</section>
+{% else %}
 <section class="sheet">
   <div class="label">{{ s.titel }} · {{ L.hinweiskarten }} · {{ L.runde }} {{ pg.runde }} · {{ L.schneiden }}</div>
   {% for m in marks %}<div class="mark {{ 'h' if m.h == 0 else 'v' }}" style="left: {{ m.x }}mm; top: {{ m.y }}mm; width: {{ m.w }}mm; height: {{ m.h }}mm"></div>{% endfor %}
@@ -13,5 +31,6 @@
   </div>
   {% endfor %}
 </section>
+{% endif %}
 {% endfor %}
 {% endblock %}
