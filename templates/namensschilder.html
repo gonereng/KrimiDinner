@@ -9,7 +9,7 @@
     <div class="half {{ side }}">
       <div class="orn">{{ theme.small_symbol }}</div>
       <div class="name fit shrink-{{ shrink.get('tent-' ~ c.id, 0) }}" data-fit="tent-{{ c.id }}" style="height: 12mm; overflow: hidden">{{ c.name }}</div>
-      <div class="rolle">{{ c.rolle }}</div>
+      <div class="rolle">{{ c.rolle }}{% if side == 'bottom' %}{{ ab_char(c.id) }}{% endif %}</div>
     </div>
     {% endfor %}
     <div class="fold"></div>

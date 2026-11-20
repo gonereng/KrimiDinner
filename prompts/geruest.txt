@@ -4,7 +4,7 @@ AUFGABE (Schritt 1 von 2): Entwirf NUR das logische Gerüst eines Mordfalls. Noc
 
 Vorgaben:
 - Thema: {{thema}}
-- Anzahl Spieler: {{spieler}} (= genau {{spieler}} spielbare Charaktere; das Opfer ist KEIN Spieler)
+{{besetzung}}
 - Spieldauer ca. {{dauer}}, 3 Runden
 - Entwurf Nr. {{variante}} (bei höheren Nummern bewusst eine andere Geschichte mit anderen Figuren erfinden)
 - Sprache aller Texte: {{sprache_name}}

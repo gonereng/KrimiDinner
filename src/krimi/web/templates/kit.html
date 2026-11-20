@@ -3,7 +3,7 @@
 <p><a href="/">← Übersicht</a></p>
 <section class="card">
   <h1>{{ kit.titel }}</h1>
-  {% if story %}<p class="muted">{{ story.untertitel }} · {{ story.spieler }} Spieler · {{ story.sprache|upper }} · Design: {{ (themes|selectattr('name', 'equalto', story.design)|first or {'label': story.design}).label }}</p>{% endif %}
+  {% if story %}<p class="muted">{{ story.untertitel }} · {{ kit.spieler }} Spieler · {{ story.sprache|upper }} · Design: {{ (themes|selectattr('name', 'equalto', story.design)|first or {'label': story.design}).label }}</p>{% endif %}
 
   <div id="status" data-kit="{{ kit.name }}" data-running="{{ 'true' if running else 'false' }}">
     <h2>Status: <span id="st-label" class="badge {{ status.status or kit.status }}">{{ status.aufgabe }} – {{ {'laeuft': 'läuft …', 'fertig': 'fertig', 'fehler': 'Fehler'}.get(status.status, kit.status) }}</span></h2>
@@ -41,6 +41,9 @@
   {% if report.ermittlung %}
     <p><strong>Gegencheck (die KI kennt nur die Hinweise):</strong> Täter laut Prüfer: <code>{{ report.ermittlung.taeter_id }}</code>, Sicherheit {{ '%.0f'|format(report.ermittlung.sicherheit * 100) }} %</p>
     <p class="muted small">{{ report.ermittlung.begruendung }}</p>
+    {% if report.gegenchecks and report.gegenchecks|length > 1 %}
+    <ul class="small">{% for g in report.gegenchecks %}<li>Bei {{ g.spieler }} Spielern: <code>{{ g.taeter_id }}</code>, Sicherheit {{ '%.0f'|format(g.sicherheit * 100) }} %</li>{% endfor %}</ul>
+    {% endif %}
   {% else %}<p class="muted small">Nur die feste Prüfung lief, ohne KI-Gegencheck.</p>{% endif %}
   {% if report.fehler %}<ul class="errors">{% for f in report.fehler %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
   {% for w in report.warnungen %}<p class="alert warn">{{ w }}</p>{% endfor %}
@@ -91,7 +94,7 @@
   <table class="tbl">
     <tr><th>Figur</th><th>Rolle</th><th>Hinweise (R1/R2/R3)</th></tr>
     {% for c in story.charaktere %}
-    <tr><td>{{ c.name }}</td><td>{{ c.rolle }}</td>
+    <tr><td>{{ c.name }}{% if c.ab_spieler and c.ab_spieler > (story.spieler_min or story.spieler) %} <span class="badge">ab {{ c.ab_spieler }}</span>{% endif %}{% if c.flexibel %} <span class="badge" title="Rolle für jedes Geschlecht">⚥</span>{% endif %}</td><td>{{ c.rolle }}</td>
       <td>{% for r in [1,2,3] %}{{ story.hinweise|selectattr('empfaenger', 'equalto', c.id)|selectattr('runde', 'equalto', r)|list|length }}{% if not loop.last %} / {% endif %}{% endfor %}</td></tr>
     {% endfor %}
   </table>

@@ -1,9 +1,9 @@
 {
   "titel": "Mord im Chalet Edelweiß",
-  "untertitel": "Ein Silvester-Krimidinner in den verschneiten Alpen, 1985",
+  "untertitel": "Ein Silvester-Krimidinner in den verschneiten Alpen, 1985 – für 6 bis 10 Spieler",
   "thema": "Silvester im Schneechalet",
   "sprache": "de",
-  "spieler": 6,
+  "spieler": 10,
   "design": "chalet",
   "seed": 1985,
   "einleitung": "Silvester 1985. Seit dem Nachmittag schneit es so heftig, dass die Passstraße nach Lech gesperrt ist und das Telefon nur noch rauscht. Im Chalet Edelweiß, hoch über dem Tal, knistert das Kaminfeuer, der Fondue-Topf blubbert, und aus dem Kassettenrekorder säuselt Modern Talking. Gastgeber Konrad „Konni“ Brandauer – Liftkaiser, Lebemann und notorischer Sturkopf – hat seine engsten Freunde, Feinde und Angestellten eingeladen. Beim Dessert klopft er an sein Glas: „Um Mitternacht, meine Lieben, werde ich euch etwas verkünden, das einige von euch nicht freuen wird.“ Dann zieht er sich in die Bibliothek zurück, um seine Rede zu schreiben. Doch als die Raketen in den Himmel steigen sollen, ist Konni nicht da. Man findet ihn in der Bibliothek – neben dem umgestoßenen Wanderpokal des Skiclubs, die Standuhr umgekippt, das Feuer im Kamin fast erloschen. Konrad Brandauer ist tot. Und da bis morgen früh niemand hinein- oder hinauskommt, steht fest: Einer von uns war es.",
@@ -11,7 +11,16 @@
     "ort": "Chalet Edelweiß, hoch über Lech am Arlberg",
     "zeit": "31. Dezember 1985, Silvesternacht",
     "atmosphaere": "Eingeschneit, holzvertäfelt und gemütlich – Kaminfeuer, Fondue, Neonfarben und Schulterpolster. Über dem Kamin hängt das Familienwappen mit drei springenden Gämsen. Draußen tobt der Schneesturm, drinnen brodeln die Geheimnisse.",
-    "raeume": ["Kaminzimmer", "Speisesaal", "Terrasse", "Bibliothek", "Küche", "Dienstbotenflur", "Büro", "Gästezimmer im Obergeschoss"]
+    "raeume": [
+      "Kaminzimmer",
+      "Speisesaal",
+      "Terrasse",
+      "Bibliothek",
+      "Küche",
+      "Dienstbotenflur",
+      "Büro",
+      "Gästezimmer im Obergeschoss"
+    ]
   },
   "opfer": {
     "name": "Konrad „Konni“ Brandauer",
@@ -31,9 +40,18 @@
       "motiv": "Das Erbe würde all ihre Schulden auf einen Schlag tilgen.",
       "alibi": "Ich habe Roccos ganzen Auftritt im Speisesaal mit meiner Videokamera gefilmt – von 23:30 bis 23:52 ohne Pause.",
       "beziehungen": [
-        {"zu": "c_rocco", "beschreibung": "Großer Fan seit „Schneeflöckchen-Samba“ – will ihn für ihr Studio-Video gewinnen."},
-        {"zu": "c_moni", "beschreibung": "Findet die Sekretärin ihres Onkels steif, aber sie war immer nett zu ihr."},
-        {"zu": "c_graefin", "beschreibung": "Bewundert ihren Stil, hält ihre Geschichten aber für maßlos übertrieben."}
+        {
+          "zu": "c_rocco",
+          "beschreibung": "Großer Fan seit „Schneeflöckchen-Samba“ – will ihn für ihr Studio-Video gewinnen."
+        },
+        {
+          "zu": "c_moni",
+          "beschreibung": "Findet die Sekretärin ihres Onkels steif, aber sie war immer nett zu ihr."
+        },
+        {
+          "zu": "c_graefin",
+          "beschreibung": "Bewundert ihren Stil, hält ihre Geschichten aber für maßlos übertrieben."
+        }
       ],
       "darf_sagen": [
         "Du bist Konnis Nichte und Erbin – das weiß ohnehin jeder.",
@@ -45,7 +63,9 @@
         "Deine Schulden bei der Bank (gib sie erst zu, wenn man dich mit dem Mahnschreiben konfrontiert).",
         "Dass du Onkel Konni heute Nachmittag vergeblich um Geld gebeten hast."
       ],
-      "ist_taeter": false
+      "ist_taeter": false,
+      "ab_spieler": 0,
+      "flexibel": false
     },
     {
       "id": "c_ferdl",
@@ -57,9 +77,18 @@
       "motiv": "Konni wollte das Chalet und die Lifte verkaufen – Ferdl hätte seine Arbeit verloren.",
       "alibi": "Ich war ab 23:33 mit Dr. Hagen auf der Terrasse und habe das Feuerwerk aufgebaut.",
       "beziehungen": [
-        {"zu": "c_graefin", "beschreibung": "Heimliche Liebe – in der Öffentlichkeit siezen sie sich betont."},
-        {"zu": "c_hagen", "beschreibung": "Sein Hausarzt; sie rauchen gern zusammen eine Zigarre."},
-        {"zu": "c_rocco", "beschreibung": "Hält ihn für einen Angeber in Glitzerjacke."}
+        {
+          "zu": "c_graefin",
+          "beschreibung": "Heimliche Liebe – in der Öffentlichkeit siezen sie sich betont."
+        },
+        {
+          "zu": "c_hagen",
+          "beschreibung": "Sein Hausarzt; sie rauchen gern zusammen eine Zigarre."
+        },
+        {
+          "zu": "c_rocco",
+          "beschreibung": "Hält ihn für einen Angeber in Glitzerjacke."
+        }
       ],
       "darf_sagen": [
         "Du bist seit 15 Jahren Skilehrer im Chalet.",
@@ -70,7 +99,9 @@
         "Deine Affäre mit der Gräfin.",
         "Dass Konni dir heute Nachmittag gesagt hat, dass er dich ab März nicht mehr braucht."
       ],
-      "ist_taeter": false
+      "ist_taeter": false,
+      "ab_spieler": 0,
+      "flexibel": false
     },
     {
       "id": "c_graefin",
@@ -82,9 +113,18 @@
       "motiv": "Konni hat beim Dinner angedeutet, dass er von dem falschen Schmuck weiß – eine öffentliche Blamage wäre ihr gesellschaftlicher Tod.",
       "alibi": "Ich war ab 23:15 im Speisesaal und habe zu Roccos Liedern getanzt.",
       "beziehungen": [
-        {"zu": "c_ferdl", "beschreibung": "Ihr heimlicher Geliebter."},
-        {"zu": "c_rocco", "beschreibung": "Findet ihn vulgär, tanzt aber trotzdem zu jedem seiner Lieder."},
-        {"zu": "c_hagen", "beschreibung": "Ihr langjähriger Schachpartner und Vertrauter."}
+        {
+          "zu": "c_ferdl",
+          "beschreibung": "Ihr heimlicher Geliebter."
+        },
+        {
+          "zu": "c_rocco",
+          "beschreibung": "Findet ihn vulgär, tanzt aber trotzdem zu jedem seiner Lieder."
+        },
+        {
+          "zu": "c_hagen",
+          "beschreibung": "Ihr langjähriger Schachpartner und Vertrauter."
+        }
       ],
       "darf_sagen": [
         "Du kommst seit zwanzig Jahren hierher und wohnst immer in Zimmer 7.",
@@ -96,7 +136,9 @@
         "Deine Affäre mit Ferdl.",
         "Dass du Konni noch Geld schuldest."
       ],
-      "ist_taeter": false
+      "ist_taeter": false,
+      "ab_spieler": 0,
+      "flexibel": false
     },
     {
       "id": "c_hagen",
@@ -108,9 +150,18 @@
       "motiv": "Konni drohte im Streit, die Geschichte publik zu machen – das hätte Hagens Ruf und Praxis ruiniert.",
       "alibi": "Ich war von 23:33 bis 23:51 mit Ferdl auf der Terrasse und habe eine Zigarre geraucht.",
       "beziehungen": [
-        {"zu": "c_ferdl", "beschreibung": "Sein Patient und Zigarren-Kumpan."},
-        {"zu": "c_graefin", "beschreibung": "Schachpartnerin und Vertraute."},
-        {"zu": "c_moni", "beschreibung": "Behandelt ihre Migräne und schätzt ihre Gründlichkeit."}
+        {
+          "zu": "c_ferdl",
+          "beschreibung": "Sein Patient und Zigarren-Kumpan."
+        },
+        {
+          "zu": "c_graefin",
+          "beschreibung": "Schachpartnerin und Vertraute."
+        },
+        {
+          "zu": "c_moni",
+          "beschreibung": "Behandelt ihre Migräne und schätzt ihre Gründlichkeit."
+        }
       ],
       "darf_sagen": [
         "Du bist Arzt und hast um 00:10 den Tod festgestellt: ein einziger Schlag mit dem Pokal, Todeszeit kurz vor Mitternacht.",
@@ -121,7 +172,9 @@
         "Worum es bei dem Streit um 22:45 wirklich ging (der übersehene Blinddarm).",
         "Dass Konni dir gedroht hat."
       ],
-      "ist_taeter": false
+      "ist_taeter": false,
+      "ab_spieler": 0,
+      "flexibel": false
     },
     {
       "id": "c_moni",
@@ -133,9 +186,18 @@
       "motiv": "Konni hat die Unterschlagung entdeckt und wollte sie um Mitternacht vor allen bloßstellen und danach anzeigen.",
       "alibi": "Ich war von 23:30 bis kurz vor Mitternacht in der Küche, habe den Sekt kaltgestellt und die Neujahrsbrezel angeschnitten.",
       "beziehungen": [
-        {"zu": "c_vroni", "beschreibung": "Kennt sie seit sie ein Kind war – und weiß von ihren Geldsorgen."},
-        {"zu": "c_hagen", "beschreibung": "Ihr Arzt, dem sie vertraut."},
-        {"zu": "c_rocco", "beschreibung": "Hat ihm die Gage überwiesen – oder auch nicht."}
+        {
+          "zu": "c_vroni",
+          "beschreibung": "Kennt sie seit sie ein Kind war – und weiß von ihren Geldsorgen."
+        },
+        {
+          "zu": "c_hagen",
+          "beschreibung": "Ihr Arzt, dem sie vertraut."
+        },
+        {
+          "zu": "c_rocco",
+          "beschreibung": "Hat ihm die Gage überwiesen – oder auch nicht."
+        }
       ],
       "darf_sagen": [
         "Du hast das Fest organisiert und die Menükarten noch spät mit Tipp-Ex korrigiert.",
@@ -148,7 +210,9 @@
         "Dass Konni dich um 22:05 im Büro zur Rede gestellt hat.",
         "Dass du über den Dienstbotenflur in die Bibliothek gegangen bist."
       ],
-      "ist_taeter": true
+      "ist_taeter": true,
+      "ab_spieler": 0,
+      "flexibel": false
     },
     {
       "id": "c_rocco",
@@ -160,9 +224,18 @@
       "motiv": "Konni schuldet ihm seit zwei Jahren 50.000 Schilling Gage und hat sich öffentlich über ihn lustig gemacht.",
       "alibi": "Ich stand von 23:15 bis 23:52 auf der Bühne im Speisesaal – das haben alle gesehen.",
       "beziehungen": [
-        {"zu": "c_vroni", "beschreibung": "Sein größter Fan – praktisch, sie hat Geld (glaubt er)."},
-        {"zu": "c_graefin", "beschreibung": "Hat sofort gesehen, dass ihr Collier unecht ist."},
-        {"zu": "c_ferdl", "beschreibung": "Rivalisiert mit ihm um die Aufmerksamkeit der Damen."}
+        {
+          "zu": "c_vroni",
+          "beschreibung": "Sein größter Fan – praktisch, sie hat Geld (glaubt er)."
+        },
+        {
+          "zu": "c_graefin",
+          "beschreibung": "Hat sofort gesehen, dass ihr Collier unecht ist."
+        },
+        {
+          "zu": "c_ferdl",
+          "beschreibung": "Rivalisiert mit ihm um die Aufmerksamkeit der Damen."
+        }
       ],
       "darf_sagen": [
         "Du bist ein Star (gewesen).",
@@ -173,137 +246,1158 @@
         "Dass du nur Playback singst.",
         "Dass du die Gräfin mit dem falschen Collier erpressen wolltest."
       ],
+      "ist_taeter": false,
+      "ab_spieler": 0,
+      "flexibel": false
+    },
+    {
+      "id": "c_kim",
+      "name": "Kim Hofer",
+      "ab_spieler": 7,
+      "flexibel": true,
+      "rolle": "Fotografin / Fotograf der Illustrierten „Bunte Woche“",
+      "kostuemtipp": "Weste mit vielen Taschen, Schiebermütze, eine alte Kamera um den Hals (gern mit Blitzwürfel).",
+      "oeffentliches_profil": "Kim fotografiert für die „Bunte Woche“ die Silvesterparty der Reichen und Schönen am Arlberg – und hält die Kamera auf alles, was nach Skandal riecht.",
+      "geheimnis": "Kim hat heimlich Fotos gemacht, die beweisen, dass Rocco nur Playback singt – und will sie teuer verkaufen.",
+      "motiv": "Konni hat Kim am Nachmittag die Kamera aus der Hand geschlagen und mit Hausverbot gedroht.",
+      "alibi": "Ich habe Roccos ganzen Auftritt im Speisesaal fotografiert, direkt neben der Bühne.",
+      "beziehungen": [
+        {
+          "zu": "c_rocco",
+          "beschreibung": "Kennt sein Playback-Geheimnis – und weiß, wie viel es wert ist."
+        },
+        {
+          "zu": "c_vroni",
+          "beschreibung": "Teilt sich mit ihr den besten Platz vor der Bühne."
+        }
+      ],
+      "darf_sagen": [
+        "Du bist für die „Bunte Woche“ hier.",
+        "Du hast den ganzen Auftritt fotografiert.",
+        "Konni hat dir am Nachmittag die Kamera aus der Hand geschlagen."
+      ],
+      "darf_nicht_sagen": [
+        "Deine Playback-Fotos von Rocco.",
+        "Dass du die Fotos meistbietend verkaufen willst."
+      ],
+      "ist_taeter": false
+    },
+    {
+      "id": "c_alex",
+      "name": "Alex Moser",
+      "ab_spieler": 8,
+      "flexibel": true,
+      "rolle": "Bergführerin / Bergführer am Arlberg",
+      "kostuemtipp": "Karierte Bundhose oder Kniebundhose, dicker Strickpulli, Seil über der Schulter, Gletscherbrille.",
+      "oeffentliches_profil": "Alex führt Gäste auf die Gipfel rund um Lech und hat die Silvestergesellschaft heute Nachmittag sicher zum Chalet gebracht, bevor der Sturm kam.",
+      "geheimnis": "Alex macht für viel Geld verbotene Tiefschnee-Touren abseits der Pisten – im letzten Winter ist dabei ein Gast verunglückt.",
+      "motiv": "Konni hat gedroht, Alex wegen der Tiefschnee-Touren anzuzeigen.",
+      "alibi": "Ich habe Ferdl ab 23:31 auf der Terrasse beim Feuerwerk geholfen.",
+      "beziehungen": [
+        {
+          "zu": "c_ferdl",
+          "beschreibung": "Alter Bergkamerad und Konkurrenz um die zahlenden Gäste."
+        },
+        {
+          "zu": "c_hagen",
+          "beschreibung": "Hat den verunglückten Gast damals zu ihm gebracht."
+        }
+      ],
+      "darf_sagen": [
+        "Du hast die Gäste heute Nachmittag sicher hinaufgeführt.",
+        "Du hast auf der Terrasse beim Feuerwerk geholfen.",
+        "Der Sturm wird bis morgen früh nicht nachlassen."
+      ],
+      "darf_nicht_sagen": [
+        "Die verbotenen Tiefschnee-Touren.",
+        "Konnis Drohung mit der Anzeige."
+      ],
+      "ist_taeter": false
+    },
+    {
+      "id": "c_sascha",
+      "name": "Sascha Lindner",
+      "ab_spieler": 9,
+      "flexibel": true,
+      "rolle": "Reporterin / Reporter beim Tiroler Tagblatt",
+      "kostuemtipp": "Trenchcoat, Notizblock und Bleistift hinter dem Ohr, große Brille, Presseausweis am Revers.",
+      "oeffentliches_profil": "Sascha schreibt für das Tiroler Tagblatt und hat den Artikel über Roccos Gagen-Klage verfasst. Offiziell ist Sascha nur als Gast hier.",
+      "geheimnis": "Sascha recherchiert verdeckt über Sicherheitsmängel an Konnis Liften und bestochene Prüfer.",
+      "motiv": "Konni hat Sascha am Abend mit einer Klage über eine Million Schilling gedroht, falls der Artikel erscheint.",
+      "alibi": "Ich saß während des ganzen Auftritts an der Bar im Speisesaal und habe mir Notizen gemacht.",
+      "beziehungen": [
+        {
+          "zu": "c_rocco",
+          "beschreibung": "Hat über seine Klage geschrieben – Rocco ist dankbar für die Schlagzeile."
+        },
+        {
+          "zu": "c_moni",
+          "beschreibung": "Hätte gern einen Blick in ihre Bücher geworfen."
+        }
+      ],
+      "darf_sagen": [
+        "Du arbeitest für das Tiroler Tagblatt.",
+        "Du hast den Artikel über Roccos Gage geschrieben.",
+        "Du warst während des Auftritts an der Bar."
+      ],
+      "darf_nicht_sagen": [
+        "Deine Recherche über die Lifte.",
+        "Konnis Klage-Drohung."
+      ],
+      "ist_taeter": false
+    },
+    {
+      "id": "c_robin",
+      "name": "Robin Kessler",
+      "ab_spieler": 10,
+      "flexibel": true,
+      "rolle": "Liftwartin / Liftwart und Konnis Mädchen für alles bei der Technik",
+      "kostuemtipp": "Latzhose oder Overall, Wollmütze, Werkzeuggürtel, ein Walkman mit Kopfhörern.",
+      "oeffentliches_profil": "Robin wartet Konnis Lifte und kümmert sich heute Abend um Licht und Ton für Roccos Auftritt.",
+      "geheimnis": "Robin hat Liftkarten heimlich weiterverkauft und das Geld eingesteckt.",
+      "motiv": "Konni hat heute bei der Kartenzählung gemerkt, dass Karten fehlen, und ein Gespräch für morgen angekündigt.",
+      "alibi": "Ich stand den ganzen Auftritt über am Kassettenrekorder neben der Bühne.",
+      "beziehungen": [
+        {
+          "zu": "c_rocco",
+          "beschreibung": "Bedient seine Playback-Kassetten – und schweigt darüber."
+        },
+        {
+          "zu": "c_ferdl",
+          "beschreibung": "Arbeitet mit ihm im Winter Tag für Tag am Lift."
+        }
+      ],
+      "darf_sagen": [
+        "Du kümmerst dich um Licht und Ton.",
+        "Du warst während des Auftritts am Kassettenrekorder.",
+        "Konni war heute sehr schlecht gelaunt."
+      ],
+      "darf_nicht_sagen": [
+        "Die weiterverkauften Liftkarten.",
+        "Dass Rocco nur Playback singt."
+      ],
       "ist_taeter": false
     }
   ],
   "fakten": [
-    {"id": "f_vroni_schulden", "text": "Vroni hat 120.000 Mark Bankschulden, fällig am 2. Januar 1986."},
-    {"id": "f_verkauf", "text": "Konni wollte Chalet und Lifte zum März verkaufen; Ferdl hätte seine Stelle verloren."},
-    {"id": "f_gage", "text": "Konni schuldet Rocco seit zwei Jahren 50.000 Schilling Gage."},
-    {"id": "f_schmuck_falsch", "text": "Das Collier der Gräfin ist Strass; Konni wusste es."},
-    {"id": "f_streit_hagen", "text": "Um 22:45 stritten Dr. Hagen und Konni laut in der Bibliothek."},
-    {"id": "f_affaere", "text": "Ferdl und die Gräfin haben eine heimliche Affäre."},
-    {"id": "f_zimmer_graefin", "text": "Die Gräfin wohnt in Zimmer 7."},
-    {"id": "f_wappen", "text": "Das Wappen über dem Kamin zeigt drei Gämsen."},
-    {"id": "f_startnummer", "text": "Ferdl fuhr 1976 mit Startnummer 5."},
-    {"id": "f_tippex_moni", "text": "Monika hatte am Abend Tipp-Ex an den Fingern, weil sie die Menükarten korrigiert hat."},
-    {"id": "f_unterschlagung", "text": "Laut Prüfbericht fehlen 380.000 Schilling; alle Überweisungen hat M. Stadler abgezeichnet. Konni wollte es um Mitternacht verkünden."},
-    {"id": "f_ohrclip", "text": "Neben der Leiche lag ein Perlmutt-Ohrclip."},
-    {"id": "f_ohrclip_moni", "text": "Monika trug beim Dinner zwei Perlmutt-Ohrclips, beim Countdown nur noch einen."},
-    {"id": "f_tippex_pokal", "text": "Am Sockel des Pokals klebt ein Tipp-Ex-Fleck mit halbem Fingerabdruck."},
-    {"id": "f_tatwaffe", "text": "Tatwaffe ist der Wanderpokal des Skiclubs aus der Bibliothek."},
-    {"id": "f_uhr", "text": "Die umgestoßene Standuhr der Bibliothek ist um 23:46 stehen geblieben."},
-    {"id": "f_hinterflur", "text": "Küche und Bibliothek sind über den Dienstbotenflur verbunden, ohne dass man durch den Speisesaal muss."},
-    {"id": "f_video", "text": "Vronis Video zeigt den Speisesaal ohne Unterbrechung von 23:30 bis 23:52: Rocco singt, die Gräfin tanzt, Vroni kommentiert und ist im Spiegel zu sehen."},
-    {"id": "f_video_terrasse", "text": "Auf dem Video gehen Ferdl und Hagen um 23:33 auf die Terrasse und kommen um 23:51 zurück."},
-    {"id": "f_terrasse_sackgasse", "text": "Die Terrasse ist eingeschneit und nur durch den Speisesaal erreichbar."},
-    {"id": "f_probe_rakete", "text": "Um 23:50 zündete Ferdl eine Probe-Rakete, Hagen hielt die Taschenlampe; alle im Speisesaal sahen es."},
-    {"id": "f_kueche_leer", "text": "Um 23:53 war die Küche leer und der Ofen aus."},
-    {"id": "f_sekt", "text": "Die Sektflaschen standen um Mitternacht noch ungekühlt in der Kiste."},
-    {"id": "f_kassenbuch_kamin", "text": "Im Bibliothekskamin liegen halb verbrannte Kassenbuchseiten in Monikas Handschrift, mit Tipp-Ex korrigiert."},
-    {"id": "f_rede", "text": "Konnis Neujahrsrätsel enthält die versteckte Ankündigung, er werde eine Diebin entlarven."}
+    {
+      "id": "f_vroni_schulden",
+      "text": "Vroni hat 120.000 Mark Bankschulden, fällig am 2. Januar 1986."
+    },
+    {
+      "id": "f_verkauf",
+      "text": "Konni wollte Chalet und Lifte zum März verkaufen; Ferdl hätte seine Stelle verloren."
+    },
+    {
+      "id": "f_gage",
+      "text": "Konni schuldet Rocco seit zwei Jahren 50.000 Schilling Gage."
+    },
+    {
+      "id": "f_schmuck_falsch",
+      "text": "Das Collier der Gräfin ist Strass; Konni wusste es."
+    },
+    {
+      "id": "f_streit_hagen",
+      "text": "Um 22:45 stritten Dr. Hagen und Konni laut in der Bibliothek."
+    },
+    {
+      "id": "f_affaere",
+      "text": "Ferdl und die Gräfin haben eine heimliche Affäre."
+    },
+    {
+      "id": "f_zimmer_graefin",
+      "text": "Die Gräfin wohnt in Zimmer 7."
+    },
+    {
+      "id": "f_wappen",
+      "text": "Das Wappen über dem Kamin zeigt drei Gämsen."
+    },
+    {
+      "id": "f_startnummer",
+      "text": "Ferdl fuhr 1976 mit Startnummer 5."
+    },
+    {
+      "id": "f_tippex_moni",
+      "text": "Monika hatte am Abend Tipp-Ex an den Fingern, weil sie die Menükarten korrigiert hat."
+    },
+    {
+      "id": "f_unterschlagung",
+      "text": "Laut Prüfbericht fehlen 380.000 Schilling; alle Überweisungen hat M. Stadler abgezeichnet. Konni wollte es um Mitternacht verkünden."
+    },
+    {
+      "id": "f_ohrclip",
+      "text": "Neben der Leiche lag ein Perlmutt-Ohrclip."
+    },
+    {
+      "id": "f_ohrclip_moni",
+      "text": "Monika trug beim Dinner zwei Perlmutt-Ohrclips, beim Countdown nur noch einen."
+    },
+    {
+      "id": "f_tippex_pokal",
+      "text": "Am Sockel des Pokals klebt ein Tipp-Ex-Fleck mit halbem Fingerabdruck."
+    },
+    {
+      "id": "f_tatwaffe",
+      "text": "Tatwaffe ist der Wanderpokal des Skiclubs aus der Bibliothek."
+    },
+    {
+      "id": "f_uhr",
+      "text": "Die umgestoßene Standuhr der Bibliothek ist um 23:46 stehen geblieben."
+    },
+    {
+      "id": "f_hinterflur",
+      "text": "Küche und Bibliothek sind über den Dienstbotenflur verbunden, ohne dass man durch den Speisesaal muss."
+    },
+    {
+      "id": "f_video",
+      "text": "Vronis Video zeigt den Speisesaal ohne Unterbrechung von 23:30 bis 23:52: Rocco singt, die Gräfin tanzt, Vroni kommentiert und ist im Spiegel zu sehen."
+    },
+    {
+      "id": "f_video_terrasse",
+      "text": "Auf dem Video gehen Ferdl und Hagen um 23:33 auf die Terrasse und kommen um 23:51 zurück."
+    },
+    {
+      "id": "f_terrasse_sackgasse",
+      "text": "Die Terrasse ist eingeschneit und nur durch den Speisesaal erreichbar."
+    },
+    {
+      "id": "f_probe_rakete",
+      "text": "Um 23:50 zündete Ferdl eine Probe-Rakete, Hagen hielt die Taschenlampe; alle im Speisesaal sahen es."
+    },
+    {
+      "id": "f_kueche_leer",
+      "text": "Um 23:53 war die Küche leer und der Ofen aus."
+    },
+    {
+      "id": "f_sekt",
+      "text": "Die Sektflaschen standen um Mitternacht noch ungekühlt in der Kiste."
+    },
+    {
+      "id": "f_kassenbuch_kamin",
+      "text": "Im Bibliothekskamin liegen halb verbrannte Kassenbuchseiten in Monikas Handschrift, mit Tipp-Ex korrigiert."
+    },
+    {
+      "id": "f_rede",
+      "text": "Konnis Neujahrsrätsel enthält die versteckte Ankündigung, er werde eine Diebin entlarven."
+    },
+    {
+      "id": "f_kim_kamera",
+      "text": "Konni schlug Kim am Nachmittag die Kamera aus der Hand und drohte mit Hausverbot."
+    },
+    {
+      "id": "f_kim_playback",
+      "text": "Kims Fotos zeigen, dass Roccos Lippen nicht zum Gesang passen."
+    },
+    {
+      "id": "f_kim_blitz",
+      "text": "Auf Vronis Video blitzt von 23:30 bis 23:52 immer wieder Kims Kamerablitz neben der Bühne auf."
+    },
+    {
+      "id": "f_alex_touren",
+      "text": "Konni drohte Alex mit einer Anzeige wegen verbotener Tiefschnee-Touren."
+    },
+    {
+      "id": "f_alex_video",
+      "text": "Auf Vronis Video geht Alex um 23:31 mit einer Kiste Raketen auf die Terrasse und kommt um 23:51 zurück."
+    },
+    {
+      "id": "f_sascha_klage",
+      "text": "Konni drohte Sascha mit einer Klage über eine Million Schilling wegen eines Artikels über seine Lifte."
+    },
+    {
+      "id": "f_moni_verweint",
+      "text": "Monika kam um 22:30 mit verweinten Augen aus dem Büro."
+    },
+    {
+      "id": "f_sascha_bar",
+      "text": "Auf Vronis Video sitzt Sascha von 23:30 bis 23:52 an der Bar und schreibt."
+    },
+    {
+      "id": "f_robin_karten",
+      "text": "Bei Konnis Kartenzählung fehlten Liftkarten; Konni kündigte Robin ein Gespräch an."
+    },
+    {
+      "id": "f_robin_playback",
+      "text": "Robin wechselt während des Auftritts die Kassetten, während Rocco weiter „singt“."
+    },
+    {
+      "id": "f_robin_video",
+      "text": "Auf Vronis Video steht Robin von 23:30 bis 23:52 am Kassettenrekorder neben der Bühne."
+    }
   ],
   "zeitleiste": [
-    {"von": "19:30", "bis": "20:30", "ort": "Kaminzimmer", "personen": ["c_vroni", "c_ferdl", "c_graefin", "c_hagen", "c_moni", "c_rocco"], "ereignis": "Aperitif mit Jagatee; Konni begrüßt die Gäste."},
-    {"von": "20:30", "bis": "22:00", "ort": "Speisesaal", "personen": ["c_vroni", "c_ferdl", "c_graefin", "c_hagen", "c_moni", "c_rocco"], "ereignis": "Fondue-Dinner. Konni spottet über das Collier der Gräfin. Monika trägt zwei Ohrclips."},
-    {"von": "22:00", "bis": "", "ort": "Speisesaal", "personen": ["c_vroni", "c_ferdl", "c_graefin", "c_hagen", "c_moni", "c_rocco"], "ereignis": "Konni kündigt für Mitternacht eine wichtige Verkündung an."},
-    {"von": "22:05", "bis": "22:30", "ort": "Büro", "personen": ["c_moni"], "ereignis": "Konni konfrontiert Monika mit dem Prüfbericht und dem zweiten Kassenbuch."},
-    {"von": "22:05", "bis": "23:15", "ort": "Kaminzimmer", "personen": ["c_vroni", "c_graefin", "c_ferdl"], "ereignis": "Bleigießen und Gesellschaftsspiele."},
-    {"von": "22:05", "bis": "22:40", "ort": "Speisesaal", "personen": ["c_rocco"], "ereignis": "Rocco baut seine Anlage auf und macht Soundcheck."},
-    {"von": "22:30", "bis": "23:35", "ort": "Küche", "personen": ["c_moni"], "ereignis": "Monika korrigiert Menükarten mit Tipp-Ex – den Sekt stellt sie nicht kalt."},
-    {"von": "22:40", "bis": "22:55", "ort": "Bibliothek", "personen": ["c_hagen"], "ereignis": "Lauter Streit zwischen Dr. Hagen und Konni über den übersehenen Blinddarm."},
-    {"von": "22:55", "bis": "23:15", "ort": "Kaminzimmer", "personen": ["c_hagen"], "ereignis": "Dr. Hagen gesellt sich zu den Spielern im Kaminzimmer."},
-    {"von": "23:00", "bis": "", "ort": "Bibliothek", "personen": [], "ereignis": "Konni zieht sich zurück, um seine Rede zu schreiben."},
-    {"von": "23:15", "bis": "23:52", "ort": "Speisesaal", "personen": ["c_rocco", "c_vroni", "c_graefin"], "ereignis": "Roccos Auftritt; ab 23:30 filmt Vroni ohne Unterbrechung."},
-    {"von": "23:15", "bis": "23:33", "ort": "Speisesaal", "personen": ["c_ferdl", "c_hagen"], "ereignis": "Ferdl und Hagen hören zu."},
-    {"von": "23:33", "bis": "23:51", "ort": "Terrasse", "personen": ["c_ferdl", "c_hagen"], "ereignis": "Ferdl baut das Feuerwerk auf, Hagen raucht Zigarre."},
-    {"von": "23:35", "bis": "23:40", "ort": "Dienstbotenflur", "personen": ["c_moni"], "ereignis": "Monika geht von der Küche über den Flur zur Bibliothek."},
-    {"von": "23:40", "bis": "23:50", "ort": "Bibliothek", "personen": ["c_moni"], "ereignis": "Monika fleht Konni an; er bleibt hart. Um 23:46 schlägt sie mit dem Pokal zu, die Standuhr kippt um. Sie wirft die Kassenbuchseiten ins Feuer und verliert einen Ohrclip."},
-    {"von": "23:50", "bis": "", "ort": "Terrasse", "personen": ["c_ferdl", "c_hagen"], "ereignis": "Probe-Rakete, im Speisesaal zu sehen."},
-    {"von": "23:50", "bis": "23:58", "ort": "Gästezimmer im Obergeschoss", "personen": ["c_moni"], "ereignis": "Monika wäscht sich in ihrem Zimmer die Hände und richtet sich her."},
-    {"von": "23:51", "bis": "23:58", "ort": "Speisesaal", "personen": ["c_ferdl", "c_hagen"], "ereignis": "Ferdl und Hagen kommen verschneit zurück."},
-    {"von": "23:52", "bis": "23:58", "ort": "Küche", "personen": ["c_vroni"], "ereignis": "Vroni holt den Sekt: Küche leer, Ofen aus, Flaschen warm."},
-    {"von": "23:52", "bis": "23:58", "ort": "Speisesaal", "personen": ["c_rocco", "c_graefin"], "ereignis": "Rocco verlässt die Bühne, plaudert mit der Gräfin."},
-    {"von": "23:58", "bis": "00:05", "ort": "Speisesaal", "personen": ["c_vroni", "c_ferdl", "c_graefin", "c_hagen", "c_moni", "c_rocco"], "ereignis": "Countdown und Anstoßen. Monika trägt nur noch einen Ohrclip. Konni fehlt."},
-    {"von": "00:05", "bis": "00:10", "ort": "Bibliothek", "personen": ["c_vroni"], "ereignis": "Vroni will Konni holen und findet ihn tot."},
-    {"von": "00:10", "bis": "00:30", "ort": "Bibliothek", "personen": ["c_vroni", "c_ferdl", "c_graefin", "c_hagen", "c_moni", "c_rocco"], "ereignis": "Alle kommen dazu, Dr. Hagen stellt den Tod fest."}
+    {
+      "von": "19:30",
+      "bis": "20:30",
+      "ort": "Kaminzimmer",
+      "personen": [
+        "c_vroni",
+        "c_ferdl",
+        "c_graefin",
+        "c_hagen",
+        "c_moni",
+        "c_rocco"
+      ],
+      "ereignis": "Aperitif mit Jagatee; Konni begrüßt die Gäste."
+    },
+    {
+      "von": "20:30",
+      "bis": "22:00",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_vroni",
+        "c_ferdl",
+        "c_graefin",
+        "c_hagen",
+        "c_moni",
+        "c_rocco"
+      ],
+      "ereignis": "Fondue-Dinner. Konni spottet über das Collier der Gräfin. Monika trägt zwei Ohrclips."
+    },
+    {
+      "von": "22:00",
+      "bis": "",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_vroni",
+        "c_ferdl",
+        "c_graefin",
+        "c_hagen",
+        "c_moni",
+        "c_rocco"
+      ],
+      "ereignis": "Konni kündigt für Mitternacht eine wichtige Verkündung an."
+    },
+    {
+      "von": "22:05",
+      "bis": "22:30",
+      "ort": "Büro",
+      "personen": [
+        "c_moni"
+      ],
+      "ereignis": "Konni konfrontiert Monika mit dem Prüfbericht und dem zweiten Kassenbuch."
+    },
+    {
+      "von": "22:05",
+      "bis": "23:15",
+      "ort": "Kaminzimmer",
+      "personen": [
+        "c_vroni",
+        "c_graefin",
+        "c_ferdl"
+      ],
+      "ereignis": "Bleigießen und Gesellschaftsspiele."
+    },
+    {
+      "von": "22:05",
+      "bis": "22:40",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_rocco"
+      ],
+      "ereignis": "Rocco baut seine Anlage auf und macht Soundcheck."
+    },
+    {
+      "von": "22:30",
+      "bis": "23:35",
+      "ort": "Küche",
+      "personen": [
+        "c_moni"
+      ],
+      "ereignis": "Monika korrigiert Menükarten mit Tipp-Ex – den Sekt stellt sie nicht kalt."
+    },
+    {
+      "von": "22:40",
+      "bis": "22:55",
+      "ort": "Bibliothek",
+      "personen": [
+        "c_hagen"
+      ],
+      "ereignis": "Lauter Streit zwischen Dr. Hagen und Konni über den übersehenen Blinddarm."
+    },
+    {
+      "von": "22:55",
+      "bis": "23:15",
+      "ort": "Kaminzimmer",
+      "personen": [
+        "c_hagen"
+      ],
+      "ereignis": "Dr. Hagen gesellt sich zu den Spielern im Kaminzimmer."
+    },
+    {
+      "von": "23:00",
+      "bis": "",
+      "ort": "Bibliothek",
+      "personen": [],
+      "ereignis": "Konni zieht sich zurück, um seine Rede zu schreiben."
+    },
+    {
+      "von": "23:15",
+      "bis": "23:52",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_rocco",
+        "c_vroni",
+        "c_graefin"
+      ],
+      "ereignis": "Roccos Auftritt; ab 23:30 filmt Vroni ohne Unterbrechung."
+    },
+    {
+      "von": "23:15",
+      "bis": "23:33",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_ferdl",
+        "c_hagen"
+      ],
+      "ereignis": "Ferdl und Hagen hören zu."
+    },
+    {
+      "von": "23:33",
+      "bis": "23:51",
+      "ort": "Terrasse",
+      "personen": [
+        "c_ferdl",
+        "c_hagen"
+      ],
+      "ereignis": "Ferdl baut das Feuerwerk auf, Hagen raucht Zigarre."
+    },
+    {
+      "von": "23:35",
+      "bis": "23:40",
+      "ort": "Dienstbotenflur",
+      "personen": [
+        "c_moni"
+      ],
+      "ereignis": "Monika geht von der Küche über den Flur zur Bibliothek."
+    },
+    {
+      "von": "23:40",
+      "bis": "23:50",
+      "ort": "Bibliothek",
+      "personen": [
+        "c_moni"
+      ],
+      "ereignis": "Monika fleht Konni an; er bleibt hart. Um 23:46 schlägt sie mit dem Pokal zu, die Standuhr kippt um. Sie wirft die Kassenbuchseiten ins Feuer und verliert einen Ohrclip."
+    },
+    {
+      "von": "23:50",
+      "bis": "",
+      "ort": "Terrasse",
+      "personen": [
+        "c_ferdl",
+        "c_hagen"
+      ],
+      "ereignis": "Probe-Rakete, im Speisesaal zu sehen."
+    },
+    {
+      "von": "23:50",
+      "bis": "23:58",
+      "ort": "Gästezimmer im Obergeschoss",
+      "personen": [
+        "c_moni"
+      ],
+      "ereignis": "Monika wäscht sich in ihrem Zimmer die Hände und richtet sich her."
+    },
+    {
+      "von": "23:51",
+      "bis": "23:58",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_ferdl",
+        "c_hagen"
+      ],
+      "ereignis": "Ferdl und Hagen kommen verschneit zurück."
+    },
+    {
+      "von": "23:52",
+      "bis": "23:58",
+      "ort": "Küche",
+      "personen": [
+        "c_vroni"
+      ],
+      "ereignis": "Vroni holt den Sekt: Küche leer, Ofen aus, Flaschen warm."
+    },
+    {
+      "von": "23:52",
+      "bis": "23:58",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_rocco",
+        "c_graefin"
+      ],
+      "ereignis": "Rocco verlässt die Bühne, plaudert mit der Gräfin."
+    },
+    {
+      "von": "23:58",
+      "bis": "00:05",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_vroni",
+        "c_ferdl",
+        "c_graefin",
+        "c_hagen",
+        "c_moni",
+        "c_rocco"
+      ],
+      "ereignis": "Countdown und Anstoßen. Monika trägt nur noch einen Ohrclip. Konni fehlt."
+    },
+    {
+      "von": "00:05",
+      "bis": "00:10",
+      "ort": "Bibliothek",
+      "personen": [
+        "c_vroni"
+      ],
+      "ereignis": "Vroni will Konni holen und findet ihn tot."
+    },
+    {
+      "von": "00:10",
+      "bis": "00:30",
+      "ort": "Bibliothek",
+      "personen": [
+        "c_vroni",
+        "c_ferdl",
+        "c_graefin",
+        "c_hagen",
+        "c_moni",
+        "c_rocco"
+      ],
+      "ereignis": "Alle kommen dazu, Dr. Hagen stellt den Tod fest."
+    },
+    {
+      "von": "19:30",
+      "bis": "22:00",
+      "ort": "Kaminzimmer und Speisesaal",
+      "personen": [
+        "c_kim",
+        "c_alex",
+        "c_sascha",
+        "c_robin"
+      ],
+      "ereignis": "Aperitif und Dinner mit den übrigen Gästen."
+    },
+    {
+      "von": "23:15",
+      "bis": "23:52",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_kim",
+        "c_sascha",
+        "c_robin"
+      ],
+      "ereignis": "Kim fotografiert, Sascha sitzt an der Bar, Robin bedient den Kassettenrekorder."
+    },
+    {
+      "von": "23:15",
+      "bis": "23:31",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_alex"
+      ],
+      "ereignis": "Alex hört dem Auftritt zu."
+    },
+    {
+      "von": "23:31",
+      "bis": "23:51",
+      "ort": "Terrasse",
+      "personen": [
+        "c_alex"
+      ],
+      "ereignis": "Alex trägt die Raketenkiste hinaus und hilft beim Feuerwerk."
+    },
+    {
+      "von": "23:51",
+      "bis": "00:10",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_alex"
+      ],
+      "ereignis": "Countdown mit allen anderen."
+    },
+    {
+      "von": "23:52",
+      "bis": "00:10",
+      "ort": "Speisesaal",
+      "personen": [
+        "c_kim",
+        "c_sascha",
+        "c_robin"
+      ],
+      "ereignis": "Countdown mit allen anderen."
+    },
+    {
+      "von": "00:10",
+      "bis": "00:30",
+      "ort": "Bibliothek",
+      "personen": [
+        "c_kim",
+        "c_alex",
+        "c_sascha",
+        "c_robin"
+      ],
+      "ereignis": "Die übrigen Gäste kommen ebenfalls in die Bibliothek."
+    }
   ],
   "hinweise": [
-    {"id": "h1_01", "runde": 1, "empfaenger": "c_ferdl", "titel": "Ein Brief vom Bankhaus", "art": "brief",
-     "text": "Bankhaus Merkl & Söhne, München. Sehr geehrte Frau Brandauer, wir müssen Sie letztmalig auffordern, den offenen Kreditbetrag von 120.000 DM bis spätestens 2. Januar 1986 auszugleichen. Andernfalls sehen wir uns gezwungen, die Zwangsvollstreckung Ihrer Studios einzuleiten. Hochachtungsvoll, Dr. F. Merkl",
-     "fakten": ["f_vroni_schulden"], "belastet": ["c_vroni"], "entlastet": []},
-    {"id": "h1_02", "runde": 1, "empfaenger": "c_vroni", "titel": "Belauscht am Nachmittag", "art": "karte",
-     "text": "Heute Nachmittag hast du im Skikeller gehört, wie Onkel Konni zu Ferdl sagte: „Genieß die Saison, Ferdl. Ab März brauch ich keinen Skilehrer mehr – das Chalet ist so gut wie verkauft.“ Ferdl hat daraufhin einen Ski gegen die Wand geworfen.",
-     "fakten": ["f_verkauf"], "belastet": ["c_ferdl"], "entlastet": []},
-    {"id": "h1_03", "runde": 1, "empfaenger": "c_hagen", "titel": "Zeitungsausschnitt", "art": "zeitung",
-     "text": "TIROLER TAGBLATT, 12. Dezember 1985 – SCHLAGERSTAR KLAGT AN: Sänger Rocco Bellini („Schneeflöckchen-Samba“) wirft dem Arlberger Liftbetreiber K. Brandauer vor, ihm seit zwei Jahren 50.000 Schilling Gage schuldig zu sein. Brandauer: „Für das Gejaule zahl ich keinen Groschen.“ Am Rand, in Konnis Handschrift: „Soll er doch klagen!“",
-     "fakten": ["f_gage"], "belastet": ["c_rocco"], "entlastet": []},
-    {"id": "h1_04", "runde": 1, "empfaenger": "c_rocco", "titel": "Ein Blick für Juwelen", "art": "karte",
-     "text": "Als Sohn einer Bozener Juweliersfamilie erkennst du es sofort: Das berühmte Diamantcollier der Gräfin ist Strass. Beim Dinner hat Konni gespottet: „Ihr Collier funkelt heute wieder so echt wie Ihr Kontostand, Gnädigste.“ Die Gräfin wurde kreidebleich.",
-     "fakten": ["f_schmuck_falsch"], "belastet": ["c_graefin"], "entlastet": []},
-    {"id": "h1_05", "runde": 1, "empfaenger": "c_graefin", "titel": "Laute Stimmen", "art": "karte",
-     "text": "Um 22:45 bist du beim Bleigießen kurz an die Tür zur Bibliothek getreten. Drinnen brüllte Dr. Hagen: „Wenn du das herumerzählst, Konni, bin ich erledigt!“ Konni lachte nur. Kurz darauf kam Hagen mit rotem Kopf heraus.",
-     "fakten": ["f_streit_hagen"], "belastet": ["c_hagen"], "entlastet": []},
-    {"id": "h1_06", "runde": 1, "empfaenger": "c_moni", "titel": "Ein seltsamer Zettel", "art": "notiz",
-     "text": "Unter einem Weinglas im Kaminzimmer lag ein gefalteter Zettel. Die Buchstaben ergeben keinen Sinn – wer hat hier eine Geheimschrift benutzt?",
-     "fakten": ["f_affaere", "f_zimmer_graefin"], "belastet": [], "entlastet": [],
-     "raetsel": {"typ": "caesar", "klartext": "Nach dem Feuerwerk in Zimmer sieben. Dein F.", "ziffern": [], "woerter": []}},
-    {"id": "h1_07", "runde": 1, "empfaenger": "c_rocco", "titel": "Weiße Finger", "art": "karte",
-     "text": "Beim Dinner ist dir aufgefallen, dass Monika ständig an weißen Flecken auf ihren Fingern kratzte. „Tipp-Ex“, seufzte sie, „ich musste noch alle Menükarten korrigieren. Konni hat ‚Fondue‘ mit zwei ‚e‘ geschrieben.“",
-     "fakten": ["f_tippex_moni"], "belastet": [], "entlastet": []},
-    {"id": "h2_01", "runde": 2, "empfaenger": "c_vroni", "titel": "Konnis Aktenkoffer", "art": "notiz",
-     "text": "In Konnis Schreibtischschublade liegt eine Notiz: „Koffercode – damit ich ihn nicht vergesse: Zimmer der Gräfin · Gämsen im Wappen · Ferdls alte Startnummer.“ Der Aktenkoffer mit dem Zahlenschloss steht im Büro.",
-     "fakten": ["f_unterschlagung", "f_zimmer_graefin", "f_wappen", "f_startnummer"], "belastet": ["c_moni"], "entlastet": [],
-     "raetsel": {"typ": "zahlenschloss", "klartext": "Im Koffer: ein Prüfbericht des Steuerberaters vom 30.12.1985. „Es fehlen 380.000 Schilling. Sämtliche Überweisungen abgezeichnet: M. Stadler.“ Darunter in Konnis Handschrift: „Um Mitternacht sag ich's allen. Danach Anzeige.“",
-                 "ziffern": [{"ziffer": 7, "herkunft": "Zimmernummer der Gräfin"}, {"ziffer": 3, "herkunft": "Anzahl der Gämsen im Wappen über dem Kamin"}, {"ziffer": 5, "herkunft": "Ferdls Startnummer bei der Abfahrt 1976"}], "woerter": []}},
-    {"id": "h2_02", "runde": 2, "empfaenger": "c_ferdl", "titel": "Fundstück am Tatort", "art": "karte",
-     "text": "Unter dem Schreibtisch, direkt neben Konnis Hand, liegt ein kleiner Ohrclip aus Perlmutt. Konni trug keinen Schmuck – der Clip muss jemand anderem gehören.",
-     "fakten": ["f_ohrclip"], "belastet": [], "entlastet": []},
-    {"id": "h2_03", "runde": 2, "empfaenger": "c_graefin", "titel": "Die Tatwaffe", "art": "karte",
-     "text": "Der schwere Wanderpokal des Skiclubs liegt neben Konni – zweifellos die Tatwaffe. Am Sockel klebt ein weißer, getrockneter Fleck. Er riecht nach Lösungsmittel: Tipp-Ex. Darin ist ein halber Fingerabdruck zu erkennen.",
-     "fakten": ["f_tippex_pokal", "f_tatwaffe"], "belastet": ["c_moni"], "entlastet": []},
-    {"id": "h2_04", "runde": 2, "empfaenger": "c_rocco", "titel": "Ein Ohrclip zu wenig", "art": "karte",
-     "text": "Du hast ein gutes Auge für Schmuck: Beim Dinner trug Monika zwei Perlmutt-Ohrclips. Beim Countdown um Mitternacht hing nur noch einer an ihrem linken Ohr. Sie hat die Haare seither auffällig über das rechte Ohr gekämmt.",
-     "fakten": ["f_ohrclip_moni"], "belastet": ["c_moni"], "entlastet": []},
-    {"id": "h2_05", "runde": 2, "empfaenger": "c_moni", "titel": "Die stehengebliebene Uhr", "art": "karte",
-     "text": "Die Standuhr der Bibliothek ist umgestoßen und um 23:46 stehen geblieben – vermutlich der Moment der Tat. Die Tapetentür zum Dienstbotenflur, der direkt zur Küche führt, steht einen Spalt offen.",
-     "fakten": ["f_uhr", "f_hinterflur"], "belastet": [], "entlastet": []},
-    {"id": "h2_06", "runde": 2, "empfaenger": "c_hagen", "titel": "Die Videokassette", "art": "karte",
-     "text": "Vroni hat Roccos Auftritt von 23:30 bis 23:52 ohne Unterbrechung gefilmt. Auf dem Band: Rocco singt durchgehend, die Gräfin tanzt fast jedes Lied, Vroni kommentiert hörbar und ist im großen Spiegel hinter der Bühne zu sehen. Monika ist nicht im Bild.",
-     "fakten": ["f_video"], "belastet": [], "entlastet": ["c_rocco", "c_graefin", "c_vroni"]},
-    {"id": "h3_01", "runde": 3, "empfaenger": "c_graefin", "titel": "Noch einmal das Video", "art": "karte",
-     "text": "Beim zweiten Ansehen des Videos fällt dir auf: Um 23:33 gehen Ferdl und Dr. Hagen durch die Glastür hinaus auf die Terrasse. Um 23:51 kommen sie zurück – beide mit Schnee auf den Schultern.",
-     "fakten": ["f_video_terrasse"], "belastet": [], "entlastet": ["c_ferdl", "c_hagen"]},
-    {"id": "h3_02", "runde": 3, "empfaenger": "c_rocco", "titel": "Eingeschneit", "art": "karte",
-     "text": "Du hast es selbst ausprobiert: Die Treppe von der Terrasse in den Garten liegt unter zwei Metern Schnee. Wer auf der Terrasse ist, kann nur durch die Glastür des Speisesaals zurück ins Haus.",
-     "fakten": ["f_terrasse_sackgasse"], "belastet": [], "entlastet": ["c_ferdl", "c_hagen"]},
-    {"id": "h3_03", "runde": 3, "empfaenger": "c_ferdl", "titel": "Die Probe-Rakete", "art": "karte",
-     "text": "Um 23:50 hast du eine Probe-Rakete gezündet, um die Lunte zu testen. Dr. Hagen hielt dir die Taschenlampe. Durch die Glastür haben alle im Speisesaal den roten Stern über dem Tal gesehen – und euch beide daneben.",
-     "fakten": ["f_probe_rakete"], "belastet": [], "entlastet": ["c_hagen", "c_ferdl"]},
-    {"id": "h3_04", "runde": 3, "empfaenger": "c_vroni", "titel": "Die leere Küche", "art": "karte",
-     "text": "Um 23:53 bist du in die Küche gegangen, um den Sekt zu holen. Die Küche war leer, der Ofen kalt, die Neujahrsbrezel unangeschnitten – und die zwölf Sektflaschen standen lauwarm in der Kiste. Niemand hatte sie kaltgestellt.",
-     "fakten": ["f_kueche_leer", "f_sekt"], "belastet": ["c_moni"], "entlastet": []},
-    {"id": "h3_05", "runde": 3, "empfaenger": "c_hagen", "titel": "Asche im Kamin", "art": "notiz",
-     "text": "Im Kamin der Bibliothek findest du halb verbrannte Seiten aus einem Kassenbuch. Die Zahlenkolonnen sind in einer sauberen Sekretärinnen-Handschrift geschrieben, die Korrekturen sind mit Tipp-Ex gemacht. Lesbar: „Liftkasse Dez. – Umbuchung Konto 4471“.",
-     "fakten": ["f_kassenbuch_kamin"], "belastet": ["c_moni"], "entlastet": []},
-    {"id": "h3_06", "runde": 3, "empfaenger": "c_moni", "titel": "Konnis Neujahrsrätsel", "art": "karte",
-     "text": "Auf Konnis Schreibtisch, neben dem Manuskript seiner Rede, liegt ein Neujahrsrätsel, das er für die Gäste vorbereitet hatte. Er liebte versteckte Botschaften …",
-     "fakten": ["f_rede"], "belastet": [], "entlastet": [],
-     "raetsel": {"typ": "wortsuche", "klartext": "Ich entlarve die Diebin", "ziffern": [], "woerter": ["Schnee", "Sekt", "Rakete", "Blei", "Piste", "Gondel", "Kamin", "Fondue"]}}
+    {
+      "id": "h1_01",
+      "runde": 1,
+      "empfaenger": "c_ferdl",
+      "titel": "Ein Brief vom Bankhaus",
+      "art": "brief",
+      "text": "Bankhaus Merkl & Söhne, München. Sehr geehrte Frau Brandauer, wir müssen Sie letztmalig auffordern, den offenen Kreditbetrag von 120.000 DM bis spätestens 2. Januar 1986 auszugleichen. Andernfalls sehen wir uns gezwungen, die Zwangsvollstreckung Ihrer Studios einzuleiten. Hochachtungsvoll, Dr. F. Merkl",
+      "fakten": [
+        "f_vroni_schulden"
+      ],
+      "belastet": [
+        "c_vroni"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h1_02",
+      "runde": 1,
+      "empfaenger": "c_vroni",
+      "titel": "Belauscht am Nachmittag",
+      "art": "karte",
+      "text": "Heute Nachmittag hast du im Skikeller gehört, wie Onkel Konni zu Ferdl sagte: „Genieß die Saison, Ferdl. Ab März brauch ich keinen Skilehrer mehr – das Chalet ist so gut wie verkauft.“ Ferdl hat daraufhin einen Ski gegen die Wand geworfen.",
+      "fakten": [
+        "f_verkauf"
+      ],
+      "belastet": [
+        "c_ferdl"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h1_03",
+      "runde": 1,
+      "empfaenger": "c_hagen",
+      "titel": "Zeitungsausschnitt",
+      "art": "zeitung",
+      "text": "TIROLER TAGBLATT, 12. Dezember 1985 – SCHLAGERSTAR KLAGT AN: Sänger Rocco Bellini („Schneeflöckchen-Samba“) wirft dem Arlberger Liftbetreiber K. Brandauer vor, ihm seit zwei Jahren 50.000 Schilling Gage schuldig zu sein. Brandauer: „Für das Gejaule zahl ich keinen Groschen.“ Am Rand, in Konnis Handschrift: „Soll er doch klagen!“",
+      "fakten": [
+        "f_gage"
+      ],
+      "belastet": [
+        "c_rocco"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h1_04",
+      "runde": 1,
+      "empfaenger": "c_rocco",
+      "titel": "Ein Blick für Juwelen",
+      "art": "karte",
+      "text": "Als Sohn einer Bozener Juweliersfamilie erkennst du es sofort: Das berühmte Diamantcollier der Gräfin ist Strass. Beim Dinner hat Konni gespottet: „Ihr Collier funkelt heute wieder so echt wie Ihr Kontostand, Gnädigste.“ Die Gräfin wurde kreidebleich.",
+      "fakten": [
+        "f_schmuck_falsch"
+      ],
+      "belastet": [
+        "c_graefin"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h1_05",
+      "runde": 1,
+      "empfaenger": "c_graefin",
+      "titel": "Laute Stimmen",
+      "art": "karte",
+      "text": "Um 22:45 bist du beim Bleigießen kurz an die Tür zur Bibliothek getreten. Drinnen brüllte Dr. Hagen: „Wenn du das herumerzählst, Konni, bin ich erledigt!“ Konni lachte nur. Kurz darauf kam Hagen mit rotem Kopf heraus.",
+      "fakten": [
+        "f_streit_hagen"
+      ],
+      "belastet": [
+        "c_hagen"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h1_06",
+      "runde": 1,
+      "empfaenger": "c_moni",
+      "titel": "Ein seltsamer Zettel",
+      "art": "notiz",
+      "text": "Unter einem Weinglas im Kaminzimmer lag ein gefalteter Zettel. Die Buchstaben ergeben keinen Sinn – wer hat hier eine Geheimschrift benutzt?",
+      "fakten": [
+        "f_affaere",
+        "f_zimmer_graefin"
+      ],
+      "belastet": [],
+      "entlastet": [],
+      "raetsel": {
+        "typ": "caesar",
+        "klartext": "Nach dem Feuerwerk in Zimmer sieben. Dein F.",
+        "ziffern": [],
+        "woerter": []
+      }
+    },
+    {
+      "id": "h1_07",
+      "runde": 1,
+      "empfaenger": "c_rocco",
+      "titel": "Weiße Finger",
+      "art": "karte",
+      "text": "Beim Dinner ist dir aufgefallen, dass Monika ständig an weißen Flecken auf ihren Fingern kratzte. „Tipp-Ex“, seufzte sie, „ich musste noch alle Menükarten korrigieren. Konni hat ‚Fondue‘ mit zwei ‚e‘ geschrieben.“",
+      "fakten": [
+        "f_tippex_moni"
+      ],
+      "belastet": [],
+      "entlastet": []
+    },
+    {
+      "id": "h2_01",
+      "runde": 2,
+      "empfaenger": "c_vroni",
+      "titel": "Konnis Aktenkoffer",
+      "art": "notiz",
+      "text": "In Konnis Schreibtischschublade liegt eine Notiz: „Koffercode – damit ich ihn nicht vergesse: Zimmer der Gräfin · Gämsen im Wappen · Ferdls alte Startnummer.“ Der Aktenkoffer mit dem Zahlenschloss steht im Büro.",
+      "fakten": [
+        "f_unterschlagung",
+        "f_zimmer_graefin",
+        "f_wappen",
+        "f_startnummer"
+      ],
+      "belastet": [
+        "c_moni"
+      ],
+      "entlastet": [],
+      "raetsel": {
+        "typ": "zahlenschloss",
+        "klartext": "Im Koffer: ein Prüfbericht des Steuerberaters vom 30.12.1985. „Es fehlen 380.000 Schilling. Sämtliche Überweisungen abgezeichnet: M. Stadler.“ Darunter in Konnis Handschrift: „Um Mitternacht sag ich's allen. Danach Anzeige.“",
+        "ziffern": [
+          {
+            "ziffer": 7,
+            "herkunft": "Zimmernummer der Gräfin"
+          },
+          {
+            "ziffer": 3,
+            "herkunft": "Anzahl der Gämsen im Wappen über dem Kamin"
+          },
+          {
+            "ziffer": 5,
+            "herkunft": "Ferdls Startnummer bei der Abfahrt 1976"
+          }
+        ],
+        "woerter": []
+      }
+    },
+    {
+      "id": "h2_02",
+      "runde": 2,
+      "empfaenger": "c_ferdl",
+      "titel": "Fundstück am Tatort",
+      "art": "karte",
+      "text": "Unter dem Schreibtisch, direkt neben Konnis Hand, liegt ein kleiner Ohrclip aus Perlmutt. Konni trug keinen Schmuck – der Clip muss jemand anderem gehören.",
+      "fakten": [
+        "f_ohrclip"
+      ],
+      "belastet": [],
+      "entlastet": []
+    },
+    {
+      "id": "h2_03",
+      "runde": 2,
+      "empfaenger": "c_graefin",
+      "titel": "Die Tatwaffe",
+      "art": "karte",
+      "text": "Der schwere Wanderpokal des Skiclubs liegt neben Konni – zweifellos die Tatwaffe. Am Sockel klebt ein weißer, getrockneter Fleck. Er riecht nach Lösungsmittel: Tipp-Ex. Darin ist ein halber Fingerabdruck zu erkennen.",
+      "fakten": [
+        "f_tippex_pokal",
+        "f_tatwaffe"
+      ],
+      "belastet": [
+        "c_moni"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h2_04",
+      "runde": 2,
+      "empfaenger": "c_rocco",
+      "titel": "Ein Ohrclip zu wenig",
+      "art": "karte",
+      "text": "Du hast ein gutes Auge für Schmuck: Beim Dinner trug Monika zwei Perlmutt-Ohrclips. Beim Countdown um Mitternacht hing nur noch einer an ihrem linken Ohr. Sie hat die Haare seither auffällig über das rechte Ohr gekämmt.",
+      "fakten": [
+        "f_ohrclip_moni"
+      ],
+      "belastet": [
+        "c_moni"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h2_05",
+      "runde": 2,
+      "empfaenger": "c_moni",
+      "titel": "Die stehengebliebene Uhr",
+      "art": "karte",
+      "text": "Die Standuhr der Bibliothek ist umgestoßen und um 23:46 stehen geblieben – vermutlich der Moment der Tat. Die Tapetentür zum Dienstbotenflur, der direkt zur Küche führt, steht einen Spalt offen.",
+      "fakten": [
+        "f_uhr",
+        "f_hinterflur"
+      ],
+      "belastet": [],
+      "entlastet": []
+    },
+    {
+      "id": "h2_06",
+      "runde": 2,
+      "empfaenger": "c_hagen",
+      "titel": "Die Videokassette",
+      "art": "karte",
+      "text": "Vroni hat Roccos Auftritt von 23:30 bis 23:52 ohne Unterbrechung gefilmt. Auf dem Band: Rocco singt durchgehend, die Gräfin tanzt fast jedes Lied, Vroni kommentiert hörbar und ist im großen Spiegel hinter der Bühne zu sehen. Monika ist nicht im Bild.",
+      "fakten": [
+        "f_video"
+      ],
+      "belastet": [],
+      "entlastet": [
+        "c_rocco",
+        "c_graefin",
+        "c_vroni"
+      ]
+    },
+    {
+      "id": "h3_01",
+      "runde": 3,
+      "empfaenger": "c_graefin",
+      "titel": "Noch einmal das Video",
+      "art": "karte",
+      "text": "Beim zweiten Ansehen des Videos fällt dir auf: Um 23:33 gehen Ferdl und Dr. Hagen durch die Glastür hinaus auf die Terrasse. Um 23:51 kommen sie zurück – beide mit Schnee auf den Schultern.",
+      "fakten": [
+        "f_video_terrasse"
+      ],
+      "belastet": [],
+      "entlastet": [
+        "c_ferdl",
+        "c_hagen"
+      ]
+    },
+    {
+      "id": "h3_02",
+      "runde": 3,
+      "empfaenger": "c_rocco",
+      "titel": "Eingeschneit",
+      "art": "karte",
+      "text": "Du hast es selbst ausprobiert: Die Treppe von der Terrasse in den Garten liegt unter zwei Metern Schnee. Wer auf der Terrasse ist, kann nur durch die Glastür des Speisesaals zurück ins Haus.",
+      "fakten": [
+        "f_terrasse_sackgasse"
+      ],
+      "belastet": [],
+      "entlastet": [
+        "c_ferdl",
+        "c_hagen"
+      ]
+    },
+    {
+      "id": "h3_03",
+      "runde": 3,
+      "empfaenger": "c_ferdl",
+      "titel": "Die Probe-Rakete",
+      "art": "karte",
+      "text": "Um 23:50 hast du eine Probe-Rakete gezündet, um die Lunte zu testen. Dr. Hagen hielt dir die Taschenlampe. Durch die Glastür haben alle im Speisesaal den roten Stern über dem Tal gesehen – und euch beide daneben.",
+      "fakten": [
+        "f_probe_rakete"
+      ],
+      "belastet": [],
+      "entlastet": [
+        "c_hagen",
+        "c_ferdl"
+      ]
+    },
+    {
+      "id": "h3_04",
+      "runde": 3,
+      "empfaenger": "c_vroni",
+      "titel": "Die leere Küche",
+      "art": "karte",
+      "text": "Um 23:53 bist du in die Küche gegangen, um den Sekt zu holen. Die Küche war leer, der Ofen kalt, die Neujahrsbrezel unangeschnitten – und die zwölf Sektflaschen standen lauwarm in der Kiste. Niemand hatte sie kaltgestellt.",
+      "fakten": [
+        "f_kueche_leer",
+        "f_sekt"
+      ],
+      "belastet": [
+        "c_moni"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h3_05",
+      "runde": 3,
+      "empfaenger": "c_hagen",
+      "titel": "Asche im Kamin",
+      "art": "notiz",
+      "text": "Im Kamin der Bibliothek findest du halb verbrannte Seiten aus einem Kassenbuch. Die Zahlenkolonnen sind in einer sauberen Sekretärinnen-Handschrift geschrieben, die Korrekturen sind mit Tipp-Ex gemacht. Lesbar: „Liftkasse Dez. – Umbuchung Konto 4471“.",
+      "fakten": [
+        "f_kassenbuch_kamin"
+      ],
+      "belastet": [
+        "c_moni"
+      ],
+      "entlastet": []
+    },
+    {
+      "id": "h3_06",
+      "runde": 3,
+      "empfaenger": "c_moni",
+      "titel": "Konnis Neujahrsrätsel",
+      "art": "karte",
+      "text": "Auf Konnis Schreibtisch, neben dem Manuskript seiner Rede, liegt ein Neujahrsrätsel, das er für die Gäste vorbereitet hatte. Er liebte versteckte Botschaften …",
+      "fakten": [
+        "f_rede"
+      ],
+      "belastet": [],
+      "entlastet": [],
+      "raetsel": {
+        "typ": "wortsuche",
+        "klartext": "Ich entlarve die Diebin",
+        "ziffern": [],
+        "woerter": [
+          "Schnee",
+          "Sekt",
+          "Rakete",
+          "Blei",
+          "Piste",
+          "Gondel",
+          "Kamin",
+          "Fondue"
+        ]
+      }
+    },
+    {
+      "art": "karte",
+      "belastet": [
+        "c_kim"
+      ],
+      "entlastet": [],
+      "id": "h1_k1",
+      "runde": 1,
+      "empfaenger": "c_kim",
+      "titel": "Die zerbrochene Kamera",
+      "fakten": [
+        "f_kim_kamera"
+      ],
+      "text": "Am Nachmittag hat Konni dir die Kamera aus der Hand geschlagen: „Ein einziges Foto von mir in deinem Käseblatt, und du fotografierst nur noch Kühe – Hausverbot inklusive!“ Das Objektiv hat seitdem einen Sprung."
+    },
+    {
+      "art": "notiz",
+      "belastet": [],
+      "entlastet": [],
+      "id": "h2_k1",
+      "runde": 2,
+      "empfaenger": "c_kim",
+      "titel": "Ein heikler Film",
+      "fakten": [
+        "f_kim_playback"
+      ],
+      "text": "Deine heimlich entwickelten Abzüge vom Auftritt: Auf jedem Bild ist Roccos Mund geschlossen, während das Lied gerade den höchsten Ton erreicht. Die „Bunte Woche“ würde dafür ein Vermögen zahlen."
+    },
+    {
+      "art": "karte",
+      "belastet": [],
+      "entlastet": [
+        "c_kim"
+      ],
+      "id": "h3_k1",
+      "runde": 3,
+      "empfaenger": "c_kim",
+      "titel": "Blitzlicht auf dem Band",
+      "fakten": [
+        "f_kim_blitz"
+      ],
+      "text": "Auf Vronis Video blitzt von 23:30 bis 23:52 immer wieder ein Kamerablitz direkt neben der Bühne auf – und zweimal ist Kim selbst mit der Kamera im großen Spiegel zu sehen."
+    },
+    {
+      "art": "karte",
+      "belastet": [
+        "c_alex"
+      ],
+      "entlastet": [],
+      "id": "h1_a1",
+      "runde": 1,
+      "empfaenger": "c_alex",
+      "titel": "Eine Drohung am Kamin",
+      "fakten": [
+        "f_alex_touren"
+      ],
+      "text": "Beim Aperitif hat Konni dich beiseitegenommen: „Noch ein Gast im Lawinenhang bei deinen Tiefschnee-Touren, und ich zeige dich an. Dann ist Schluss mit dem Bergführen.“"
+    },
+    {
+      "art": "karte",
+      "belastet": [],
+      "entlastet": [],
+      "id": "h2_a1",
+      "runde": 2,
+      "empfaenger": "c_alex",
+      "titel": "Die Raketenkiste",
+      "fakten": [
+        "f_alex_video"
+      ],
+      "text": "Du hast um 23:31 die schwere Kiste mit den Raketen aus dem Speisesaal auf die Terrasse getragen. Ferdl hat sich bedankt – allein hätte er sie im Schnee kaum bewegen können."
+    },
+    {
+      "art": "karte",
+      "belastet": [],
+      "entlastet": [
+        "c_alex"
+      ],
+      "id": "h3_a1",
+      "runde": 3,
+      "empfaenger": "c_alex",
+      "titel": "Noch einmal das Video",
+      "fakten": [
+        "f_alex_video"
+      ],
+      "text": "Auf Vronis Video geht Alex um 23:31 mit einer Kiste Raketen durch die Glastür hinaus auf die Terrasse und kommt erst um 23:51 zurück, mit Schnee auf der Mütze."
+    },
+    {
+      "art": "notiz",
+      "belastet": [
+        "c_sascha"
+      ],
+      "entlastet": [],
+      "id": "h1_s1",
+      "runde": 1,
+      "empfaenger": "c_sascha",
+      "titel": "Ein gefährlicher Artikel",
+      "fakten": [
+        "f_sascha_klage"
+      ],
+      "text": "Notiz in Saschas Block: „Liftanlage 3 – Prüfbericht gefälscht? Prüfer bestochen?“ Darunter: „Konni droht mit Klage über 1 Mio. Schilling, falls das erscheint!“"
+    },
+    {
+      "art": "karte",
+      "belastet": [
+        "c_moni"
+      ],
+      "entlastet": [],
+      "id": "h2_s1",
+      "runde": 2,
+      "empfaenger": "c_sascha",
+      "titel": "Beobachtet um 22:30",
+      "fakten": [
+        "f_moni_verweint"
+      ],
+      "text": "In deinem Notizblock steht: „22:30 – Monika kommt mit verweinten Augen aus dem Büro, Konni knallt hinter ihr die Tür zu. Worüber haben die beiden gestritten?“"
+    },
+    {
+      "art": "karte",
+      "belastet": [],
+      "entlastet": [
+        "c_sascha"
+      ],
+      "id": "h3_s1",
+      "runde": 3,
+      "empfaenger": "c_sascha",
+      "titel": "Ein Platz an der Bar",
+      "fakten": [
+        "f_sascha_bar"
+      ],
+      "text": "Auf Vronis Video sitzt Sascha von 23:30 bis 23:52 durchgehend an der Bar im Speisesaal, schreibt in einen Notizblock und applaudiert nach jedem Lied."
+    },
+    {
+      "art": "karte",
+      "belastet": [
+        "c_robin"
+      ],
+      "entlastet": [],
+      "id": "h1_r1",
+      "runde": 1,
+      "empfaenger": "c_robin",
+      "titel": "Die Kartenzählung",
+      "fakten": [
+        "f_robin_karten"
+      ],
+      "text": "Heute Nachmittag hat Konni die Liftkarten gezählt und dann lange geschwiegen. Schließlich sagte er nur: „Morgen früh reden wir zwei, Robin. Über ein paar Karten, die es eigentlich nicht geben dürfte.“"
+    },
+    {
+      "art": "karte",
+      "belastet": [],
+      "entlastet": [],
+      "id": "h2_r1",
+      "runde": 2,
+      "empfaenger": "c_robin",
+      "titel": "Kassettenwechsel",
+      "fakten": [
+        "f_robin_playback"
+      ],
+      "text": "Während des Auftritts hast du am Kassettenrekorder zweimal die Kassette gewechselt. Rocco hat einfach weiter die Lippen bewegt – zum Glück hat es keiner gemerkt. Oder doch?"
+    },
+    {
+      "art": "karte",
+      "belastet": [],
+      "entlastet": [
+        "c_robin"
+      ],
+      "id": "h3_r1",
+      "runde": 3,
+      "empfaenger": "c_robin",
+      "titel": "Am Rand des Videos",
+      "fakten": [
+        "f_robin_video"
+      ],
+      "text": "Am Rand von Vronis Video steht Robin von 23:30 bis 23:52 ununterbrochen am Kassettenrekorder neben der Bühne – mit Kopfhörern und konzentriertem Blick."
+    }
   ],
   "runden": [
-    {"nummer": 1, "titel": "Ein Fest mit Hintergedanken",
-     "ablauf": "Nach dem Vorlesen der Einleitung stellen sich alle Figuren reihum vor (je 1–2 Minuten). Danach werden die Hinweise der Runde 1 verteilt. Die Spieler befragen sich gegenseitig zu Motiven. Ideal während der Vorspeise (ca. 30 Minuten).",
-     "vorlesetext": "Dr. Hagen hat den Tod festgestellt: ein einziger, heftiger Schlag mit dem Wanderpokal. Das Telefon ist tot, die Straße gesperrt. Bis die Gendarmerie morgen früh mit dem Pistenbully kommt, liegt es an uns. Jeder hier hatte einen Grund, Konni nicht zu mögen – fangen wir mit den Motiven an.",
-     "hinweis_ids": ["h1_01", "h1_02", "h1_03", "h1_04", "h1_05", "h1_06", "h1_07"]},
-    {"nummer": 2, "titel": "Spuren in der Bibliothek",
-     "ablauf": "Die Hinweise der Runde 2 werden verteilt – sie stammen vom Tatort. Das Zahlenschloss-Rätsel sollte die Gruppe gemeinsam lösen; der Gastgeber gibt den Inhalt des Koffers erst bei richtigem Code heraus. Während des Hauptgangs (ca. 40 Minuten).",
-     "vorlesetext": "Wir haben uns die Bibliothek genauer angesehen. Die Uhr, der Pokal, ein Ohrclip, ein offener Flur – und Konnis Aktenkoffer im Büro. Was wollte er um Mitternacht verkünden?",
-     "hinweis_ids": ["h2_01", "h2_02", "h2_03", "h2_04", "h2_05", "h2_06"]},
-    {"nummer": 3, "titel": "Die Wahrheit kommt ans Licht",
-     "ablauf": "Letzte Hinweise verteilen, die Wortsuche lösen lassen. Danach gibt jeder Spieler auf einem Zettel seinen Tipp ab (Täter + Begründung). Dann liest der Gastgeber die versiegelte Auflösung vor. Zum Dessert (ca. 40 Minuten).",
-     "vorlesetext": "Die Nacht ist schon weit fortgeschritten, der Schnee fällt weiter. Noch einmal gehen wir alles durch: Wer war wann wo – und wer hat gelogen?",
-     "hinweis_ids": ["h3_01", "h3_02", "h3_03", "h3_04", "h3_05", "h3_06"]}
+    {
+      "nummer": 1,
+      "titel": "Ein Fest mit Hintergedanken",
+      "ablauf": "Nach dem Vorlesen der Einleitung stellen sich alle Figuren reihum vor (je 1–2 Minuten). Danach werden die Hinweise der Runde 1 verteilt. Die Spieler befragen sich gegenseitig zu Motiven. Ideal während der Vorspeise (ca. 30 Minuten).",
+      "vorlesetext": "Dr. Hagen hat den Tod festgestellt: ein einziger, heftiger Schlag mit dem Wanderpokal. Das Telefon ist tot, die Straße gesperrt. Bis die Gendarmerie morgen früh mit dem Pistenbully kommt, liegt es an uns. Jeder hier hatte einen Grund, Konni nicht zu mögen – fangen wir mit den Motiven an.",
+      "hinweis_ids": [
+        "h1_01",
+        "h1_02",
+        "h1_03",
+        "h1_04",
+        "h1_05",
+        "h1_06",
+        "h1_07",
+        "h1_k1",
+        "h1_a1",
+        "h1_s1",
+        "h1_r1"
+      ]
+    },
+    {
+      "nummer": 2,
+      "titel": "Spuren in der Bibliothek",
+      "ablauf": "Die Hinweise der Runde 2 werden verteilt – sie stammen vom Tatort. Das Zahlenschloss-Rätsel sollte die Gruppe gemeinsam lösen; der Gastgeber gibt den Inhalt des Koffers erst bei richtigem Code heraus. Während des Hauptgangs (ca. 40 Minuten).",
+      "vorlesetext": "Wir haben uns die Bibliothek genauer angesehen. Die Uhr, der Pokal, ein Ohrclip, ein offener Flur – und Konnis Aktenkoffer im Büro. Was wollte er um Mitternacht verkünden?",
+      "hinweis_ids": [
+        "h2_01",
+        "h2_02",
+        "h2_03",
+        "h2_04",
+        "h2_05",
+        "h2_06",
+        "h2_k1",
+        "h2_a1",
+        "h2_s1",
+        "h2_r1"
+      ]
+    },
+    {
+      "nummer": 3,
+      "titel": "Die Wahrheit kommt ans Licht",
+      "ablauf": "Letzte Hinweise verteilen, die Wortsuche lösen lassen. Danach gibt jeder Spieler auf einem Zettel seinen Tipp ab (Täter + Begründung). Dann liest der Gastgeber die versiegelte Auflösung vor. Zum Dessert (ca. 40 Minuten).",
+      "vorlesetext": "Die Nacht ist schon weit fortgeschritten, der Schnee fällt weiter. Noch einmal gehen wir alles durch: Wer war wann wo – und wer hat gelogen?",
+      "hinweis_ids": [
+        "h3_01",
+        "h3_02",
+        "h3_03",
+        "h3_04",
+        "h3_05",
+        "h3_06",
+        "h3_k1",
+        "h3_a1",
+        "h3_s1",
+        "h3_r1"
+      ]
+    }
   ],
   "aufloesung": {
     "taeter_id": "c_moni",
@@ -338,11 +1432,26 @@
       "Kurz vor der Auflösung: alle schreiben ihren Tipp auf. Wer richtig liegt und die beste Begründung hat, bekommt einen Preis (z. B. eine Flasche Sekt – gekühlt!)."
     ],
     "menue": [
-      {"gang": "Aperitif", "gericht": "Jagatee oder Kir Royal"},
-      {"gang": "Vorspeise", "gericht": "Kaspressknödelsuppe"},
-      {"gang": "Hauptgang", "gericht": "Käsefondue mit Bergkäse und Appenzeller, dazu Baguette, Kartoffeln und Essiggurken"},
-      {"gang": "Dessert", "gericht": "Kaiserschmarrn mit Zwetschgenröster"},
-      {"gang": "Mitternacht", "gericht": "Neujahrsbrezel und (gut gekühlter!) Sekt"}
+      {
+        "gang": "Aperitif",
+        "gericht": "Jagatee oder Kir Royal"
+      },
+      {
+        "gang": "Vorspeise",
+        "gericht": "Kaspressknödelsuppe"
+      },
+      {
+        "gang": "Hauptgang",
+        "gericht": "Käsefondue mit Bergkäse und Appenzeller, dazu Baguette, Kartoffeln und Essiggurken"
+      },
+      {
+        "gang": "Dessert",
+        "gericht": "Kaiserschmarrn mit Zwetschgenröster"
+      },
+      {
+        "gang": "Mitternacht",
+        "gericht": "Neujahrsbrezel und (gut gekühlter!) Sekt"
+      }
     ],
     "einkaufsliste": [
       "1,5 kg Bergkäse und Appenzeller, 2 Knoblauchzehen, 0,5 l Weißwein, 2 cl Kirschwasser, Speisestärke",
@@ -358,5 +1467,6 @@
       "Eine alte Uhr, auf 23:46 gestellt",
       "Watte als Schnee auf der Fensterbank, Lichterketten, Luftschlangen"
     ]
-  }
+  },
+  "spieler_min": 6
 }

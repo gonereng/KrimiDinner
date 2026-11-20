@@ -3,7 +3,7 @@
 {% for h in beweise %}
 {% set p = puzzles.get(h.id) %}
 <section class="evidence-page">
-  <div class="ev-label"><span>{{ L.beweisstueck }} {{ h.id }} · {{ L.runde }} {{ h.runde }}</span><span>{{ L.fuer }}: {{ name_of(h.empfaenger) }}</span></div>
+  <div class="ev-label"><span>{{ L.beweisstueck }} {{ h.id }} · {{ L.runde }} {{ h.runde }}{{ ab_hint(h) }}</span><span>{{ L.fuer }}: {{ name_of(h.empfaenger) }}</span></div>
   {% if h.art == 'brief' %}
   <div class="ev ev-brief"><div class="letterhead">{{ h.titel }}</div>{{ h.text }}{% if p %}{{ puzzle_body(h, p) }}{% endif %}</div>
   {% elif h.art == 'zeitung' %}
@@ -19,7 +19,7 @@
 </section>
 {% if p and p.code %}
 <section class="evidence-page">
-  <div class="ev-label host"><span>{{ L.beweisstueck }} {{ h.id }}b · {{ L.runde }} {{ h.runde }} · {{ L.inhalt_titel }}</span><span>{{ L.erst_bei_code }} {{ p.code }}</span></div>
+  <div class="ev-label host"><span>{{ L.beweisstueck }} {{ h.id }}b · {{ L.runde }} {{ h.runde }} · {{ L.inhalt_titel }}{{ ab_hint(h) }}</span><span>{{ L.erst_bei_code }} {{ p.code }}</span></div>
   <div class="ev ev-brief" style="white-space: pre-line"><div class="letterhead">{{ L.inhalt_von }}: {{ h.titel }}</div>{{ p.loesung }}</div>
 </section>
 {% endif %}

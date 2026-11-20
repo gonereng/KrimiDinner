@@ -6,7 +6,7 @@
     <h1>{{ s.titel }}</h1>
     <div class="sub">{{ s.untertitel }}</div>
     {% if images.cover %}<img class="hero" src="{{ images.cover }}">{% else %}<div class="snow">{{ theme.cover_symbol }}</div>{% endif %}
-    <div class="meta">{{ L.abend }} {{ s.spieler }} {{ L.spieler }} · {{ L.dauer }}</div>
+    <div class="meta">{{ L.abend }} {{ spieler_text() }} {{ L.spieler }} · {{ L.dauer }}</div>
   </div>
   <div class="doc">{{ doc_label }}{% if extra %}<br><span style="font-size: 11pt; font-style: italic">{{ extra }}</span>{% endif %}</div>
 </section>

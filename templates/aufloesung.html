@@ -26,7 +26,7 @@
 <table class="fixed">
   <tr><th style="width:22mm">{{ L.zeit }}</th><th style="width:30mm">{{ L.ort }}</th><th style="width:38mm">{{ L.wer }}</th><th>{{ L.was }}</th></tr>
   {% for e in s.zeitleiste %}
-  <tr><td>{{ e.von }}{% if e.bis %}–{{ e.bis }}{% endif %}</td><td>{{ e.ort }}</td><td class="small">{% for p in e.personen %}{{ name_of(p)|short }}{% if not loop.last %}, {% endif %}{% endfor %}</td><td class="small">{{ e.ereignis }}</td></tr>
+  <tr><td>{{ e.von }}{% if e.bis %}–{{ e.bis }}{% endif %}</td><td>{{ e.ort }}</td><td class="small">{% for p in e.personen %}{{ name_of(p)|short }}{% if s.variabel and stufe(p) > s.min_spieler %} <span class="muted">({{ stufe(p) }}+)</span>{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</td><td class="small">{{ e.ereignis }}</td></tr>
   {% endfor %}
 </table>
 

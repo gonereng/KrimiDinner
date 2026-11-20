@@ -16,8 +16,24 @@
 <h2>{{ L.figuren }}</h2>
 <table>
   <tr><th>{{ L.wer }}</th><th>{{ L.rolle }}</th><th>{{ L.kostuem }}</th></tr>
-  {% for c in s.charaktere %}<tr><td><strong>{{ c.name }}</strong></td><td>{{ c.rolle }}<br><span class="small muted">{{ c.oeffentliches_profil }}</span></td><td class="small">{{ c.kostuemtipp }}</td></tr>{% endfor %}
+  {% for c in s.charaktere %}<tr><td><strong>{{ c.name }}</strong>{{ ab_char(c.id) }}{{ flex(c) }}</td><td>{{ c.rolle }}<br><span class="small muted">{{ c.oeffentliches_profil }}</span></td><td class="small">{{ c.kostuemtipp }}</td></tr>{% endfor %}
 </table>
+
+{% if besetzung %}
+<div class="avoid">
+<h2>{{ L.besetzung }}</h2>
+<p class="small">{{ L.besetzung_info }}</p>
+<table class="besetzung">
+  <tr><th style="width:18mm">{{ L.spieler_anzahl }}</th><th>{{ L.figuren }}</th><th style="width:52mm">{{ L.beiseite }}</th></tr>
+  {% for row in besetzung %}
+  <tr><td><strong>{{ row.n }}</strong></td>
+    <td>{% if row.stamm %}<strong>{{ L.stamm }}:</strong> {% for c in row.figuren %}{{ c.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+        {% else %}{{ L.plus }}: <strong>{{ row.figuren|map(attribute='name')|join(', ') }}</strong> <span class="small muted">({{ row.figuren|map(attribute='rolle')|join(', ') }})</span>{% endif %}</td>
+    <td class="small">{% if not row.stamm %}{{ L.ab_n.format(n=row.n) }}: {{ row.hinweise|join(', ') }}{% endif %}</td></tr>
+  {% endfor %}
+</table>
+</div>
+{% endif %}
 
 <h2>{{ L.vorbereitung }}</h2>
 <ul>{% for v in s.gastgeber.vorbereitung %}<li>☐ {{ v }}</li>{% endfor %}</ul>
@@ -30,7 +46,7 @@
   <table>
     <tr><th style="width:14mm">ID</th><th>{{ L.verteilen }}</th><th style="width:42mm">{{ L.fuer }}</th><th style="width:34mm"></th></tr>
     {% for h in s.hinweise if h.runde == r.nummer %}
-    <tr><td class="small">{{ h.id }}</td><td>{{ h.titel }}</td><td>{{ name_of(h.empfaenger) }}</td><td class="small muted">{{ art_name(h) }}{% if h.raetsel %} · {{ h.raetsel.typ|capitalize }}{% endif %}</td></tr>
+    <tr><td class="small">{{ h.id }}</td><td>{{ h.titel }}</td><td>{{ name_of(h.empfaenger) }}{{ ab_hint(h) }}</td><td class="small muted">{{ art_name(h) }}{% if h.raetsel %} · {{ h.raetsel.typ|capitalize }}{% endif %}</td></tr>
     {% endfor %}
   </table>
 {% endfor %}

@@ -150,7 +150,8 @@ def kit_summary(d: Path) -> dict:
         status["status"] = "abgebrochen"  # z. B. Server-Neustart während der Generierung
     return {
         "name": d.name, "titel": story.get("titel") or d.name, "thema": story.get("thema", ""),
-        "spieler": story.get("spieler"), "sprache": story.get("sprache"),
+        "spieler": (f"{story['spieler_min']}–{story['spieler']}" if 0 < (story.get("spieler_min") or 0) < (story.get("spieler") or 0)
+                    else story.get("spieler")), "sprache": story.get("sprache"),
         "status": status.get("status", "fertig" if (d / "kit.zip").exists() else "entwurf"),
         "aufgabe": status.get("aufgabe", ""), "report_ok": report.get("ok") if report else None,
         "has_pdf": (d / "kit.zip").exists(), "mtime": d.stat().st_mtime,
@@ -237,7 +238,8 @@ def index(request: Request):
 
 
 @app.post("/kits/new")
-def new_kit(request: Request, thema: str = Form(...), spieler: int = Form(6), lang: str = Form("de"),
+def new_kit(request: Request, thema: str = Form(...), spieler: int = Form(6), spieler_bis: str = Form(""),
+            lang: str = Form("de"),
             paper: str = Form("a4"), bilder: bool = Form(False), ohne_cache: bool = Form(False),
             variante: int = Form(1), design: str = Form("auto")):
     need_login(request)
@@ -247,14 +249,19 @@ def new_kit(request: Request, thema: str = Form(...), spieler: int = Form(6), la
     thema = thema.strip()[:200]
     if not thema:
         raise HTTPException(400, "Bitte ein Thema angeben.")
-    if not 3 <= spieler <= 12 or lang not in ("de", "en") or paper not in ("a4", "letter"):
+    from ..pipeline import parse_spieler
+    try:
+        spieler, bis = parse_spieler(f"{spieler}-{spieler_bis}" if spieler_bis.strip() else spieler)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc))
+    if lang not in ("de", "en") or paper not in ("a4", "letter"):
         raise HTTPException(400, "Ungültige Eingabe.")
     variante = max(1, min(variante, 99))
-    name = kit_name(thema, spieler, lang, variante)
+    name = kit_name(thema, spieler, lang, variante, bis)
     kit_dir = out_dir() / name
 
     def task(job: Job):
-        res = generate_kit(thema, spieler, lang, paper, images=bilder, use_cache=not ohne_cache,
+        res = generate_kit(thema, spieler, lang, paper, images=bilder, use_cache=not ohne_cache, spieler_bis=bis,
                            variante=variante, progress=job.progress, kit_dir=kit_dir, design=design)
         u = res["usage"]
         job.progress(f"KI: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "

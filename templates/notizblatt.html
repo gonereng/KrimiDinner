@@ -6,7 +6,7 @@
   <h1 style="font-size: 20pt">{{ L.notizblatt }} <span class="muted" style="font-size: 12pt">– {{ me.name }}</span></h1>
   <table class="suspects">
     <tr><th>{{ L.verdaechtige }}</th><th>{{ L.spalte_motiv }}</th><th>{{ L.spalte_alibi }}</th><th>{{ L.spalte_gelegenheit }}</th><th style="width: 18mm">{{ L.spalte_verdacht }}</th></tr>
-    {% for c in s.charaktere %}<tr><td>{{ c.name|short }}<br><span class="small muted" style="font-family: var(--f-body)">{{ c.rolle[:34] }}</span></td><td></td><td></td><td></td><td class="center muted">☐ ☐ ☐</td></tr>{% endfor %}
+    {% for c in s.charaktere %}<tr><td>{{ c.name|short }}{{ ab_char(c.id) }}<br><span class="small muted" style="font-family: var(--f-body)">{{ c.rolle[:34] }}</span></td><td></td><td></td><td></td><td class="center muted">☐ ☐ ☐</td></tr>{% endfor %}
   </table>
   <h3>{{ L.zeitnotizen }}</h3>
   <div class="lines-box">{% for _ in range(6) %}<div></div>{% endfor %}</div>

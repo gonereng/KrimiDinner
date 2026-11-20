@@ -8,6 +8,13 @@ import pytest
 from krimi.llm_client import LLMClient, LLMError
 from krimi.models import Ausarbeitung, CharakterDetails, Geruest, GeruestCharakter
 from krimi.pipeline import generate_kit
+from krimi.validate import besetzung
+
+
+@pytest.fixture
+def story(story):
+    """Diese Tests prüfen den allgemeinen Ablauf mit fester Besetzung (6 Spieler)."""
+    return besetzung(story, 6)
 
 
 def parts_from_demo(story):
@@ -200,3 +207,28 @@ def test_unknown_ai_design_falls_back(tmp_path, story):
     models.geruest.design = "barock-disco"
     generate_kit("E", 6, client=make_client(tmp_path, models), kit_dir=tmp_path / "kit", render=False)
     assert json.loads((tmp_path / "kit/story.json").read_text())["design"] == "klassisch"
+
+
+def test_variable_player_count(tmp_path):
+    """6–10 Spieler: Gerüst/Ausarbeitung bekommen die Besetzungsregeln, die Story den Bereich."""
+    from krimi.story import load_story
+    from tests.conftest import DEMO
+    full = load_story(DEMO)
+    models = FakeModels(full, broken_first=False)
+    prompts = []
+    orig = models.complete_json
+    models.complete_json = lambda prompt, schema, model, temperature: (prompts.append(prompt), orig(prompt, schema, model, temperature))[1]
+    client = make_client(tmp_path, models)
+    res = generate_kit("Silvester", 6, client=client, kit_dir=tmp_path / "kit", spieler_bis=10)
+    st = json.loads((tmp_path / "kit/story.json").read_text())
+    assert st["spieler"] == 10 and st["spieler_min"] == 6
+    assert "VARIABLE SPIELERZAHL: 6 bis 10" in prompts[0] and "ab_spieler = 7, 8, 9, 10" in prompts[0]
+    assert "VARIABLE SPIELERZAHL (6–10)" in prompts[1]
+    assert json.loads((tmp_path / "kit/params.json").read_text())["spieler_bis"] == 10
+    assert res["warnings"] == []
+
+
+def test_too_many_optional_characters(tmp_path, story):
+    from krimi.pipeline import KitFailed
+    with pytest.raises(KitFailed, match="Höchstens 4"):
+        generate_kit("X", 6, client=make_client(tmp_path, FakeModels(story)), kit_dir=tmp_path / "k", spieler_bis=11)

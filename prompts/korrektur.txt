@@ -16,6 +16,7 @@ Korrigiere das Kit so, dass ALLE Fehler behoben sind. Regeln:
 - Niemand ist in der Zeitleiste zur selben Zeit an zwei Orten.
 - Zahlenschloss: "klartext" ist der vollständige, wörtliche Text des gefundenen Dokuments (200–600 Zeichen); "herkunft" verrät weder Ziffer noch Code, die nötige Information steht in einem anderen Hinweis.
 - Ist das Kit "mehrdeutig", schärfe die belastenden Hinweise gegen den Täter und die entlastenden Hinweise für die genannten Verdächtigen.
+{{besetzung_regeln}}
 - Behalte alles bei, was nicht fehlerhaft ist. Sprache: {{sprache_name}}.
 
 Gib das VOLLSTÄNDIGE korrigierte Kit als JSON nach dem Schema zurück.

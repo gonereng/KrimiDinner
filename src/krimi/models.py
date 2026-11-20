@@ -51,6 +51,9 @@ class Charakter(BaseModel):
     darf_sagen: list[str] = Field([], description="Was die Figur ruhig erzählen darf")
     darf_nicht_sagen: list[str] = Field([], description="Was die Figur verbergen muss")
     ist_taeter: bool = False
+    ab_spieler: int = Field(0, description="Optionale Figur: nur dabei ab dieser Spielerzahl "
+                                           "(0 oder Mindestzahl = Stammbesetzung)")
+    flexibel: bool = Field(False, description="Rolle ist von jedem Geschlecht spielbar")
 
 
 class Fakt(BaseModel):
@@ -137,7 +140,8 @@ class Story(BaseModel):
     untertitel: str = ""
     thema: str
     sprache: str = "de"
-    spieler: int
+    spieler: int = Field(description="Höchstzahl der Spieler (= Anzahl Charaktere)")
+    spieler_min: int = Field(0, description="Mindestzahl der Spieler; 0 = feste Besetzung (= spieler)")
     design: str = Field("klassisch", description="Name des PDF-Designs (siehe krimi.themes)")
     seed: int = 1985
     einleitung: str = Field(description="Atmosphärischer Einstieg, wird zu Beginn vorgelesen")
@@ -162,6 +166,28 @@ class Story(BaseModel):
         return [h for h in self.hinweise
                 if h.empfaenger == cid and (runde is None or h.runde == runde)]
 
+    # Variable Spielerzahl -------------------------------------------------
+    @property
+    def min_spieler(self) -> int:
+        return self.spieler_min if 0 < self.spieler_min <= self.spieler else self.spieler
+
+    @property
+    def variabel(self) -> bool:
+        return self.min_spieler < self.spieler
+
+    def stufe(self, cid: str) -> int:
+        """Ab welcher Spielerzahl die Figur dabei ist (Stammbesetzung = Mindestzahl)."""
+        c = self.charakter(cid)
+        return max(c.ab_spieler, self.min_spieler) if c else self.spieler + 1
+
+    def hinweis_stufe(self, h: Hinweis) -> int:
+        """Ein Hinweis wird gebraucht, sobald alle betroffenen Figuren mitspielen."""
+        ids = [h.empfaenger, *h.belastet, *h.entlastet]
+        return max([self.min_spieler] + [self.stufe(i) for i in ids])
+
+    def spielerzahlen(self) -> list[int]:
+        return list(range(self.min_spieler, self.spieler + 1))
+
 
 # --------------------------------------------------------------------------
 # Zwischenschritte der Generierung (KI-Ausgabeschemata)
@@ -176,6 +202,8 @@ class GeruestCharakter(BaseModel):
     motiv: str
     alibi: str
     ist_taeter: bool
+    ab_spieler: int = Field(description="Stammfigur: Mindest-Spielerzahl; optionale Figur: ab welcher Spielerzahl")
+    flexibel: bool = Field(description="true = Rolle von jedem Geschlecht spielbar")
 
 
 class Geruest(BaseModel):

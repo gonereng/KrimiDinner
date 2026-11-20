@@ -13,6 +13,7 @@
   <div class="small muted">{{ L.rolle }}</div>
   <div class="name">{{ c.name }}</div>
   <div class="rolle">{{ c.rolle }}</div>
+  {% if ab_char(c.id) or flex(c) %}<div class="badges">{{ ab_char(c.id) }}{{ flex(c) }}</div>{% endif %}
   <div class="text fit shrink-{{ shrink.get('inv-' ~ c.id, 0) }}" data-fit="inv-{{ c.id }}" style="height: 58mm">
     <p>{{ c.oeffentliches_profil }}</p>
     <p><strong>{{ L.kostuem }}:</strong> {{ c.kostuemtipp }}</p>

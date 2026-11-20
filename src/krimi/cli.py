@@ -36,17 +36,23 @@ def _check_design(design: str) -> str:
 
 
 def _run(render: bool, theme, players, lang, paper, images, cache, variante, verbose, design="auto"):
+    from .pipeline import parse_spieler
+    try:
+        players, players_bis = parse_spieler(players)
+    except ValueError as exc:
+        typer.secho(f"✘ {exc}", fg="red")
+        raise typer.Exit(2)
     from .llm_client import LLMError
     from .pipeline import KitFailed, generate_kit, kit_name
     _setup_logging(verbose)
     try:
-        res = generate_kit(theme, players, lang, paper, images=images, use_cache=cache,
+        res = generate_kit(theme, players, lang, paper, images=images, use_cache=cache, spieler_bis=players_bis,
                            variante=variante, progress=_progress, render=render,
                            design=_check_design(design))
     except (KitFailed, LLMError) as exc:
         from .config import get_settings
         typer.secho(f"✘ {exc}", fg="red")
-        kit = get_settings().output_dir / kit_name(theme, players, lang, variante)
+        kit = get_settings().output_dir / kit_name(theme, players, lang, variante, players_bis)
         typer.echo(f"  Fortschritt gesichert – später fortsetzen mit: krimi resume {kit}")
         raise typer.Exit(1)
     for w in res["warnings"]:
@@ -60,7 +66,8 @@ DESIGN_HELP = "PDF-Design (siehe `krimi designs`), Standard: auto = KI wählt pa
 
 @app.command()
 def new(theme: str = typer.Option(..., "--theme", "-t", help="Thema des Krimidinners"),
-        players: int = typer.Option(6, "--players", "-p", min=3, max=12),
+        players: str = typer.Option("6", "--players", "-p",
+                                    help="Spielerzahl, fest (6) oder variabel (6-10, max. 4 optionale Figuren)"),
         design: str = typer.Option("auto", "--design", "-d", help=DESIGN_HELP),
         lang: str = typer.Option("de", "--lang", help="de oder en"),
         variante: int = typer.Option(1, "--variante", help="Andere Geschichte zum selben Thema"),
@@ -72,7 +79,8 @@ def new(theme: str = typer.Option(..., "--theme", "-t", help="Thema des Krimidin
 
 @app.command()
 def all(theme: str = typer.Option(..., "--theme", "-t"),
-        players: int = typer.Option(6, "--players", "-p", min=3, max=12),
+        players: str = typer.Option("6", "--players", "-p",
+                                    help="Spielerzahl, fest (6) oder variabel (6-10, max. 4 optionale Figuren)"),
         lang: str = typer.Option("de", "--lang"),
         paper: str = typer.Option("a4", "--paper", help="a4 oder letter"),
         design: str = typer.Option("auto", "--design", "-d", help=DESIGN_HELP),

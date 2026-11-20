@@ -14,6 +14,7 @@
       <div class="cb-title fit shrink-{{ shrink.get('back-' ~ h.id, 0) }}" data-fit="back-{{ h.id }}">{{ s.titel }}</div>
       <div class="cb-round">{{ L.runde }} {{ h.runde }}</div>
       <div class="cb-for">{{ L.fuer }}: {{ name_of(h.empfaenger)|short }}</div>
+      {% if ab_hint(h) %}<div class="cb-ab">{{ ab_hint(h) }}</div>{% endif %}
     </div>
   </div>
   {% endfor %}
@@ -24,7 +25,7 @@
   {% for m in marks %}<div class="mark {{ 'h' if m.h == 0 else 'v' }}" style="left: {{ m.x }}mm; top: {{ m.y }}mm; width: {{ m.w }}mm; height: {{ m.h }}mm"></div>{% endfor %}
   {% for slot, h in pg.cards %}
   <div class="card" style="left: {{ slot.x }}mm; top: {{ slot.y }}mm; width: {{ card_w }}mm; height: {{ card_h }}mm">
-    <div class="head"><span>{{ L.runde }} {{ h.runde }}</span><span>{{ L.fuer }}: {{ name_of(h.empfaenger)|short }}</span></div>
+    <div class="head"><span>{{ L.runde }} {{ h.runde }}{{ ab_hint(h) }}</span><span>{{ L.fuer }}: {{ name_of(h.empfaenger)|short }}</span></div>
     <h3>{{ h.titel }}</h3>
     <div class="body fit shrink-{{ shrink.get(h.id, 0) }}" data-fit="{{ h.id }}">{{ h.text }}</div>
     <div class="foot">{{ h.id }}</div>

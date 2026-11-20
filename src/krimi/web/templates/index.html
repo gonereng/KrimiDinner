@@ -11,7 +11,8 @@
       <input name="thema" required maxlength="200" value="Silvester im Schneechalet" placeholder="z. B. Mord auf dem Orient-Express-Bankett">
     </label>
     <div class="row">
-      <label>Spieler <input type="number" name="spieler" min="3" max="12" value="6"></label>
+      <label>Spieler von <input type="number" name="spieler" min="3" max="12" value="6"></label>
+      <label title="Leer lassen für eine feste Spielerzahl. Bis zu 4 optionale, geschlechtsflexible Rollen.">bis (optional) <input type="number" name="spieler_bis" min="3" max="12" value="10" placeholder="fest"></label>
       <label>Sprache
         <select name="lang"><option value="de">Deutsch</option><option value="en">English</option></select>
       </label>
@@ -20,6 +21,7 @@
       </label>
       <label title="Andere Geschichte zum selben Thema">Variante <input type="number" name="variante" min="1" max="99" value="1"></label>
     </div>
+    <p class="muted small" style="margin:-4px 0 0">Mit „bis“ entsteht ein Kit für eine variable Spielerzahl: Stammbesetzung plus bis zu 4 optionale Rollen für jedes Geschlecht, die nur besetzt werden, wenn so viele Gäste kommen. „bis“ leer lassen = feste Spielerzahl.</p>
     <fieldset class="designs">
       <legend>Design der PDFs</legend>
       {{ design_picker('auto', true) }}

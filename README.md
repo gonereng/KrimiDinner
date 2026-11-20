@@ -22,6 +22,28 @@ Bedienen lässt er sich über eine **passwortgeschützte Web-Oberfläche** oder 
 
 Die Formate A4 und US Letter stehen zur Wahl.
 
+### Variable Spielerzahl (z. B. 6–10)
+
+Ein Kit kann eine feste oder eine variable Spielerzahl haben. Bei variabler Spielerzahl entstehen:
+- eine **Stammbesetzung**, z. B. 6 Figuren. Sie wird immer gespielt, und Täter:in sowie alle Hinweise, die die Lösung braucht, gehören zu ihr.
+- bis zu **4 optionale Figuren** „ab 7“, „ab 8“, „ab 9“ und „ab 10 Spielern“. Sie haben eigene Motive und Geheimnisse und sorgen für falsche Fährten, sind aber unschuldig und werden durch eigene Hinweise entlastet.
+- **geschlechtsflexible** optionale Rollen: mit Vornamen wie Kim, Alex, Sascha oder Robin, der Rolle in beiden Formen („Fotografin / Fotograf“) und ohne Pronomen in den Texten. So kann sie jeder Gast spielen.
+
+**So nutzt du es:**
+- Alles Material optionaler Figuren (Einladung, Charakterheft, Hinweiskarten, Beweisstücke, Namensschild) trägt den Vermerk **„ab N Spielern“**.
+- Die Gastgeber-Anleitung enthält die Tabelle **„Besetzung nach Spielerzahl“**: welche Figur ab wann dazukommt und welche Karten bei weniger Gästen beiseitegelegt werden.
+
+**So wird die Logik geprüft:**
+- Die Logikprüfung läuft für **jede Spielerzahl einzeln**.
+- Kein Text darf eine Figur erwähnen, die bei seiner Spielerzahl fehlen könnte. Ein Hinweis der Stammbesetzung oder die Auflösung erwähnt also nie eine optionale Figur.
+- Der KI-Gegencheck ermittelt mit der kleinsten **und** der größten Besetzung.
+
+**Eingabe:**
+- Web-App: „Spieler von … bis …“; „bis“ leer lassen ergibt eine feste Spielerzahl.
+- Kommandozeile: `krimi all --theme "..." --players 6-10`.
+
+Das Demo-Kit ist für 6–10 Spieler ausgelegt.
+
 ### Designs
 
 Es gibt zehn Designs mit eigenen Farben, Schriften, Ornamenten, Zeitungskopf und Bildstil:
@@ -78,7 +100,7 @@ docker run -d -p 8000:8000 --env-file .env -v "$PWD/data:/data" --name krimidinn
 
 ## Die Web-Oberfläche
 
-- **Neues Kit**: Thema, Spielerzahl (3–12), Sprache (DE/EN), Papierformat und optional Illustrationen wählen. Der Fortschritt erscheint live: Gerüst → Texte → Logikprüfung → Korrekturen → PDFs.
+- **Neues Kit**: Thema, Spielerzahl (fest 3–12 oder variabel, z. B. 6–10), Sprache (DE/EN), Papierformat und optional Illustrationen wählen. Der Fortschritt erscheint live: Gerüst → Texte → Logikprüfung → Korrekturen → PDFs.
 - **Demo-Kit**: Ein fertiges Beispiel („Mord im Chalet Edelweiß“, Silvester 1985, 6 Spieler) funktioniert auch ohne API-Key.
 - **Wiederholen**: Bricht eine Generierung ab, etwa weil das DeepSeek-Guthaben oder Gemini-Kontingent aufgebraucht ist oder der Server neu gestartet wurde, erscheint auf der Kit-Seite der Button **↻ Wiederholen**. Er macht beim letzten gesicherten Schritt weiter (Gerüst, Texte, jede Korrektur, Prüfung, jedes Bild). Bereits erledigte Schritte werden nicht noch einmal bezahlt, auch nicht mit „Cache umgehen“.
 - **Kit-Seite**: alle PDFs zum Ansehen oder Herunterladen, Prüfbericht mit Gegencheck-Ergebnis und KI-Verbrauch (Aufrufe, Cache-Treffer, Tokens).
@@ -110,6 +132,7 @@ krimi render output/<kit> --paper a4                                  # PDFs neu
 krimi render output/<kit> --design gothic                             # ... in einem anderen Design
 krimi designs                                                         # verfügbare Designs
 krimi all --theme "..." --players 6                                   # alles in einem Lauf
+krimi all --theme "..." --players 6-10                                # variable Spielerzahl (Stamm 6 + 4 optionale Rollen)
 krimi all --theme "..." --design artdeco                              # mit festem Design (Standard: auto)
 krimi all --theme "..." --no-images --paper letter
 krimi resume output/<kit>                                             # abgebrochenen Lauf fortsetzen (z. B. nach Kontingent-Ende)

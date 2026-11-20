@@ -5,7 +5,8 @@ AUFGABE (Schritt 2 von 2): Arbeite auf Basis des folgenden Gerüsts die spielbar
 GERÜST (JSON):
 {{geruest_json}}
 
-Sprache aller Texte: {{sprache_name}}. Anzahl Spieler: {{spieler}}. 3 Runden, ca. {{dauer}}.
+Sprache aller Texte: {{sprache_name}}. Spieler: {{spieler}}. 3 Runden, ca. {{dauer}}.
+{{besetzung_regeln}}
 
 Liefere:
 1. einleitung: atmosphärischer Vorlesetext für den Spielbeginn (150–250 Wörter).

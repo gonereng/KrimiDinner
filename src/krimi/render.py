@@ -61,6 +61,12 @@ LABELS = {
         "inhalt_titel": "Für die Spielleitung", "erst_bei_code": "Erst herausgeben bei Code",
         "inhalt_von": "Inhalt", "inhalt_seite": "Inhalt liegt als Beweisstück",
         "hinweis_label": "Hinweis",
+        "ab_n": "ab {n} Spielern", "flexibel": "Rolle für jedes Geschlecht",
+        "besetzung": "Besetzung nach Spielerzahl", "spieler_anzahl": "Spieler",
+        "stamm": "Stammbesetzung", "plus": "zusätzlich",
+        "besetzung_info": "Druckt das komplette Kit aus. Alles, was zu einer optionalen Figur gehört – Einladung, Charakterheft, Hinweiskarten, Beweisstücke, Namensschild –, trägt den Vermerk „ab … Spielern“. Kommen weniger Gäste, legt ihr einfach alles mit einer höheren Zahl beiseite. Die Lösung funktioniert mit jeder Besetzung.",
+        "beiseite": "Bei weniger Spielern beiseitelegen",
+        "von_bis": "{a} bis {b}",
         "rueckseiten": "Rückseiten · beidseitig drucken, an der langen Kante wenden",
     },
     "en": {
@@ -98,6 +104,12 @@ LABELS = {
         "inhalt_titel": "For the host", "erst_bei_code": "Hand out only for code",
         "inhalt_von": "Contents", "inhalt_seite": "Contents are evidence",
         "hinweis_label": "Clue",
+        "ab_n": "from {n} players", "flexibel": "Role for any gender",
+        "besetzung": "Cast by number of players", "spieler_anzahl": "Players",
+        "stamm": "Core cast", "plus": "add",
+        "besetzung_info": "Print the complete kit. Everything that belongs to an optional character – invitation, character booklet, clue cards, evidence, name card – is marked “from … players”. With fewer guests, simply set aside everything with a higher number. The solution works with every cast.",
+        "beiseite": "Set aside with fewer players",
+        "von_bis": "{a} to {b}",
         "rueckseiten": "Card backs · print double-sided, flip on long edge",
     },
 }
@@ -166,7 +178,8 @@ def build_puzzles(story: Story) -> dict[str, PuzzleView]:
 
 
 def build_seating(story: Story):
-    names = [short_name(c.name) for c in story.charaktere][:7]
+    # nur Stammfiguren – optionale Figuren sitzen nicht immer mit am Tisch
+    names = [short_name(c.name) for c in story.charaktere if story.stufe(c.id) <= story.min_spieler][:7]
     if len(names) < 3:
         return None
     return puzzles.seating_puzzle(names, seed=story.seed)
@@ -302,10 +315,39 @@ class Renderer:
                                autoescape=select_autoescape(["html"]))
         self.env.filters["short"] = short_name
         self.env.globals["name_of"] = self.name_of
+        self.env.globals["ab_char"] = lambda cid: self._badge(self.story.stufe(cid))
+        self.env.globals["ab_hint"] = lambda h: self._badge(self.story.hinweis_stufe(h))
+        self.env.globals["flex"] = self._flex
+        self.env.globals["stufe"] = self.story.stufe
+        self.env.globals["spieler_text"] = self.spieler_text
         self.puzzles = build_puzzles(story)
         self.seating = build_seating(story)
         self.images = self._find_images()
         self.warnings: list[str] = []
+
+    def _badge(self, n: int):
+        from markupsafe import Markup, escape
+        if not self.story.variabel or n <= self.story.min_spieler:
+            return ""
+        return Markup(f'<span class="ab-badge">{escape(self.L["ab_n"].format(n=n))}</span>')
+
+    def _flex(self, c):
+        from markupsafe import Markup, escape
+        return Markup(f'<span class="flex-badge">⚥ {escape(self.L["flexibel"])}</span>') if c.flexibel else ""
+
+    def spieler_text(self) -> str:
+        s = self.story
+        return self.L["von_bis"].format(a=s.min_spieler, b=s.spieler) if s.variabel else str(s.spieler)
+
+    def besetzung_tabelle(self) -> list[dict]:
+        """Für die Gastgeber-Anleitung: welche Figur und welche Hinweise ab welcher Spielerzahl."""
+        s = self.story
+        rows = []
+        for n in s.spielerzahlen():
+            neu = [c for c in s.charaktere if s.stufe(c.id) == n]
+            karten = [h.id for h in s.hinweise if s.hinweis_stufe(h) == n]
+            rows.append({"n": n, "figuren": neu, "hinweise": karten, "stamm": n == s.min_spieler})
+        return rows
 
     def name_of(self, cid: str) -> str:
         c = self.story.charakter(cid)
@@ -334,7 +376,8 @@ class Renderer:
         s = self.story
         return {"s": s, "L": self.L, "paper": self.paper, "pw": PAPER[self.paper][0],
                 "ph": PAPER[self.paper][1], "puzzles": self.puzzles, "seating": self.seating,
-                "images": self.images, "css": self._css(), "theme": self.theme, "card_w": CARD_W, "card_h": CARD_H, "bleed": BLEED,
+                "images": self.images, "css": self._css(), "theme": self.theme,
+                "besetzung": self.besetzung_tabelle() if s.variabel else [], "card_w": CARD_W, "card_h": CARD_H, "bleed": BLEED,
                 "taeter": s.taeter()[0] if s.taeter() else None, **extra}
 
     def _pdf(self, template: str, out: Path, fit_retries: int = 4, **extra) -> Path:

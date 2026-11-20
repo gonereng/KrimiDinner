@@ -8,6 +8,7 @@
     {% if images[c.id] %}<img class="portrait" src="{{ images[c.id] }}">{% else %}<div class="medal">{{ (c.name|short)[:1] }}</div>{% endif %}
     <div class="name">{{ c.name }}</div>
     <div class="rolle">{{ c.rolle }}</div>
+    {% if ab_char(c.id) or flex(c) %}<div class="badges">{{ ab_char(c.id) }}{{ flex(c) }}</div>{% endif %}
     {{ ornament() }}
     <p class="small muted" style="margin-top: 10mm">{{ 'Nur für deine Augen bestimmt!' if s.sprache == 'de' else 'For your eyes only!' }}</p>
   </div>
@@ -35,7 +36,7 @@
   {% endif %}
 
   <h3>{{ 'Die anderen Gäste' if s.sprache == 'de' else 'The other guests' }}</h3>
-  <table>{% for o in s.charaktere if o.id != c.id %}<tr><td style="width:45mm"><strong>{{ o.name }}</strong><br><span class="small muted">{{ o.rolle }}</span></td><td class="small">{{ o.oeffentliches_profil }}</td></tr>{% endfor %}</table>
+  <table>{% for o in s.charaktere if o.id != c.id %}<tr><td style="width:45mm"><strong>{{ o.name }}</strong>{{ ab_char(o.id) }}<br><span class="small muted">{{ o.rolle }}</span></td><td class="small">{{ o.oeffentliches_profil }}</td></tr>{% endfor %}</table>
 </section>
 {% endfor %}
 {% endblock %}

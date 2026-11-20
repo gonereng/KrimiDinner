@@ -151,3 +151,24 @@ def test_design_picker_and_rerender(client):
     detail = client.get(f"/kits/{name}").text
     assert "Design: Riviera" in detail and 'value="riviera" checked' in detail
     assert client.post("/kits/new", data={"thema": "X", "design": "disco"}).status_code == 400
+
+
+def test_variable_player_range_form(client):
+    login(client)
+    page = client.get("/").text
+    assert 'name="spieler_bis"' in page
+    r = client.post("/kits/new", data={"thema": "Varia", "spieler": 6, "spieler_bis": "10"}, follow_redirects=False)
+    assert r.headers["location"].endswith("varia-6-10p-de")
+    wait(client, "varia-6-10p-de")
+    assert client.post("/kits/new", data={"thema": "Varia", "spieler": 6, "spieler_bis": "11"}).status_code == 400
+    r = client.post("/kits/new", data={"thema": "Fest", "spieler": 6, "spieler_bis": ""}, follow_redirects=False)
+    assert r.headers["location"].endswith("fest-6p-de")
+
+
+def test_demo_shows_player_range(client):
+    login(client)
+    client.post("/demo")
+    wait(client, "demo-silvester-im-schneechalet")
+    assert "6–10 Spieler" in client.get("/").text
+    detail = client.get("/kits/demo-silvester-im-schneechalet").text
+    assert "ab 7" in detail and "⚥" in detail

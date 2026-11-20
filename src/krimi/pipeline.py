@@ -29,8 +29,28 @@ class KitFailed(RuntimeError):
         self.report = report
 
 
-def kit_name(thema: str, spieler: int, lang: str, variante: int = 1) -> str:
-    name = f"{slug(thema)}-{spieler}p-{lang}"
+MAX_OPTIONALE = 4  # höchstens so viele optionale Figuren über der Stammbesetzung
+
+
+def parse_spieler(text: str | int) -> tuple[int, int | None]:
+    """'6' -> (6, None), '6-10' / '6–10' -> (6, 10). Prüft Grenzen."""
+    t = str(text).strip().replace("–", "-").replace(" ", "")
+    teile = t.split("-")
+    try:
+        von = int(teile[0])
+        bis = int(teile[1]) if len(teile) == 2 and teile[1] else None
+    except (ValueError, IndexError):
+        raise ValueError(f"Ungültige Spielerzahl '{text}' – z. B. 6 oder 6-10")
+    if len(teile) > 2 or not 3 <= von <= 12 or (bis is not None and not von <= bis <= 12):
+        raise ValueError(f"Ungültige Spielerzahl '{text}' – erlaubt sind 3 bis 12")
+    if bis is not None and bis - von > MAX_OPTIONALE:
+        raise ValueError(f"Höchstens {MAX_OPTIONALE} optionale Figuren, z. B. {von}-{von + MAX_OPTIONALE}")
+    return von, (bis if bis and bis > von else None)
+
+
+def kit_name(thema: str, spieler: int, lang: str, variante: int = 1, spieler_bis: int | None = None) -> str:
+    anzahl = f"{spieler}-{spieler_bis}" if spieler_bis and spieler_bis > spieler else f"{spieler}"
+    name = f"{slug(thema)}-{anzahl}p-{lang}"
     return name if variante <= 1 else f"{name}-v{variante}"
 
 
@@ -129,20 +149,25 @@ def generate_kit(thema: str, spieler: int = 6, lang: str = "de", paper: str = "a
                  images: bool = False, use_cache: bool = True, variante: int = 1,
                  progress=lambda m: None, client: LLMClient | None = None,
                  kit_dir: Path | None = None, render: bool = True, resume: bool = False,
-                 design: str | None = None) -> dict:
+                 design: str | None = None, spieler_bis: int | None = None) -> dict:
     """Erzeugt ein Kit. Mit resume=True wird ab dem letzten gesicherten Schritt weitergemacht.
-    design: Name eines Themas aus krimi.themes oder None/"auto" (die KI wählt passend zum Thema)."""
+    design: Name eines Themas aus krimi.themes oder None/"auto" (die KI wählt passend zum Thema).
+    spieler_bis: für variable Spielerzahl (spieler = Mindestzahl, spieler_bis = Höchstzahl)."""
     design = None if design in (None, "", "auto") else themes.normalize(design)
+    if spieler_bis is not None and spieler_bis <= spieler:
+        spieler_bis = None
+    if spieler_bis and spieler_bis - spieler > MAX_OPTIONALE:
+        raise KitFailed(f"Höchstens {MAX_OPTIONALE} optionale Figuren: {spieler}–{spieler + MAX_OPTIONALE} Spieler")
     s = get_settings()
     client = client or LLMClient(use_cache=use_cache)
-    kit_dir = Path(kit_dir or s.output_dir / kit_name(thema, spieler, lang, variante))
+    kit_dir = Path(kit_dir or s.output_dir / kit_name(thema, spieler, lang, variante, spieler_bis))
     kit_dir.mkdir(parents=True, exist_ok=True)
     zs = Zwischenstand(kit_dir)
     if not resume:
         zs.reset()
     write_json(kit_dir / "params.json", {"thema": thema, "spieler": spieler, "lang": lang, "paper": paper,
                                          "images": images, "variante": variante, "render": render,
-                                         "design": design})
+                                         "design": design, "spieler_bis": spieler_bis})
     if resume and zs.summary():
         progress("Fortsetzen – bereits gesichert: " + ", ".join(zs.summary()))
     try:
@@ -150,19 +175,20 @@ def generate_kit(thema: str, spieler: int = 6, lang: str = "de", paper: str = "a
         geruest = zs.load_model("geruest", Geruest) if resume else None
         if geruest is None:
             progress("Schritt 1/2: Gerüst (Täter, Motiv, Zeitleiste, Alibis) …")
-            geruest = generate_geruest(client, s.text_model, thema, spieler, lang, variante=variante)
+            geruest = generate_geruest(client, s.text_model, thema, spieler, lang, variante=variante,
+                                       spieler_bis=spieler_bis)
             zs.save_model("geruest", geruest)
         # 2. Ausarbeitung
         aus = zs.load_model("ausarbeitung", Ausarbeitung) if resume else None
         if aus is None:
             progress(f"Gerüst „{geruest.titel}“ – Schritt 2/2: Charaktere, Hinweise, Runden …")
-            aus = generate_ausarbeitung(client, s.text_model, geruest, spieler, lang)
+            aus = generate_ausarbeitung(client, s.text_model, geruest, spieler, lang, spieler_bis=spieler_bis)
             zs.save_model("ausarbeitung", aus)
         # 3. Story (ggf. schon korrigierte Fassung übernehmen)
         if resume and zs.data.get("story") and (kit_dir / "story.json").exists():
             story = load_story(kit_dir / "story.json")
         else:
-            story = merge(geruest, aus, thema, spieler, lang)
+            story = merge(geruest, aus, thema, spieler, lang, spieler_bis)
             if design:
                 story.design = design
             save_story(story, kit_dir / "story.json")
@@ -235,7 +261,7 @@ def resume_kit(kit_dir: Path, progress=lambda m: None, client: LLMClient | None 
                         images=params.get("images", False), use_cache=use_cache,
                         variante=params.get("variante", 1), progress=progress, client=client,
                         kit_dir=Path(kit_dir), render=params.get("render", True), resume=True,
-                        design=params.get("design"))
+                        design=params.get("design"), spieler_bis=params.get("spieler_bis"))
 
 
 def validate_kit(story_path: Path, gegencheck: bool = True, use_cache: bool = True) -> Report:

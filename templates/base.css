@@ -170,3 +170,13 @@ table.seat td:first-child { text-align: left; }
 .card-back .cb-title { font-family: var(--f-head); font-size: 17pt; line-height: 1.15; max-height: 22mm; overflow: hidden; color: var(--c-cover-ink); }
 .card-back .cb-round { margin-top: 4mm; font-family: var(--f-head); font-size: 11pt; color: var(--c-gold); }
 .card-back .cb-for { margin-top: 1mm; font-size: 7.5pt; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+
+/* ---------- Variable Spielerzahl ---------- */
+.ab-badge { display: inline-block; font-family: var(--f-body); font-size: 6.5pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--c-red); border: .6pt solid var(--c-red); border-radius: 2pt; padding: .2mm 1.2mm; margin-left: 1.5mm; vertical-align: middle; line-height: 1.3; white-space: nowrap; }
+.flex-badge { display: inline-block; font-family: var(--f-body), "DejaVu Sans", sans-serif; font-size: 6.5pt; letter-spacing: .04em; color: var(--c-accent); border: .6pt solid var(--c-accent); border-radius: 2pt; padding: .2mm 1.2mm; margin-left: 1.5mm; vertical-align: middle; line-height: 1.3; white-space: nowrap; }
+.badges { margin: 1mm 0 3mm; }
+.badges .ab-badge, .badges .flex-badge { font-size: 8pt; padding: .5mm 2mm; }
+.card .head .ab-badge { font-size: 5.5pt; margin-left: 1mm; }
+.card-back .cb-ab { margin-top: 2mm; }
+.card-back .ab-badge { color: var(--c-gold); border-color: var(--c-gold); margin-left: 0; font-size: 7pt; }
+table.besetzung td { vertical-align: top; }
