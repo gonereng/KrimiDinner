@@ -25,10 +25,17 @@
   {% for m in marks %}<div class="mark {{ 'h' if m.h == 0 else 'v' }}" style="left: {{ m.x }}mm; top: {{ m.y }}mm; width: {{ m.w }}mm; height: {{ m.h }}mm"></div>{% endfor %}
   {% for slot, h in pg.cards %}
   <div class="card" style="left: {{ slot.x }}mm; top: {{ slot.y }}mm; width: {{ card_w }}mm; height: {{ card_h }}mm">
-    <div class="head"><span>{{ L.runde }} {{ h.runde }}{{ ab_hint(h) }}</span><span>{{ L.fuer }}: {{ name_of(h.empfaenger)|short }}</span></div>
-    <h3>{{ h.titel }}</h3>
-    <div class="body fit shrink-{{ shrink.get(h.id, 0) }}" data-fit="{{ h.id }}">{{ h.text }}</div>
-    <div class="foot">{{ h.id }}</div>
+    <div class="c-frame"></div>
+    <span class="c-corner tl"></span><span class="c-corner tr"></span><span class="c-corner bl"></span><span class="c-corner br"></span>
+    <div class="c-inner fit shrink-{{ shrink.get(h.id, 0) }}" data-fit="{{ h.id }}">
+      <div class="c-kicker">{{ L.runde }} {{ h.runde }}</div>
+      <div class="c-num">{{ nr(h) }}</div>
+      <h3 class="c-title">{{ h.titel }}</h3>
+      <div class="c-div"><span class="c-line"></span><span class="c-orn">{{ theme.ornament }}</span><span class="c-line"></span></div>
+      <div class="body">{{ h.text }}</div>
+    </div>
+    <div class="c-for">{{ L.fuer }}: {{ name_of(h.empfaenger)|short }}{{ ab_hint(h) }}</div>
+    <div class="c-id">{{ h.id }}</div>
   </div>
   {% endfor %}
 </section>

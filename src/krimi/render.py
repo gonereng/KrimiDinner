@@ -22,7 +22,7 @@ from .models import Hinweis, Story
 log = logging.getLogger("krimi.render")
 
 PAPER = {"a4": (210.0, 297.0), "letter": (215.9, 279.4)}
-CARD_W, CARD_H, CARD_GAP = 90.0, 80.0, 6.0
+CARD_W, CARD_H, CARD_GAP = 90.0, 125.0, 6.0  # Hochformat, 2 × 2 Karten pro Seite
 BLEED = 2.0  # Rückseiten-Farbe ragt so weit über die Schnittkante (Toleranz beim Duplexdruck)
 
 LABELS = {
@@ -191,7 +191,7 @@ def build_seating(story: Story):
 
 def card_layout(paper: str) -> list[dict]:
     pw, ph = PAPER[paper]
-    cols, rows = 2, 3
+    cols, rows = 2, 2
     gw = cols * CARD_W + (cols - 1) * CARD_GAP
     gh = rows * CARD_H + (rows - 1) * CARD_GAP
     x0, y0 = (pw - gw) / 2, (ph - gh) / 2
@@ -319,11 +319,17 @@ class Renderer:
         self.env.globals["ab_hint"] = lambda h: self._badge(self.story.hinweis_stufe(h))
         self.env.globals["flex"] = self._flex
         self.env.globals["stufe"] = self.story.stufe
+        self.env.globals["nr"] = self.hint_nr
         self.env.globals["spieler_text"] = self.spieler_text
         self.puzzles = build_puzzles(story)
         self.seating = build_seating(story)
         self.images = self._find_images()
         self.warnings: list[str] = []
+
+    def hint_nr(self, h) -> int:
+        """Laufende Nummer des Hinweises innerhalb seiner Runde (für die große Zahl auf der Karte)."""
+        runde = sorted((x for x in self.card_hints() if x.runde == h.runde), key=lambda x: x.id)
+        return next((i for i, x in enumerate(runde, 1) if x.id == h.id), 0)
 
     def _badge(self, n: int):
         from markupsafe import Markup, escape

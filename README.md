@@ -12,7 +12,7 @@ Bedienen lässt er sich über eine **passwortgeschützte Web-Oberfläche** oder 
 | `01_gastgeber.pdf` | Vorbereitung, Ablauf je Runde mit Vorlesetexten, Verteilplan der Hinweise, Rätsel-Lösungen, Tipps, Menü, Einkaufsliste, Deko |
 | `02_einladungen.pdf` | eine Einladung pro Figur mit Rolle und Kostümtipp |
 | `03_charakterhefte.pdf` + `charakterhefte/*.pdf` | pro Spieler: Profil, Geheimnis, Motiv, Alibi, Beziehungen, was man sagen darf und was nicht |
-| `04_hinweiskarten.pdf` | Hinweiskarten je Runde zum Ausschneiden, mit Schnittmarken, **mit Rückseiten im gewählten Design** für den beidseitigen Druck (an der langen Kante wenden) |
+| `04_hinweiskarten.pdf` | Hinweiskarten je Runde im Hochformat (4 pro Seite, ca. 90 × 125 mm) mit Zierrahmen, Rundennummer und Kartennummer, zum Ausschneiden mit Schnittmarken, **mit Rückseiten im gewählten Design** für den beidseitigen Druck (an der langen Kante wenden) |
 | `04_hinweiskarten_einseitig.pdf` | dieselben Karten nur mit Vorderseiten, für Drucker ohne Duplex |
 | `05_beweisstuecke.pdf` | Brief, Zeitungsausschnitt, Notiz, Telegramm und Rätsel (Chiffre, Zahlenschloss, Wortsuche) im passenden Look |
 | `06_aufloesung.pdf` | versiegelte Auflösung („Erst am Ende öffnen“) mit Schlusskette und Zeitleiste |

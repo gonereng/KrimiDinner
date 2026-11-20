@@ -102,3 +102,18 @@ def test_pages_have_white_background(tmp_path, story, name):
     for box in (page._page_box, root, root.children[0]):
         color = box.style["background_color"]
         assert color.alpha == 0 or tuple(color)[:3] == (1.0, 1.0, 1.0), (name, color)
+
+
+@pytest.mark.parametrize("paper", ["a4", "letter"])
+def test_four_portrait_cards_per_page_and_long_text_fits(tmp_path, story, paper):
+    from krimi.render import CARD_H, CARD_W, PAPER, card_layout
+    slots = card_layout(paper)
+    pw, ph = PAPER[paper]
+    assert len(slots) == 4 and CARD_H > CARD_W
+    assert all(0 < s["x"] and s["x"] + CARD_W < pw and 0 < s["y"] and s["y"] + CARD_H < ph for s in slots)
+    h = next(h for h in story.hinweise if h.art == "karte" and not h.raetsel)
+    h.text, h.titel = ("Sehr langer Hinweistext. " * 30)[:450], "Ein sehr langer Titel für eine Hinweiskarte"
+    r = Renderer(story, tmp_path, paper)
+    r._pdf("hinweiskarten.html", tmp_path / "k.pdf", marks=crop_marks(slots),
+           pages=[{"runde": h.runde, "side": "front", "cards": [(slots[0], h)]}])
+    assert r.warnings == []  # passt nach automatischem Verkleinern

@@ -83,11 +83,33 @@ table.fixed { table-layout: fixed; }
 .mark { position: absolute; border-color: #000; border-style: solid; border-width: 0; }
 .mark.h { border-top-width: .25pt; }
 .mark.v { border-left-width: .25pt; }
-.card { position: absolute; box-sizing: border-box; background: #fff; border: .4pt dashed var(--c-line); padding: 5mm 5.5mm; display: flex; flex-direction: column; }
-.card .head { display: flex; justify-content: space-between; font-size: 7pt; text-transform: uppercase; letter-spacing: .12em; color: var(--c-accent); border-bottom: .5pt solid var(--c-accent); padding-bottom: 1.5mm; margin-bottom: 2.5mm; }
-.card h3 { margin: 0 0 2mm; font-size: 12pt; }
-.card .body { flex: 1; overflow: hidden; font-size: 10.6pt; line-height: 1.38; }
-.card .foot { font-size: 6.5pt; color: var(--c-muted); text-align: right; margin-top: 1mm; }
+.card { position: absolute; box-sizing: border-box; background: #fff; border: .3pt dotted var(--c-line); }
+.card .c-frame { position: absolute; top: 4mm; left: 4mm; right: 4mm; bottom: 4mm; border: .9pt solid var(--c-gold); }
+.card .c-frame::after { content: ""; position: absolute; top: 1.3mm; left: 1.3mm; right: 1.3mm; bottom: 1.3mm; border: .35pt solid var(--c-gold); }
+/* Stufen-Ecken im Art-déco-Stil */
+.card .c-corner { position: absolute; width: 9mm; height: 9mm; border-color: var(--c-gold); border-style: solid; border-width: 0; }
+.card .c-corner::after { content: ""; position: absolute; width: 4.5mm; height: 4.5mm; border-color: var(--c-gold); border-style: solid; border-width: 0; }
+.card .c-corner.tl { top: 7.5mm; left: 7.5mm; border-top-width: 1.1pt; border-left-width: 1.1pt; }
+.card .c-corner.tl::after { top: 1.6mm; left: 1.6mm; border-top-width: .6pt; border-left-width: .6pt; }
+.card .c-corner.tr { top: 7.5mm; right: 7.5mm; border-top-width: 1.1pt; border-right-width: 1.1pt; }
+.card .c-corner.tr::after { top: 1.6mm; right: 1.6mm; border-top-width: .6pt; border-right-width: .6pt; }
+.card .c-corner.bl { bottom: 7.5mm; left: 7.5mm; border-bottom-width: 1.1pt; border-left-width: 1.1pt; }
+.card .c-corner.bl::after { bottom: 1.6mm; left: 1.6mm; border-bottom-width: .6pt; border-left-width: .6pt; }
+.card .c-corner.br { bottom: 7.5mm; right: 7.5mm; border-bottom-width: 1.1pt; border-right-width: 1.1pt; }
+.card .c-corner.br::after { bottom: 1.6mm; right: 1.6mm; border-bottom-width: .6pt; border-right-width: .6pt; }
+.card .c-inner { position: absolute; top: 11.5mm; left: 11mm; right: 11mm; bottom: 15mm; overflow: hidden; text-align: center; font-size: 11.4pt; }
+/* Überlauf: ganze Karte stufenweise verkleinern (alle Innenmaße in em) */
+.card .c-inner.shrink-1 { font-size: 10.6pt !important; } .card .c-inner.shrink-2 { font-size: 9.9pt !important; }
+.card .c-inner.shrink-3 { font-size: 9.2pt !important; } .card .c-inner.shrink-4 { font-size: 8.5pt !important; line-height: 1.38; }
+.card .c-kicker { font-family: var(--f-body); font-size: .62em; letter-spacing: .32em; text-transform: uppercase; color: var(--c-accent); }
+.card .c-num { font-family: var(--f-head); font-size: 2.1em; line-height: 1.1; color: var(--c-gold); margin-top: .12em; }
+.card h3.c-title { font-family: var(--f-head); font-size: 1.23em; line-height: 1.15; color: var(--c-primary); margin: .05em 0 .45em; font-weight: 700; border: 0; }
+.card .c-div { margin: 0 0 .8em; white-space: nowrap; }
+.card .c-line { display: inline-block; width: 13mm; border-top: .6pt solid var(--c-gold); vertical-align: middle; }
+.card .c-orn { display: inline-block; font-family: "DejaVu Sans", serif; font-size: .66em; letter-spacing: .25em; color: var(--c-gold); margin: 0 1.5mm 0 2mm; vertical-align: middle; }
+.card .body { font-size: 1em; line-height: 1.45; hyphens: auto; }
+.card .c-for { position: absolute; left: 11mm; right: 11mm; bottom: 10mm; text-align: center; font-family: var(--f-body); font-size: 6.8pt; letter-spacing: .18em; text-transform: uppercase; color: var(--c-muted); }
+.card .c-id { position: absolute; bottom: 1.2mm; right: 2mm; font-size: 5pt; color: var(--c-line); }
 
 .fit.shrink-1 { font-size: 92% !important; }
 .fit.shrink-2 { font-size: 85% !important; line-height: 1.3; }
@@ -176,7 +198,7 @@ table.seat td:first-child { text-align: left; }
 .flex-badge { display: inline-block; font-family: var(--f-body), "DejaVu Sans", sans-serif; font-size: 6.5pt; letter-spacing: .04em; color: var(--c-accent); border: .6pt solid var(--c-accent); border-radius: 2pt; padding: .2mm 1.2mm; margin-left: 1.5mm; vertical-align: middle; line-height: 1.3; white-space: nowrap; }
 .badges { margin: 1mm 0 3mm; }
 .badges .ab-badge, .badges .flex-badge { font-size: 8pt; padding: .5mm 2mm; }
-.card .head .ab-badge { font-size: 5.5pt; margin-left: 1mm; }
+.card .c-for .ab-badge { font-size: 5.5pt; letter-spacing: .04em; margin-left: 1.5mm; }
 .card-back .cb-ab { margin-top: 2mm; }
 .card-back .ab-badge { color: var(--c-gold); border-color: var(--c-gold); margin-left: 0; font-size: 7pt; }
 table.besetzung td { vertical-align: top; }
