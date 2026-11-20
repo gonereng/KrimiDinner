@@ -29,8 +29,10 @@
   <ul>{% for z in p.lock_hinweise %}<li>{{ z }}</li>{% endfor %}</ul>
   <div class="puzzle-help">{{ p.hilfe }}</div>
 {% elif p.typ == 'wortsuche' %}
-  <table class="ws">{% for row in p.grid %}<tr>{% for ch in row %}<td>{{ ch }}</td>{% endfor %}</tr>{% endfor %}</table>
-  <div class="wordlist">{{ L.gesucht }}: {% for w in p.woerter %}<span>{{ w }}</span>{% endfor %}</div>
+  {% set cell = [8.5, (88 / (p.grid|length))|round(1, 'floor')]|min %}
+  <table class="ws" style="font-size: {{ (cell * 1.5)|round(1) }}pt">{% for row in p.grid %}<tr>{% for ch in row %}<td style="width: {{ cell }}mm; height: {{ cell }}mm">{{ ch }}</td>{% endfor %}</tr>{% endfor %}</table>
+  <div class="wordlist-label">{{ L.gesucht }}:</div>
+  <div class="wordlist">{% for w in p.woerter %}<span>{{ w }}</span> {% endfor %}</div>
   <div class="puzzle-help">{{ p.hilfe }}</div>
 {% endif %}
 {%- endmacro %}
