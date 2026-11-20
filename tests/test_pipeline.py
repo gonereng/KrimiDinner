@@ -28,7 +28,7 @@ def parts_from_demo(story):
 class FakeModels:
     """Imitiert client.models.generate_content des google-genai-SDK."""
 
-    def __init__(self, story, broken_first=True, fail_times=0):
+    def __init__(self, story, broken_first=True, fail_times=0, quota_on=None):
         self.story = story
         self.geruest, aus = parts_from_demo(story)
         self.aus_ok = aus
@@ -39,6 +39,7 @@ class FakeModels:
                     h.entlastet.remove("c_rocco")
         self.calls = []
         self.fail_times = fail_times
+        self.quota_on = quota_on  # Schema-Name, bei dem das Tageskontingent "erschöpft" ist
 
     def generate_content(self, model, contents, config):
         if self.fail_times:
@@ -47,6 +48,10 @@ class FakeModels:
             err.code = 429
             raise err
         name = config.response_schema.__name__
+        if name == self.quota_on:
+            err = RuntimeError("429 RESOURCE_EXHAUSTED: Quota exceeded for GenerateRequestsPerDay")
+            err.code = 429
+            raise err
         self.calls.append(name)
         payload = {
             "Geruest": lambda: self.geruest.model_dump_json(),
@@ -125,3 +130,57 @@ def test_missing_key_is_clear_error(tmp_path):
     c = GeminiClient(api_key="", cache_dir=tmp_path)
     with pytest.raises(GeminiError, match="GEMINI_API_KEY"):
         c.generate_json("hallo", Geruest, "m")
+
+
+def test_resume_after_quota_exhausted(tmp_path, story):
+    from krimi.gemini_client import GeminiQuotaError
+    from krimi.pipeline import Zwischenstand, resume_kit
+    models = FakeModels(story, quota_on="Ausarbeitung")
+    sleeps = []
+    client = GeminiClient(api_key="t", use_cache=False, cache_dir=tmp_path / "c", sleep=sleeps.append)
+    client._client = SimpleNamespace(models=models)
+    kit = tmp_path / "kit"
+    with pytest.raises(GeminiQuotaError, match="Fortschritt ist gespeichert"):
+        generate_kit("Silvester", 6, client=client, kit_dir=kit, use_cache=False)
+    assert sleeps == []  # Tageslimit: kein sinnloses Warten
+    assert models.calls == ["Geruest"]
+    assert Zwischenstand(kit).summary() == ["Gerüst"]
+
+    # Später: Kontingent wieder da, aber Gerüst steht nur noch der Kontingent beim Prüfen im Weg
+    models.quota_on = "Ermittlung"
+    with pytest.raises(GeminiQuotaError):
+        resume_kit(kit, client=client, use_cache=False)
+    assert models.calls == ["Geruest", "Ausarbeitung", "Story"]  # Gerüst NICHT erneut
+    zs = Zwischenstand(kit)
+    assert zs.data["korrekturen"] == 1 and "Story + 1 Korrektur(en)" in zs.summary()
+
+    # Nochmal: nur noch der Gegencheck fehlt, die Korrektur wird nicht wiederholt
+    models.quota_on = None
+    msgs = []
+    vorher = client.usage.api_calls
+    res = resume_kit(kit, client=client, use_cache=False, progress=msgs.append)
+    assert models.calls == ["Geruest", "Ausarbeitung", "Story", "Ermittlung"]
+    assert any("Fortsetzen – bereits gesichert" in m for m in msgs)
+    assert (kit / "kit.zip").exists() and res["usage"]["api_calls"] - vorher == 1
+
+    # Ein fertiges Kit erneut fortsetzen kostet nichts mehr
+    res = resume_kit(kit, client=client, use_cache=False)
+    assert models.calls[-1] == "Ermittlung" and len(models.calls) == 4
+
+
+def test_new_run_discards_old_checkpoints(tmp_path, story):
+    from krimi.pipeline import Zwischenstand
+    models = FakeModels(story, broken_first=False)
+    client = make_client(tmp_path, models, cache=False)
+    generate_kit("A", 6, client=client, kit_dir=tmp_path / "kit", render=False)
+    generate_kit("A", 6, client=client, kit_dir=tmp_path / "kit", render=False)  # ohne resume: neu
+    assert models.calls.count("Geruest") == 2
+    assert Zwischenstand(tmp_path / "kit").data["pruefung_ok"] is True
+
+
+def test_short_rate_limit_becomes_quota_error_after_retries(tmp_path, story):
+    from krimi.gemini_client import GeminiQuotaError
+    models = FakeModels(story, fail_times=99)
+    client = make_client(tmp_path, models)
+    with pytest.raises(GeminiQuotaError):
+        generate_kit("Z", 6, client=client, kit_dir=tmp_path / "kit", render=False)

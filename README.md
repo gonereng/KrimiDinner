@@ -55,6 +55,7 @@ docker run -d -p 8000:8000 --env-file .env -v "$PWD/data:/data" --name krimidinn
 
 - **Neues Kit**: Thema, Spielerzahl (3–12), Sprache (DE/EN), Papierformat und optional Illustrationen wählen. Der Fortschritt erscheint live: Gerüst → Texte → Logikprüfung → Korrekturen → PDFs.
 - **Demo-Kit**: Ein fertiges Beispiel („Mord im Chalet Edelweiß“, Silvester 1985, 6 Spieler) funktioniert auch ohne API-Key.
+- **Wiederholen**: Bricht eine Generierung ab, etwa weil das Gemini-Kontingent aufgebraucht ist oder der Server neu gestartet wurde, erscheint auf der Kit-Seite der Button **↻ Wiederholen**. Er macht beim letzten gesicherten Schritt weiter (Gerüst, Texte, jede Korrektur, Prüfung, jedes Bild). Bereits erledigte Schritte werden nicht noch einmal bezahlt, auch nicht mit „Cache umgehen“.
 - **Kit-Seite**: alle PDFs zum Ansehen oder Herunterladen, Prüfbericht mit Gegencheck-Ergebnis und Gemini-Verbrauch (Aufrufe, Cache-Treffer, Tokens).
 - **story.json bearbeiten**: Texte, Hinweise und Rätsel direkt im Browser ändern. Danach „Speichern & prüfen“ oder „Speichern & PDFs rendern“, beides ohne KI-Kosten. Die vorige Fassung bleibt als `story.backup.json` erhalten.
 
@@ -83,6 +84,7 @@ krimi validate output/<kit>/story.json --ohne-gegencheck              # nur die 
 krimi render output/<kit> --paper a4                                  # PDFs neu setzen (a4 | letter)
 krimi all --theme "..." --players 6                                   # alles in einem Lauf
 krimi all --theme "..." --no-images --paper letter
+krimi resume output/<kit>                                             # abgebrochenen Lauf fortsetzen (z. B. nach Kontingent-Ende)
 krimi demo                                                            # Beispiel-Kit ohne API-Key
 krimi serve --port 8000                                               # Web-Oberfläche
 ```
@@ -113,7 +115,7 @@ Nützliche Optionen:
 
 - Die Modelle stehen in `.env`: `GEMINI_TEXT_MODEL`, `GEMINI_CHECK_MODEL` und optional `GEMINI_IMAGE_MODEL`. Die Defaults in `.env.example` entsprechen dem Stand vom November 2026. Aktuelle Namen findest du unter <https://ai.google.dev/gemini-api/docs/models>.
 - **Cache**: Jede Antwort wird unter `sha256(Modell + Prompt + Schema)` in `.cache/` abgelegt. Ein zweiter Lauf mit denselben Eingaben kostet keine API-Aufrufe.
-- Bei Rate-Limits (429), Serverfehlern und Timeouts wiederholt der Client den Aufruf mit exponentiellem Backoff.
+- Bei Rate-Limits (429), Serverfehlern und Timeouts wiederholt der Client den Aufruf mit exponentiellem Backoff. Ist das **Tageskontingent** erschöpft, bricht er sofort mit einem klaren Hinweis ab. Der Fortschritt liegt dann in `output/<kit>/zwischenstand/` und lässt sich mit „Wiederholen“ bzw. `krimi resume` fortsetzen.
 - Der Token-Verbrauch jedes Laufs steht in `output/<kit>/usage.json`, in der Konsole und auf der Kit-Seite.
 - Alle Prompts liegen als Textdateien in `prompts/` und lassen sich dort anpassen.
 

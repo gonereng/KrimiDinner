@@ -29,13 +29,16 @@ def _usage(u: dict) -> None:
 
 def _run(render: bool, theme, players, lang, paper, images, cache, variante, verbose):
     from .gemini_client import GeminiError
-    from .pipeline import KitFailed, generate_kit
+    from .pipeline import KitFailed, generate_kit, kit_name
     _setup_logging(verbose)
     try:
         res = generate_kit(theme, players, lang, paper, images=images, use_cache=cache,
                            variante=variante, progress=_progress, render=render)
     except (KitFailed, GeminiError) as exc:
+        from .config import get_settings
         typer.secho(f"✘ {exc}", fg="red")
+        kit = get_settings().output_dir / kit_name(theme, players, lang, variante)
+        typer.echo(f"  Fortschritt gesichert – später fortsetzen mit: krimi resume {kit}")
         raise typer.Exit(1)
     for w in res["warnings"]:
         typer.secho(f"⚠ {w}", fg="yellow")
@@ -65,6 +68,25 @@ def all(theme: str = typer.Option(..., "--theme", "-t"),
         verbose: bool = typer.Option(False, "--verbose", "-v")):
     """Alles in einem Lauf: Story, Prüfung, Bilder, PDFs, ZIP."""
     _run(True, theme, players, lang, paper, images, cache, variante, verbose)
+
+
+@app.command()
+def resume(kit_dir: Path = typer.Argument(..., exists=True, file_okay=False),
+           cache: bool = typer.Option(True, "--cache/--no-cache"),
+           verbose: bool = typer.Option(False, "--verbose", "-v")):
+    """Abgebrochenen Lauf (z. B. Kontingent erschöpft) ab dem letzten gesicherten Schritt fortsetzen."""
+    from .gemini_client import GeminiError
+    from .pipeline import KitFailed, resume_kit
+    _setup_logging(verbose)
+    try:
+        res = resume_kit(kit_dir, progress=_progress, use_cache=cache)
+    except (KitFailed, GeminiError) as exc:
+        typer.secho(f"✘ {exc}", fg="red")
+        raise typer.Exit(1)
+    for w in res["warnings"]:
+        typer.secho(f"⚠ {w}", fg="yellow")
+    typer.secho(f"✔ Fertig: {res['kit_dir']}", fg="green")
+    _usage(res["usage"])
 
 
 @app.command()

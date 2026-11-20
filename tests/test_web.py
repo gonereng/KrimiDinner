@@ -98,3 +98,35 @@ def test_new_kit_rejects_bad_input(client):
     login(client)
     r = client.post("/kits/new", data={"thema": "X", "spieler": 50})
     assert r.status_code == 400
+
+
+def test_retry_button_after_failure(client, monkeypatch, tmp_path):
+    login(client)
+    r = client.post("/kits/new", data={"thema": "Quota", "spieler": 6}, follow_redirects=False)
+    name = r.headers["location"].split("/")[-1]
+    assert wait(client, name)["status"] == "fehler"
+    page = client.get(f"/kits/{name}").text
+    assert "Wiederholen" in page and "/retry" in page
+
+    # Retry mit simuliertem Gemini: Gerüst lag schon vor
+    from krimi import pipeline
+    calls = []
+
+    def fake_resume(kit_dir, progress=lambda m: None, **kw):
+        calls.append(kit_dir.name)
+        progress("Fortsetzen – bereits gesichert: Gerüst")
+        return {"warnings": [], "usage": {"api_calls": 1, "cache_hits": 0, "total_tokens": 5}}
+
+    monkeypatch.setattr(pipeline, "resume_kit", fake_resume)
+    client.post(f"/kits/{name}/retry")
+    st = wait(client, name)
+    assert st["status"] == "fertig" and calls == [name]
+    assert any("bereits gesichert" in line for line in st["log"])
+    assert "/retry" not in client.get(f"/kits/{name}").text  # fertig: kein Button mehr
+
+
+def test_retry_without_params_rejected(client):
+    login(client)
+    client.post("/demo")
+    wait(client, "demo-silvester-im-schneechalet")
+    assert client.post("/kits/demo-silvester-im-schneechalet/retry").status_code == 400

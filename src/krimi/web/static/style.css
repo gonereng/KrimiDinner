@@ -58,3 +58,5 @@ table.tbl th, table.tbl td { text-align: left; padding: 6px 8px; border-bottom: 
 textarea#json { width: 100%; min-height: 65vh; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; padding: 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--ink); }
 code { font-size: .88em; }
 details { margin-top: 8px; }
+
+.retry { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 12px; }

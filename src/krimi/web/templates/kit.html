@@ -9,6 +9,16 @@
     <h2>Status: <span id="st-label" class="badge {{ status.status or kit.status }}">{{ status.aufgabe }} – {{ {'laeuft': 'läuft …', 'fertig': 'fertig', 'fehler': 'Fehler'}.get(status.status, kit.status) }}</span></h2>
     <pre id="log" class="log">{{ (status.log or [])|join('\n') }}</pre>
     {% if status.fehler %}<div class="alert err"><strong>Fehler:</strong><pre class="plain">{{ status.fehler }}</pre></div>{% endif %}
+    {% if kit.status == 'abgebrochen' %}<div class="alert warn">Der Lauf wurde unterbrochen (z. B. durch einen Neustart des Servers).</div>{% endif %}
+    {% if can_retry %}
+    <div class="retry">
+      <form method="post" action="/kits/{{ kit.name }}/retry" class="inline">
+        <button class="primary">↻ Wiederholen</button>
+      </form>
+      <span class="muted small">Macht beim letzten gesicherten Schritt weiter, bereits erledigte Schritte kosten nichts.
+        {% if gesichert %}Gesichert: {{ gesichert|join(' · ') }}.{% else %}Noch kein Schritt gesichert, es beginnt von vorn.{% endif %}</span>
+    </div>
+    {% endif %}
     {% for w in status.warnungen or [] %}<p class="alert warn">{{ w }}</p>{% endfor %}
   </div>
 </section>

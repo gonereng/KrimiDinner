@@ -30,6 +30,19 @@ class GeminiError(RuntimeError):
     pass
 
 
+class GeminiQuotaError(GeminiError):
+    """Kontingent/Rate-Limit dauerhaft überschritten – später erneut versuchen."""
+
+
+QUOTA_HINT = ("Gemini-Kontingent erschöpft (Rate-Limit oder Tageslimit). Der bisherige Fortschritt "
+              "ist gespeichert – später mit „Wiederholen“ (Web) bzw. `krimi resume` fortsetzen.")
+
+
+def _is_daily_quota(exc: Exception) -> bool:
+    text = str(exc).lower()
+    return "perday" in text or "per day" in text or "daily" in text
+
+
 @dataclass
 class Usage:
     api_calls: int = 0
@@ -111,12 +124,16 @@ class GeminiClient:
             except Exception as exc:  # noqa: BLE001 – SDK wirft verschiedene Typen
                 code = getattr(exc, "code", None)
                 is_timeout = "timeout" in type(exc).__name__.lower() or "timed out" in str(exc).lower()
+                if code == 429 and _is_daily_quota(exc):  # Tageslimit: Warten lohnt nicht
+                    raise GeminiQuotaError(f"{QUOTA_HINT}\n({exc})") from exc
                 if (code in RETRY_CODES or is_timeout) and attempt < self.max_retries:
                     wait = delay + random.uniform(0, 1)
                     log.warning("Gemini-Fehler (%s), neuer Versuch in %.1fs …", code or exc, wait)
                     self.sleep(wait)
                     delay *= 2
                     continue
+                if code == 429:
+                    raise GeminiQuotaError(f"{QUOTA_HINT}\n({exc})") from exc
                 raise GeminiError(f"Gemini-Aufruf fehlgeschlagen: {exc}") from exc
 
     @staticmethod

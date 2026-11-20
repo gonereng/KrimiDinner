@@ -238,6 +238,26 @@ def new_kit(request: Request, thema: str = Form(...), spieler: int = Form(6), la
     return RedirectResponse(f"/kits/{name}", status_code=303)
 
 
+@app.post("/kits/{name}/retry")
+def kit_retry(request: Request, name: str):
+    """Abgebrochene Generierung ab dem letzten gesicherten Schritt fortsetzen."""
+    need_login(request)
+    d = kit_path(name)
+    from ..pipeline import resume_kit
+    if not (d / "params.json").exists():
+        raise HTTPException(400, "Für dieses Kit gibt es keinen fortsetzbaren Lauf.")
+
+    def task(job: Job):
+        res = resume_kit(d, progress=job.progress)
+        u = res["usage"]
+        job.progress(f"Gemini: {u['api_calls']} API-Aufrufe, {u['cache_hits']} aus dem Cache, "
+                     f"{u['total_tokens']} Tokens")
+        return res["warnings"]
+
+    start_job(name, d, "Generierung (fortgesetzt)", task)
+    return RedirectResponse(f"/kits/{name}", status_code=303)
+
+
 @app.post("/demo")
 def demo(request: Request, paper: str = Form("a4")):
     need_login(request)
@@ -266,8 +286,13 @@ def kit_detail(request: Request, name: str):
     files = [(f, FILE_LABELS[f]) for f in FILE_LABELS if (d / f).exists()]
     hefte = sorted((d / "charakterhefte").glob("*.pdf")) if (d / "charakterhefte").is_dir() else []
     story = read_json(d / "story.json")
+    from ..pipeline import Zwischenstand
+    summary = kit_summary(d)
+    can_retry = ((d / "params.json").exists() and name not in _running
+                 and summary["status"] in ("fehler", "abgebrochen"))
     return templates.TemplateResponse(request, "kit.html", {
-        "kit": kit_summary(d), "status": read_json(d / "status.json", {}) or {},
+        "can_retry": can_retry, "gesichert": Zwischenstand(d).summary(),
+        "kit": summary, "status": read_json(d / "status.json", {}) or {},
         "report": read_json(d / "report.json"), "usage": read_json(d / "usage.json"),
         "files": files, "hefte": [h.name for h in hefte], "story": story,
         "running": name in _running, "has_key": bool(get_settings().api_key)})

@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from .gemini_client import GeminiClient, load_prompt
+from .gemini_client import GeminiClient, GeminiQuotaError, load_prompt
 from .models import Story
 
 log = logging.getLogger("krimi.images")
@@ -31,9 +31,13 @@ def generate_images(story: Story, client: GeminiClient, model: str, kit_dir: Pat
         jobs.append((c.id, load_prompt("bild_portrait", name=c.name, rolle=c.rolle, zeit=story.setting.zeit,
                                        ort=story.setting.ort, kostuem=c.kostuemtipp, stil=stil)))
     for i, (name, prompt) in enumerate(jobs, 1):
+        if (img_dir / f"{name}.png").exists():  # schon vorhanden (z. B. beim Fortsetzen)
+            continue
         progress(f"Bild {i}/{len(jobs)}: {name}")
         try:
             data = client.generate_image(prompt, model, label=f"Bild {name}")
+        except GeminiQuotaError:
+            raise  # Kontingent weg: abbrechen, damit „Wiederholen“ die fehlenden Bilder nachholt
         except Exception as exc:  # Bilder sind optional – Kit bleibt nutzbar
             warnings.append(f"Bild '{name}' fehlgeschlagen: {exc}")
             continue
