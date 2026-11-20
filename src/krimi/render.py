@@ -57,6 +57,8 @@ LABELS = {
         "uebersicht_hinweise": "Hinweise je Runde", "opfer": "Das Opfer", "tatort": "Fundort",
         "abend": "Ein Krimidinner für", "sitzhinweis": "Die Plätze sind in einer Reihe von links (1) nach rechts nummeriert.",
         "beweis_hinweis": "Beweisstück – an die genannte Person aushändigen", "schneiden": "Entlang der Marken ausschneiden",
+        "inhalt_titel": "Für die Spielleitung", "erst_bei_code": "Erst herausgeben bei Code",
+        "inhalt_von": "Inhalt", "inhalt_seite": "Inhalt liegt als Beweisstück",
     },
     "en": {
         "gastgeber": "Host Guide", "einladung": "Invitation", "rolle": "Your role",
@@ -90,6 +92,8 @@ LABELS = {
         "uebersicht_hinweise": "Clues per round", "opfer": "The victim", "tatort": "Found in",
         "abend": "A murder mystery dinner for", "sitzhinweis": "Seats are in a row, numbered from left (1) to right.",
         "beweis_hinweis": "Evidence – hand to the named player", "schneiden": "Cut along the marks",
+        "inhalt_titel": "For the host", "erst_bei_code": "Hand out only for code",
+        "inhalt_von": "Contents", "inhalt_seite": "Contents are evidence",
     },
 }
 

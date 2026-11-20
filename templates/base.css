@@ -129,6 +129,7 @@ table.ws td { width: 8.5mm; height: 8.5mm; text-align: center; vertical-align: m
 .wordlist-label { text-align: center; font-family: var(--f-head); margin-top: 2mm; }
 .wordlist { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5mm 5mm; font-family: var(--f-head); letter-spacing: .08em; font-size: 10pt; margin-top: 1.5mm; }
 .wordlist span { white-space: nowrap; }
+.ev-label.host { color: var(--c-red); border-bottom-color: var(--c-red); }
 .content-slip { margin-top: 12mm; border: 1.4pt dashed var(--c-red); padding: 8mm; }
 .content-slip .kicker { color: var(--c-red); }
 

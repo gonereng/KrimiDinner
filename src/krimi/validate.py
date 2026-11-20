@@ -6,6 +6,7 @@
 """
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from dataclasses import dataclass, field
 
@@ -13,6 +14,7 @@ from .models import Ermittlung, Story
 
 MIN_TAETER_HINWEISE = 3
 MIN_SICHERHEIT = 0.7
+MIN_INHALT_ZEICHEN = 150
 
 
 @dataclass
@@ -104,8 +106,19 @@ def check_story(story: Story) -> Report:
             W(f"Hinweis {h.id} ist sehr lang ({len(h.text)} Zeichen) – passt evtl. nicht auf die Karte")
         if h.raetsel:
             rs = h.raetsel
-            if rs.typ == "zahlenschloss" and not 3 <= len(rs.ziffern) <= 4:
-                E(f"Hinweis {h.id}: Zahlenschloss braucht 3–4 Ziffern")
+            if rs.typ == "zahlenschloss":
+                if not 3 <= len(rs.ziffern) <= 4:
+                    E(f"Hinweis {h.id}: Zahlenschloss braucht 3–4 Ziffern")
+                code = "".join(str(z.ziffer) for z in rs.ziffern)
+                for z in rs.ziffern:
+                    zahlen = re.findall(r"\d+", z.herkunft)
+                    if code in z.herkunft or str(z.ziffer) in zahlen or any(code in n for n in zahlen):
+                        E(f"Hinweis {h.id}: Ziffer-Hinweis „{z.herkunft}“ verrät die Lösung – "
+                          f"er soll nur sagen, WO die Ziffer zu finden ist, die Zahl steht in einem anderen Hinweis")
+                if len(rs.klartext.strip()) < MIN_INHALT_ZEICHEN:
+                    E(f"Hinweis {h.id}: Der Inhalt hinter dem Zahlenschloss ist nur eine Kurzbeschreibung "
+                      f"({len(rs.klartext.strip())} Zeichen) – nötig ist der vollständige Text des Dokuments, "
+                      f"das der Gastgeber den Spielern zeigt")
             if rs.typ == "wortsuche" and len(rs.woerter) < 4:
                 E(f"Hinweis {h.id}: Wortsuche braucht mindestens 4 Wörter")
             if not rs.klartext.strip():

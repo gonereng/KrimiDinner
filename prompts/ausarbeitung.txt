@@ -20,7 +20,8 @@ Liefere:
    - Text pro Hinweis höchstens 450 Zeichen. "art" ist "karte" (normale Hinweiskarte) oder ein Beweisstück: "brief", "zeitung", "notiz", "telegramm" (insgesamt 4–6 Beweisstücke, Text im passenden Stil).
    - Baue genau drei Rätsel-Hinweise ein (Feld "raetsel"; den Text der Karte schreibst du als Einleitung, z. B. "Im Kamin fand sich ein halb verbrannter Zettel …"):
      a) typ "caesar" ODER "substitution": klartext = die geheime Botschaft (max. 120 Zeichen).
-     b) typ "zahlenschloss": klartext = was in der verschlossenen Schatulle/dem Safe liegt; ziffern = 3–4 Ziffern, jede mit "herkunft" aus einem Fakt, den die Spieler aus anderen Hinweisen kennen.
+     b) typ "zahlenschloss": klartext = der VOLLSTÄNDIGE, wörtliche Text des Dokuments, das im Safe/in der Schatulle liegt (200–600 Zeichen), so wie die Spieler ihn vorlesen – z. B. der ausformulierte Brief, Vertrag oder Bericht mit Datum und Unterschrift, KEINE Stichwort-Beschreibung. Liegen mehrere Dinge darin, beschreibe sie alle ausformuliert.
+        ziffern = 3–4 Ziffern. Jede "herkunft" ist ein Rätselhinweis, der beschreibt, WO die Spieler die Ziffer finden (z. B. "Die Zimmernummer der Gräfin"), und darf weder die Ziffer noch den Code noch die zugrunde liegende Zahl enthalten. Die Information selbst (z. B. die Zimmernummer 7) muss in einem ANDEREN Hinweis, im Vorlesetext oder in einem öffentlichen Profil stehen – nicht in diesem Rätsel. Am besten stammen die Ziffern aus verschiedenen Quellen.
      c) typ "wortsuche": woerter = 6–10 thematische Wörter (nur Buchstaben, max. 10 Zeichen), klartext = versteckte Botschaft aus den übrig bleibenden Buchstaben (max. 30 Buchstaben).
 4. runden: genau 3 Runden (nummer 1–3) mit Titel, Ablauf für den Gastgeber, Vorlesetext und hinweis_ids (= alle Hinweise dieser Runde).
 5. aufloesung: taeter_id, Zusammenfassung, 5–8 logische Schritte (jeder Schritt nennt die zugehörigen Hinweis-IDs in Klammern), ausführlicher Tathergang.

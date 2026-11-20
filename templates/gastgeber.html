@@ -40,7 +40,7 @@
 <table>
   {% for hid, p in puzzles.items() %}
   <tr><td style="width:14mm" class="small">{{ hid }}</td><td style="width:30mm">{{ p.typ|capitalize }}</td>
-      <td>{% if p.code %}<strong>{{ L.code }}: {{ p.code }}</strong><br><span class="small">{{ L.inhalt }}: {{ p.loesung }}</span>{% else %}{{ L.botschaft }}: <strong>{{ p.loesung }}</strong>{% if p.detail %} <span class="small muted">({{ p.detail }})</span>{% endif %}{% endif %}</td></tr>
+      <td>{% if p.code %}<strong>{{ L.code }}: {{ p.code }}</strong><br><span class="small">{{ L.inhalt_seite }} <strong>{{ hid }}b</strong> {{ 'in 05_beweisstuecke.pdf bereit – bei richtigem Code aushändigen.' if s.sprache == 'de' else 'in 05_beweisstuecke.pdf – hand it out once the code is correct.' }}</span>{% else %}{{ L.botschaft }}: <strong>{{ p.loesung }}</strong>{% if p.detail %} <span class="small muted">({{ p.detail }})</span>{% endif %}{% endif %}</td></tr>
   {% endfor %}
 </table>
 {% endif %}

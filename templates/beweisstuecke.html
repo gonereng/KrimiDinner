@@ -16,12 +16,12 @@
   {% else %}
   <div class="ev ev-karte"><h3>{{ h.titel }}</h3><p>{{ h.text }}</p>{% if p %}{{ puzzle_body(h, p) }}{% endif %}</div>
   {% endif %}
-  {% if p and p.code %}
-  <div class="content-slip">
-    <div class="kicker">{{ 'Für die Spielleitung – abschneiden und erst herausgeben, wenn der Code' if s.sprache == 'de' else 'For the host – cut off and hand out only when the code' }} {{ p.code }} {{ 'genannt wurde' if s.sprache == 'de' else 'is given' }}</div>
-    <p style="margin-top: 3mm">{{ p.loesung }}</p>
-  </div>
-  {% endif %}
 </section>
+{% if p and p.code %}
+<section class="evidence-page">
+  <div class="ev-label host"><span>{{ L.beweisstueck }} {{ h.id }}b · {{ L.runde }} {{ h.runde }} · {{ L.inhalt_titel }}</span><span>{{ L.erst_bei_code }} {{ p.code }}</span></div>
+  <div class="ev ev-brief" style="white-space: pre-line"><div class="letterhead">{{ L.inhalt_von }}: {{ h.titel }}</div>{{ p.loesung }}</div>
+</section>
+{% endif %}
 {% endfor %}
 {% endblock %}

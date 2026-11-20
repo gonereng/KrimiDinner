@@ -130,3 +130,29 @@ def test_cross_check_wrong_culprit(story):
 def test_cross_check_unsure(story):
     c = FakeClient(Ermittlung(taeter_id="c_moni", sicherheit=0.4, begruendung="?"))
     assert has(full_check(story, c, "m"), "unsicher")
+
+
+def _lock(story):
+    return next(h for h in story.hinweise if h.raetsel and h.raetsel.typ == "zahlenschloss")
+
+
+def test_lock_hint_must_not_reveal_code(story):
+    h = _lock(story)
+    h.raetsel.ziffern[0].herkunft = "Erste Ziffer des Codes 735"
+    assert has(check_story(story), "verrät die Lösung")
+
+
+def test_lock_hint_must_not_contain_digit(story):
+    h = _lock(story)
+    h.raetsel.ziffern[1].herkunft = "Gämsen im Wappen (3)"
+    assert has(check_story(story), "verrät die Lösung")
+
+
+def test_lock_hint_may_contain_unrelated_numbers(story):
+    # "Startnummer bei der Abfahrt 1976" -> Ziffer 5, 1976 verrät nichts
+    assert check_story(story).ok
+
+
+def test_lock_content_must_be_full_text(story):
+    _lock(story).raetsel.klartext = "Kaufvertrag für das Gasthaus und eine Kündigung"
+    assert has(check_story(story), "nur eine Kurzbeschreibung")

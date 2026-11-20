@@ -14,6 +14,7 @@ Korrigiere das Kit so, dass ALLE Fehler behoben sind. Regeln:
 - Jeder Unschuldige wird von mindestens einem Hinweis entlastet; der Täter von mindestens drei Hinweisen mit verschiedenen Fakten belastet.
 - Jeder Charakter erhält in jeder Runde mindestens einen Hinweis; runden[].hinweis_ids enthält genau die Hinweise der Runde.
 - Niemand ist in der Zeitleiste zur selben Zeit an zwei Orten.
+- Zahlenschloss: "klartext" ist der vollständige, wörtliche Text des gefundenen Dokuments (200–600 Zeichen); "herkunft" verrät weder Ziffer noch Code, die nötige Information steht in einem anderen Hinweis.
 - Ist das Kit "mehrdeutig", schärfe die belastenden Hinweise gegen den Täter und die entlastenden Hinweise für die genannten Verdächtigen.
 - Behalte alles bei, was nicht fehlerhaft ist. Sprache: {{sprache_name}}.
 
