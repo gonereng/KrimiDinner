@@ -69,3 +69,22 @@ def test_kit_contains_both_card_files(tmp_path, story):
     files, warnings = render_kit(story, tmp_path, "a4")
     names = {f.name for f in files}
     assert {"04_hinweiskarten.pdf", "04_hinweiskarten_einseitig.pdf"} <= names and warnings == []
+
+
+@pytest.mark.parametrize("paper", ["a4", "letter"])
+@pytest.mark.parametrize("name", list(themes.THEMES))
+def test_evidence_stays_within_margins(tmp_path, story, name, paper):
+    story.design = name
+    story.hinweise[2].art = "telegramm"  # alle Beweisstück-Arten abdecken
+    r = Renderer(story, tmp_path, paper)
+    r._pdf("beweisstuecke.html", tmp_path / "b.pdf",
+           beweise=sorted(r.evidence_hints(), key=lambda h: (h.runde, h.id)))
+    assert r.warnings == []
+
+
+def test_wide_box_is_detected(tmp_path, story):
+    from weasyprint import HTML
+    from krimi.render import find_wide_boxes
+    doc = HTML(string='<style>@page{size:210mm 297mm;margin:20mm}</style>'
+                      '<div class="ev" style="width:190mm">zu breit</div>').render()
+    assert find_wide_boxes(doc) and "20.0 mm zu breit" in find_wide_boxes(doc)[0]

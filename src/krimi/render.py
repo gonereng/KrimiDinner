@@ -235,6 +235,32 @@ def chunk(items: list, n: int) -> list[list]:
 # Überlauf-Erkennung
 # --------------------------------------------------------------------------
 
+WIDTH_WATCH = {"ev", "box", "invite", "content-slip", "tip-box", "read"}
+
+
+def find_wide_boxes(document) -> list[str]:
+    """Boxen (Beweisstücke, Kästen, Einladungen …), die rechts über den Satzspiegel hinausragen."""
+    wide: list[str] = []
+
+    def walk(box, limit):
+        el = getattr(box, "element", None)
+        if el is not None and getattr(box, "element_tag", None):
+            classes = set((el.get("class") or "").split())
+            if classes & WIDTH_WATCH:
+                right = box.border_box_x() + box.border_width()
+                if right > limit + 1:  # 1 px Toleranz
+                    wide.append(f"{'.'.join(sorted(classes & WIDTH_WATCH))} "
+                                f"({(right - limit) * 25.4 / 96:.1f} mm zu breit)")
+                    return
+        for child in getattr(box, "children", []) or []:
+            walk(child, limit)
+
+    for page in document.pages:
+        pb = page._page_box
+        walk(pb, pb.content_box_x() + pb.width)
+    return wide
+
+
 def find_overflows(document) -> list[str]:
     """Liefert data-fit-IDs aller Boxen mit class 'fit', deren Inhalt über den Rand ragt."""
     over: list[str] = []
@@ -320,6 +346,9 @@ class Renderer:
             doc = HTML(string=html, base_url=str(TEMPLATES_DIR)).render()
             over = find_overflows(doc)
             if not over:
+                for w in find_wide_boxes(doc):
+                    self.warnings.append(f"{out.name}: Box ragt über den Seitenrand: {w}")
+                    log.warning(self.warnings[-1])
                 break
             if attempt == fit_retries:
                 self.warnings.append(f"{out.name}: Text passt nicht in Box(en) {', '.join(over)}")
